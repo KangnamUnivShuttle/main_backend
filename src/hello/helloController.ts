@@ -3,7 +3,7 @@ import {
     Get,
     Route,
   } from "tsoa";
-  
+
   @Route("hello")
   export class HelloController extends Controller {
     @Get()

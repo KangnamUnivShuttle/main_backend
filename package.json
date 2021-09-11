@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsoa spec-and-routes && tsc && webpack --config webpack.config.js",
     "start": "npm run build && nodemon ./src/server.js",
-    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\""
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "tslint": "tslint -c tslint.json 'src/**/*.ts'",
+    "tslint:fix": "tslint -c tslint.json 'src/**/*.ts' --fix"
   },
   "repository": {
     "type": "git",

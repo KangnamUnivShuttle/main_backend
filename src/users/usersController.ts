@@ -11,7 +11,7 @@ import {
   } from "tsoa";
   import { User } from "./user";
   import { UsersService, UserCreationParams } from "./usersService";
-  
+
   @Route("users")
   export class UsersController extends Controller {
     @Get("{userId}")
@@ -21,7 +21,7 @@ import {
     ): Promise<User> {
       return new UsersService().get(userId, name);
     }
-  
+
     @SuccessResponse("201", "Created") // Custom success response
     @Post()
     public async createUser(
