@@ -10,7 +10,10 @@ const {
 } = process.env;
 
 module.exports = {
-  entry: './src/server.ts',
+  entry: {
+    origin: { import: './src/server.ts' },
+    web: { import: './src/server.ts', filename: '../../main_container/app/main.bundle.js' }
+  },
   target: 'node',
   mode: NODE_ENV,
   watch: NODE_ENV === 'development',
