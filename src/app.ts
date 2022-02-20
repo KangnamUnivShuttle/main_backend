@@ -5,6 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import passport from 'passport';
 import session from 'express-session';
 import passportLocal from 'passport-local';
+import logger from './logger';
 const LocalStrategy = passportLocal.Strategy;
 
 export const app = express();
@@ -23,7 +24,6 @@ passport.use(new LocalStrategy(
         passwordField: 'passwd'
     },
     (username, password, done) => {
-        console.log('[Authntication] [LocalStrategy]', 'username', username, 'password', password)
         if (username === 'admin' && password === 'password') {
             return done(null, {
                 username,

@@ -10,6 +10,7 @@ import {
 import { BasicResponseModel } from "../models/response.model";
 import passport from 'passport';
 import express, { Response as ExResponse, Request as ExRequest } from "express";
+import logger from '../logger';
 
 @Route("auth")
 export class AuthController extends Controller {
@@ -27,7 +28,7 @@ export class AuthController extends Controller {
         return new Promise<any>((resolve) => {
             expReq.login({email}, (err) => {
                 if (err) {
-                    console.log('[AuthController] [expressAuth]', 'err', err)
+                    logger.error(`[AuthController] [expressAuth] Login failed: ${err}`)
                 }
                 resolve({err, email})
             })
@@ -47,13 +48,15 @@ export class AuthController extends Controller {
         @Request() expReq: ExRequest,
         @Body() requestBody: {email: string, passwd: string}
     ): Promise<BasicResponseModel> {
-        console.log('[AuthController] [login]', requestBody)
+        logger.debug(`[AuthController] [expressAuth] Req login: ${JSON.stringify(requestBody)}`)
         const {err, email} = await this.expressAuth(expReq, requestBody.email);
         if (err || !email) {
+            logger.warn(`[AuthController] [expressAuth] Req login failed. Error or email undefined.`)
             return {
                 success: false
             } as BasicResponseModel;
         } else {
+            logger.info(`[AuthController] [expressAuth] Req login success`);
             return {
                 success: true
             } as BasicResponseModel;
