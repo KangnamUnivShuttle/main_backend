@@ -101,7 +101,7 @@
 	"paths": {
 		"/auth": {
 			"get": {
-				"operationId": "Test",
+				"operationId": "SessionTest",
 				"responses": {
 					"200": {
 						"description": "Ok",

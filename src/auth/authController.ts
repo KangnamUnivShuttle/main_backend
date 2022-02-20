@@ -36,9 +36,10 @@ export class AuthController extends Controller {
 
     @Security('passport-cookie')
     @Get()
-    public async test(): Promise<string> {
-        console.log('hello?')
-        return 'hello world!';
+    public async sessionTest(
+            @Request() expReq: ExRequest
+        ): Promise<string> {
+        return `Hi, ${expReq.user}`;
     }
 
     @Post()

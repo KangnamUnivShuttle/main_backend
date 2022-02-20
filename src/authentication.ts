@@ -23,9 +23,13 @@ export async function expressAuthentication(
     ): Promise<any> {
     console.log('[Authntication] [expressAuthentication]', 'securityName', securityName, 'req head', request.headers)
     if (securityName === 'passport-cookie') {
-        console.log('[Authntication] [expressAuthentication]', request.user)
-        return Promise.resolve();
+        if (request.user) {
+            console.log('[Authntication] [expressAuthentication]', request.user)
+            return Promise.resolve(request.user);
+        } else {
+            return Promise.reject(new Error('Session expired.'))
+        }
     } else {
-        return Promise.reject({});
+        return Promise.reject(new Error('Undefined authentication detected.'))
     }
 }

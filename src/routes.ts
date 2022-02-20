@@ -61,8 +61,9 @@ export function RegisterRoutes(app: express.Router) {
         app.get('/auth',
             authenticateMiddleware([{"passport-cookie":[]}]),
 
-            function AuthController_test(request: any, response: any, next: any) {
+            function AuthController_sessionTest(request: any, response: any, next: any) {
             const args = {
+                    expReq: {"in":"request","name":"expReq","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -77,7 +78,7 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new AuthController();
 
 
-            const promise = controller.test.apply(controller, validatedArgs as any);
+            const promise = controller.sessionTest.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
