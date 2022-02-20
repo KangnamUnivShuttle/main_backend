@@ -143,16 +143,16 @@
 						"application/json": {
 							"schema": {
 								"properties": {
-									"password": {
+									"passwd": {
 										"type": "string"
 									},
-									"username": {
+									"email": {
 										"type": "string"
 									}
 								},
 								"required": [
-									"password",
-									"username"
+									"passwd",
+									"email"
 								],
 								"type": "object"
 							}
