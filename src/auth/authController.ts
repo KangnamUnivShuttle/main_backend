@@ -5,13 +5,17 @@ import {
     Body,
     Security,
     Route,
-    Request
+    Request,
+    Tags,
+    Delete,
+    Put
   } from "tsoa";
 import { BasicResponseModel } from "../models/response.model";
 import passport from 'passport';
 import express, { Response as ExResponse, Request as ExRequest } from "express";
 import logger from '../logger';
 
+@Tags("Auth")
 @Route("auth")
 export class AuthController extends Controller {
 
@@ -62,4 +66,23 @@ export class AuthController extends Controller {
             } as BasicResponseModel;
         }
     }
+
+    @Security('passport-cookie')
+    @Delete()
+    public async logout(
+        @Request() expReq: ExRequest): Promise<BasicResponseModel> {
+            try {
+                logger.debug(`[AuthController] [logout] bye user: ${expReq.user}`)
+                expReq.logout()
+                return {
+                    success: true
+                } as BasicResponseModel;
+            } catch (err: any) {
+                logger.error(`[AuthController] [logout] failed, user: ${expReq.user}`)
+                return {
+                    success: false,
+                    message: err.message || 'Unknown error!'
+                } as BasicResponseModel;
+            }
+        }
 }
