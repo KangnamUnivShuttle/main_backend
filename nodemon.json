@@ -1,5 +1,5 @@
 {
-    "exec": "tsoa spec-and-routes && ts-node src/server.ts",
+    "exec": "tsoa spec-and-routes && tsc && ts-node src/server.ts",
     "watch": ["src/**/*.ts", "src/*.ts"],
     "ignore": [".json", "src/routes.ts"],
     "ext": "ts"
