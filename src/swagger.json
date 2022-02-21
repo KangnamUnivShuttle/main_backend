@@ -114,6 +114,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [
 					{
 						"passport-cookie": []
@@ -135,6 +138,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Auth"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -159,6 +165,30 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/hello": {
@@ -176,6 +206,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Hello world"
+				],
 				"security": [],
 				"parameters": []
 			}
@@ -195,6 +228,9 @@
 						}
 					}
 				},
+				"tags": [
+					"Users Test"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -225,6 +261,9 @@
 						"description": "Created"
 					}
 				},
+				"tags": [
+					"Users Test"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {

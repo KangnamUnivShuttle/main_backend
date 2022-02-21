@@ -8,10 +8,12 @@ import {
     Query,
     Route,
     SuccessResponse,
+    Tags
   } from "tsoa";
   import { User } from "./user";
   import { UsersService, UserCreationParams } from "./usersService";
 
+  @Tags("Users Test")
   @Route("users")
   export class UsersController extends Controller {
     @Get("{userId}")
