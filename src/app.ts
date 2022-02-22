@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 import express, { Response as ExResponse, Request as ExRequest } from "express";
 import bodyParser from "body-parser";
 import { RegisterRoutes } from "./routes";
