@@ -213,6 +213,282 @@
 				"parameters": []
 			}
 		},
+		"/plugin": {
+			"get": {
+				"operationId": "GetInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Plugin"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "pid",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "RegisterPlugin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Plugin"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "ModifyPlugin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Plugin"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/plugin/{pid}": {
+			"delete": {
+				"operationId": "DeletePlugin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Plugin"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "pid",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/runtime": {
+			"get": {
+				"operationId": "GetInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "rid",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/runtime/register": {
+			"post": {
+				"operationId": "RegisterNewRuntime",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/runtime/execute/{rid}": {
+			"post": {
+				"operationId": "Execute",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "rid",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/runtime/modify": {
+			"put": {
+				"operationId": "ModifyRuntime",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/runtime/{rid}": {
+			"delete": {
+				"operationId": "DeleteRuntime",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "rid",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/users/{userId}": {
 			"get": {
 				"operationId": "GetUser",
