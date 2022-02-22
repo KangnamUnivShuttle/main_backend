@@ -36,7 +36,7 @@ passport.use(new LocalStrategy(
         }
     }
 ));
-app.use(session({ secret: process.env.SESSION_KEY || 'testSecret', resave: true, saveUninitialized: false, cookie: {maxAge: Number(process.env.SESSION_TIME) || 60000 } }));
+app.use(session({ secret: process.env.SESSION_KEY || 'testSecret', resave: true, saveUninitialized: false, cookie: {maxAge: Number(process.env.SESSION_TIME) || 1800000 } }));
 app.use(passport.initialize());
 app.use(passport.session());
 
