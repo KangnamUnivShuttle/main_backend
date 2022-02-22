@@ -6,6 +6,7 @@ import passport from 'passport';
 import session from 'express-session';
 import passportLocal from 'passport-local';
 import logger from './logger';
+import "reflect-metadata";
 const LocalStrategy = passportLocal.Strategy;
 
 export const app = express();
