@@ -7,14 +7,19 @@
 		"responses": {},
 		"schemas": {
 			"BasicResponseModel": {
+				"description": "기본 응답 모델",
 				"properties": {
 					"message": {
-						"type": "string"
+						"type": "string",
+						"description": "오류 메시지"
 					},
 					"success": {
-						"type": "boolean"
+						"type": "boolean",
+						"description": "성공 실패 여부, true: 성공, false: 실패"
 					},
-					"data": {}
+					"data": {
+						"description": "처리 내용 반환"
+					}
 				},
 				"required": [
 					"message",
@@ -228,6 +233,7 @@
 						}
 					}
 				},
+				"summary": "설치된 플러그인의 세부 정보를 반환",
 				"tags": [
 					"Plugin"
 				],
@@ -238,6 +244,29 @@
 				],
 				"parameters": [
 					{
+						"description": "페이지 번호",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "한 페이지에 렌더링 할 데이터 건 수",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "특정 플러그인 idx 에 해당하는 정보 반환, null 이면 리스트 반환",
 						"in": "query",
 						"name": "pid",
 						"required": false,
@@ -252,7 +281,7 @@
 				"operationId": "RegisterPlugin",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "등록 성공 / 실패 여부",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -262,6 +291,7 @@
 						}
 					}
 				},
+				"summary": "새로운 플러그인 설치",
 				"tags": [
 					"Plugin"
 				],
@@ -286,6 +316,7 @@
 						}
 					}
 				},
+				"summary": "기존 설치된 플러그인 변경",
 				"tags": [
 					"Plugin"
 				],
@@ -312,6 +343,7 @@
 						}
 					}
 				},
+				"summary": "기존 설치된 플러그인 삭제",
 				"tags": [
 					"Plugin"
 				],
@@ -322,6 +354,7 @@
 				],
 				"parameters": [
 					{
+						"description": "삭제할 플러그인 idx",
 						"in": "path",
 						"name": "pid",
 						"required": true,
@@ -338,7 +371,7 @@
 				"operationId": "GetInfo",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "특정 런타임 세부 정보 혹은 런타임 목록",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -348,6 +381,7 @@
 						}
 					}
 				},
+				"summary": "런타임 내용 확인",
 				"tags": [
 					"Runtime"
 				],
@@ -358,6 +392,29 @@
 				],
 				"parameters": [
 					{
+						"description": "페이지 번호",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "한 페이지에 렌더링 할 데이터 건 수",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "런타임 idx",
 						"in": "query",
 						"name": "rid",
 						"required": false,
@@ -384,6 +441,7 @@
 						}
 					}
 				},
+				"summary": "런타임 등록",
 				"tags": [
 					"Runtime"
 				],
@@ -410,12 +468,14 @@
 						}
 					}
 				},
+				"summary": "런타임 실행",
 				"tags": [
 					"Runtime"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "실행할 런타임 idx",
 						"in": "path",
 						"name": "rid",
 						"required": true,
@@ -442,6 +502,7 @@
 						}
 					}
 				},
+				"summary": "런타임 수정",
 				"tags": [
 					"Runtime"
 				],
@@ -468,6 +529,7 @@
 						}
 					}
 				},
+				"summary": "런타임 삭제",
 				"tags": [
 					"Runtime"
 				],
@@ -478,6 +540,7 @@
 				],
 				"parameters": [
 					{
+						"description": "삭제할 런타임 idx",
 						"in": "path",
 						"name": "rid",
 						"required": true,

@@ -161,6 +161,8 @@ export function RegisterRoutes(app: express.Router) {
 
             function PluginController_getInfo(request: any, response: any, next: any) {
             const args = {
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
                     pid: {"in":"query","name":"pid","dataType":"double"},
             };
 
@@ -255,6 +257,8 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeController_getInfo(request: any, response: any, next: any) {
             const args = {
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
                     rid: {"in":"query","name":"rid","dataType":"double"},
             };
 
