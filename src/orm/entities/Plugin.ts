@@ -35,6 +35,7 @@ export class Plugin {
   @Column("int", {
     name: "port",
     comment: "해당 플러그인이 사용될 내부포트 번호",
+    default: () => "'10000'",
   })
   port: number;
 
