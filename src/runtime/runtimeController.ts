@@ -8,8 +8,10 @@ import {
     Path,
     Put,
     Delete,
-    Security
+    Security,
+    Body
   } from "tsoa";
+import { KakaoChatReqModel } from "../models/kakaochat.model";
 import { BasicResponseModel } from "../models/response.model";
 
   @Tags("Runtime")
@@ -46,6 +48,20 @@ import { BasicResponseModel } from "../models/response.model";
         } as BasicResponseModel;
     }
 
+    requestLocalPlugin(input: KakaoChatReqModel): Promise<any> {
+        return new Promise<any>(() => {});
+    }
+
+    @Post('kakaochat')
+    public async kakaoChatRuntime(
+        @Body() body: KakaoChatReqModel
+    ): Promise<any> {
+
+
+
+        return {};
+    }
+
     /**
      * @summary 런타임 실행
      * @param rid 실행할 런타임 idx
@@ -54,6 +70,9 @@ import { BasicResponseModel } from "../models/response.model";
     public async execute(
         @Path() rid: number
     ): Promise<BasicResponseModel> {
+
+
+
         return {
 
         } as BasicResponseModel;

@@ -6,3 +6,10 @@ export interface PayloadPlugin {
     url: string;
     env: string;
 }
+
+export interface PluginInfoModel {
+    url: string;
+    env: string;
+    sampleOfResponse: any;
+    sampleOfRequest: any;
+}
