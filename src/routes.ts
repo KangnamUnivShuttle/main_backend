@@ -32,7 +32,79 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlockOrIntentOrBot": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Properties": {
+        "dataType": "refObject",
+        "properties": {
+            "appUserId": {"dataType":"string","required":true},
+            "appUserStatus": {"dataType":"string","required":true},
+            "plusfriend_user_key": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "User": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "properties": {"ref":"Properties","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "timezone": {"dataType":"string","required":true},
+            "block": {"ref":"BlockOrIntentOrBot","required":true},
+            "utterance": {"dataType":"string","required":true},
+            "lang": {"dataType":"string","required":true},
+            "user": {"ref":"User","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ParamsOrDetailParams": {
+        "dataType": "refObject",
+        "properties": {
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Action": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "clientExtra": {"dataType":"string","required":true},
+            "params": {"ref":"ParamsOrDetailParams","required":true},
+            "id": {"dataType":"string","required":true},
+            "detailParams": {"ref":"ParamsOrDetailParams","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "KakaoChatReqModel": {
+        "dataType": "refObject",
+        "properties": {
+            "intent": {"ref":"BlockOrIntentOrBot","required":true},
+            "userRequest": {"ref":"UserRequest","required":true},
+            "contexts": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"enum","enums":[null]}},{"dataType":"enum","enums":[null]}]},
+            "bot": {"ref":"BlockOrIntentOrBot","required":true},
+            "action": {"ref":"Action","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserSample": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"double","required":true},
@@ -44,14 +116,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_User.email-or-name-or-phoneNumbers_": {
+    "Pick_UserSample.email-or-name-or-phoneNumbers_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"phoneNumbers":{"dataType":"array","array":{"dataType":"string"},"required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserCreationParams": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_User.email-or-name-or-phoneNumbers_","validators":{}},
+        "type": {"ref":"Pick_UserSample.email-or-name-or-phoneNumbers_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -396,6 +468,29 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.registerNewRuntime.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/runtime/kakaochat',
+
+            function RuntimeController_kakaoChatRuntime(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"KakaoChatReqModel"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new RuntimeController();
+
+
+            const promise = controller.kakaoChatRuntime.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

@@ -29,7 +29,159 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BlockOrIntentOrBot": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Properties": {
+				"properties": {
+					"appUserId": {
+						"type": "string"
+					},
+					"appUserStatus": {
+						"type": "string"
+					},
+					"plusfriend_user_key": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"appUserId",
+					"appUserStatus",
+					"plusfriend_user_key"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"User": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"properties": {
+						"$ref": "#/components/schemas/Properties"
+					}
+				},
+				"required": [
+					"id",
+					"type",
+					"properties"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserRequest": {
+				"properties": {
+					"timezone": {
+						"type": "string"
+					},
+					"block": {
+						"$ref": "#/components/schemas/BlockOrIntentOrBot"
+					},
+					"utterance": {
+						"type": "string"
+					},
+					"lang": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					}
+				},
+				"required": [
+					"timezone",
+					"block",
+					"utterance",
+					"lang",
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ParamsOrDetailParams": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Action": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"clientExtra": {
+						"type": "string"
+					},
+					"params": {
+						"$ref": "#/components/schemas/ParamsOrDetailParams"
+					},
+					"id": {
+						"type": "string"
+					},
+					"detailParams": {
+						"$ref": "#/components/schemas/ParamsOrDetailParams"
+					}
+				},
+				"required": [
+					"name",
+					"clientExtra",
+					"params",
+					"id",
+					"detailParams"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"KakaoChatReqModel": {
+				"properties": {
+					"intent": {
+						"$ref": "#/components/schemas/BlockOrIntentOrBot"
+					},
+					"userRequest": {
+						"$ref": "#/components/schemas/UserRequest"
+					},
+					"contexts": {
+						"items": {
+							"type": "number",
+							"enum": [
+								null
+							],
+							"nullable": true
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"bot": {
+						"$ref": "#/components/schemas/BlockOrIntentOrBot"
+					},
+					"action": {
+						"$ref": "#/components/schemas/Action"
+					}
+				},
+				"required": [
+					"intent",
+					"userRequest",
+					"bot",
+					"action"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserSample": {
 				"properties": {
 					"id": {
 						"type": "number",
@@ -64,7 +216,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Pick_User.email-or-name-or-phoneNumbers_": {
+			"Pick_UserSample.email-or-name-or-phoneNumbers_": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -88,7 +240,7 @@
 				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
 			"UserCreationParams": {
-				"$ref": "#/components/schemas/Pick_User.email-or-name-or-phoneNumbers_"
+				"$ref": "#/components/schemas/Pick_UserSample.email-or-name-or-phoneNumbers_"
 			}
 		},
 		"securitySchemes": {}
@@ -593,6 +745,36 @@
 				"parameters": []
 			}
 		},
+		"/runtime/kakaochat": {
+			"post": {
+				"operationId": "KakaoChatRuntime",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/KakaoChatReqModel"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/runtime/execute/{rid}": {
 			"post": {
 				"operationId": "Execute",
@@ -701,7 +883,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/UserSample"
 								}
 							}
 						}

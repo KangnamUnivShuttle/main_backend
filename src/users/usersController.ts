@@ -10,7 +10,7 @@ import {
     SuccessResponse,
     Tags
   } from "tsoa";
-  import { User } from "./user";
+  import { UserSample } from "./user";
   import { UsersService, UserCreationParams } from "./usersService";
 
   @Tags("Users Test")
@@ -20,7 +20,7 @@ import {
     public async getUser(
       @Path() userId: number,
       @Query() name?: string
-    ): Promise<User> {
+    ): Promise<UserSample> {
       return new UsersService().get(userId, name);
     }
 
