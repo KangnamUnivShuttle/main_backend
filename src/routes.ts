@@ -32,6 +32,238 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimpleText": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimpleTextOutputsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "simpleText": {"ref":"SimpleText","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimpleImage": {
+        "dataType": "refObject",
+        "properties": {
+            "imageUrl": {"dataType":"string","required":true},
+            "altText": {"dataType":"string","required":true},
+            "forwardable": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimpleImageOutputsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "simpleImage": {"ref":"SimpleImage","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Thumbnail": {
+        "dataType": "refObject",
+        "properties": {
+            "imageUrl": {"dataType":"string","required":true},
+            "width": {"dataType":"double"},
+            "height": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Profile": {
+        "dataType": "refObject",
+        "properties": {
+            "imageUrl": {"dataType":"string","required":true},
+            "nickname": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Social": {
+        "dataType": "refObject",
+        "properties": {
+            "like": {"dataType":"double","required":true},
+            "comment": {"dataType":"double","required":true},
+            "share": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ButtonsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "action": {"dataType":"string","required":true},
+            "label": {"dataType":"string","required":true},
+            "messageText": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "webLinkUrl": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BasicCard": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "thumbnail": {"ref":"Thumbnail","required":true},
+            "profile": {"ref":"Profile","required":true},
+            "social": {"ref":"Social","required":true},
+            "buttons": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ButtonsEntity"}},{"dataType":"enum","enums":[null]}]},
+            "forwardable": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BasicCardOutputsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "basicCard": {"ref":"BasicCard","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Link": {
+        "dataType": "refObject",
+        "properties": {
+            "web": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ThumbnailsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "imageUrl": {"dataType":"string","required":true},
+            "link": {"ref":"Link","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CommerceCard": {
+        "dataType": "refObject",
+        "properties": {
+            "description": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "discount": {"dataType":"double","required":true},
+            "currency": {"dataType":"string","required":true},
+            "thumbnails": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ThumbnailsEntity"}},{"dataType":"enum","enums":[null]}]},
+            "profile": {"ref":"Profile","required":true},
+            "buttons": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ButtonsEntity"}},{"dataType":"enum","enums":[null]}]},
+            "forwardable": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CommerceCardOutputsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "commerceCard": {"ref":"CommerceCard","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemListEntityOrImageTitleOrItemListSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemCard": {
+        "dataType": "refObject",
+        "properties": {
+            "imageTitle": {"ref":"ItemListEntityOrImageTitleOrItemListSummary","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "thumbnail": {"ref":"Thumbnail","required":true},
+            "profile": {"ref":"Profile","required":true},
+            "itemList": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ItemListEntityOrImageTitleOrItemListSummary"}},{"dataType":"enum","enums":[null]}]},
+            "itemListAlignment": {"dataType":"string","required":true},
+            "itemListSummary": {"ref":"ItemListEntityOrImageTitleOrItemListSummary","required":true},
+            "buttons": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ButtonsEntity"}},{"dataType":"enum","enums":[null]}]},
+            "buttonLayout": {"dataType":"string","required":true},
+            "forwardable": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemCardOutputsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "itemCard": {"ref":"ItemCard","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "imageUrl": {"dataType":"string"},
+            "link": {"ref":"Link"},
+            "thumbnail": {"ref":"Thumbnail"},
+            "buttons": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ButtonsEntity"}},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Carousel": {
+        "dataType": "refObject",
+        "properties": {
+            "type": {"dataType":"string","required":true},
+            "items": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"ItemsEntity"}},{"dataType":"enum","enums":[null]}]},
+            "forwardable": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CarouselOutputsEntity": {
+        "dataType": "refObject",
+        "properties": {
+            "carousel": {"ref":"Carousel","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "QuickReplyModel": {
+        "dataType": "refObject",
+        "properties": {
+            "messageText": {"dataType":"string","required":true},
+            "action": {"dataType":"string","required":true},
+            "label": {"dataType":"string","required":true},
+            "blockId": {"dataType":"string"},
+            "extra": {"dataType":"any"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Template": {
+        "dataType": "refObject",
+        "properties": {
+            "outputs": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"ref":"SimpleTextOutputsEntity"},{"ref":"SimpleImageOutputsEntity"},{"ref":"BasicCardOutputsEntity"},{"ref":"CommerceCardOutputsEntity"},{"ref":"ItemCardOutputsEntity"},{"ref":"CarouselOutputsEntity"}]}},
+            "quickReplies": {"dataType":"array","array":{"dataType":"refObject","ref":"QuickReplyModel"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "KakaoChatResModel": {
+        "dataType": "refObject",
+        "properties": {
+            "version": {"dataType":"string","required":true},
+            "template": {"ref":"Template","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BlockOrIntentOrBot": {
         "dataType": "refObject",
         "properties": {

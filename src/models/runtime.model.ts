@@ -4,6 +4,10 @@ import { BasicResponseModel } from "./response.model";
 
 export interface RuntimePayloadModel {
     pluginList: PluginInfoModel[];
-    kakaoChatPayload: KakaoChatReqModel[];
+    kakaoChatPayload?: KakaoChatReqModel;
     processResult: BasicResponseModel[];
+}
+
+export interface RuntimeHashmapModel {
+    [key: string]: RuntimePayloadModel;
 }

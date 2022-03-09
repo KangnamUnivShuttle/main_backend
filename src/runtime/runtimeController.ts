@@ -9,10 +9,16 @@ import {
     Put,
     Delete,
     Security,
-    Body
+    Body,
+    Response
   } from "tsoa";
-import { KakaoChatReqModel } from "../models/kakaochat.model";
+import { postRequestToInstance } from "../lib/internalRequest";
+import logger from "../logger";
+import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model";
 import { BasicResponseModel } from "../models/response.model";
+import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
+import { returnErrorMessage } from "./runtimeHandler";
 
   @Tags("Runtime")
   @Route("runtime")
@@ -52,14 +58,46 @@ import { BasicResponseModel } from "../models/response.model";
         return new Promise<any>(() => {});
     }
 
+    @Response<KakaoChatResModel>(200, 'Response ok')
     @Post('kakaochat')
     public async kakaoChatRuntime(
         @Body() body: KakaoChatReqModel
-    ): Promise<any> {
+    ): Promise<KakaoChatResModel> {
 
+        const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
+            'sample_weather': {
+                pluginList: [],
+                kakaoChatPayload: body,
+                processResult: []
+            } as RuntimePayloadModel
+        };
 
+        const selectedkey = 'sample_weather'
 
-        return {};
+        if (kakaoChatRuntimeHashmap.hasOwnProperty(selectedkey)) {
+            try {
+                const currentRuntime = kakaoChatRuntimeHashmap[selectedkey]
+                let payload = body as any
+                for (let idx = 0; idx < currentRuntime.pluginList.length; idx ++) {
+                    currentRuntime.processResult.push(await postRequestToInstance(currentRuntime.pluginList[idx].url, payload))
+                    payload = currentRuntime.processResult[currentRuntime.processResult.length - 1]
+                }
+
+                return payload
+            } catch (err: unknown) {
+                // https://stackoverflow.com/a/64452744/7270469
+                if (err instanceof Error) {
+                    logger.error(`[runtimeController] [kakaoChatRuntime] Runtime error detected. ${err.message}`)
+                    return returnErrorMessage();
+                } else {
+                    logger.error(`[runtimeController] [kakaoChatRuntime] Undefined runtime error detected.`)
+                    return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR);
+                }
+            }
+        }
+
+        logger.error(`[runtimeController] [kakaoChatRuntime] Undefined chat request type: ${selectedkey}`)
+        return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY);
     }
 
     /**

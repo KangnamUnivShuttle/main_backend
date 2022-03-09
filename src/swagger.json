@@ -29,6 +29,509 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SimpleText": {
+				"properties": {
+					"text": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"text"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SimpleTextOutputsEntity": {
+				"properties": {
+					"simpleText": {
+						"$ref": "#/components/schemas/SimpleText"
+					}
+				},
+				"required": [
+					"simpleText"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SimpleImage": {
+				"properties": {
+					"imageUrl": {
+						"type": "string"
+					},
+					"altText": {
+						"type": "string"
+					},
+					"forwardable": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"imageUrl",
+					"altText"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SimpleImageOutputsEntity": {
+				"properties": {
+					"simpleImage": {
+						"$ref": "#/components/schemas/SimpleImage"
+					}
+				},
+				"required": [
+					"simpleImage"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Thumbnail": {
+				"properties": {
+					"imageUrl": {
+						"type": "string"
+					},
+					"width": {
+						"type": "number",
+						"format": "double"
+					},
+					"height": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"imageUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Profile": {
+				"properties": {
+					"imageUrl": {
+						"type": "string"
+					},
+					"nickname": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"imageUrl",
+					"nickname"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Social": {
+				"properties": {
+					"like": {
+						"type": "number",
+						"format": "double"
+					},
+					"comment": {
+						"type": "number",
+						"format": "double"
+					},
+					"share": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"like",
+					"comment",
+					"share"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ButtonsEntity": {
+				"properties": {
+					"action": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"messageText": {
+						"type": "string",
+						"nullable": true
+					},
+					"webLinkUrl": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"action",
+					"label"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BasicCard": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"thumbnail": {
+						"$ref": "#/components/schemas/Thumbnail"
+					},
+					"profile": {
+						"$ref": "#/components/schemas/Profile"
+					},
+					"social": {
+						"$ref": "#/components/schemas/Social"
+					},
+					"buttons": {
+						"items": {
+							"$ref": "#/components/schemas/ButtonsEntity"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"forwardable": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"title",
+					"description",
+					"thumbnail",
+					"profile",
+					"social"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BasicCardOutputsEntity": {
+				"properties": {
+					"basicCard": {
+						"$ref": "#/components/schemas/BasicCard"
+					}
+				},
+				"required": [
+					"basicCard"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Link": {
+				"properties": {
+					"web": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"web"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ThumbnailsEntity": {
+				"properties": {
+					"imageUrl": {
+						"type": "string"
+					},
+					"link": {
+						"$ref": "#/components/schemas/Link"
+					}
+				},
+				"required": [
+					"imageUrl",
+					"link"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CommerceCard": {
+				"properties": {
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"discount": {
+						"type": "number",
+						"format": "double"
+					},
+					"currency": {
+						"type": "string"
+					},
+					"thumbnails": {
+						"items": {
+							"$ref": "#/components/schemas/ThumbnailsEntity"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"profile": {
+						"$ref": "#/components/schemas/Profile"
+					},
+					"buttons": {
+						"items": {
+							"$ref": "#/components/schemas/ButtonsEntity"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"forwardable": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"description",
+					"price",
+					"discount",
+					"currency",
+					"profile"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CommerceCardOutputsEntity": {
+				"properties": {
+					"commerceCard": {
+						"$ref": "#/components/schemas/CommerceCard"
+					}
+				},
+				"required": [
+					"commerceCard"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemListEntityOrImageTitleOrItemListSummary": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"description"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemCard": {
+				"properties": {
+					"imageTitle": {
+						"$ref": "#/components/schemas/ItemListEntityOrImageTitleOrItemListSummary"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"thumbnail": {
+						"$ref": "#/components/schemas/Thumbnail"
+					},
+					"profile": {
+						"$ref": "#/components/schemas/Profile"
+					},
+					"itemList": {
+						"items": {
+							"$ref": "#/components/schemas/ItemListEntityOrImageTitleOrItemListSummary"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"itemListAlignment": {
+						"type": "string"
+					},
+					"itemListSummary": {
+						"$ref": "#/components/schemas/ItemListEntityOrImageTitleOrItemListSummary"
+					},
+					"buttons": {
+						"items": {
+							"$ref": "#/components/schemas/ButtonsEntity"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"buttonLayout": {
+						"type": "string"
+					},
+					"forwardable": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"imageTitle",
+					"title",
+					"description",
+					"thumbnail",
+					"profile",
+					"itemListAlignment",
+					"itemListSummary",
+					"buttonLayout"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemCardOutputsEntity": {
+				"properties": {
+					"itemCard": {
+						"$ref": "#/components/schemas/ItemCard"
+					}
+				},
+				"required": [
+					"itemCard"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemsEntity": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"link": {
+						"$ref": "#/components/schemas/Link"
+					},
+					"thumbnail": {
+						"$ref": "#/components/schemas/Thumbnail"
+					},
+					"buttons": {
+						"items": {
+							"$ref": "#/components/schemas/ButtonsEntity"
+						},
+						"type": "array",
+						"nullable": true
+					}
+				},
+				"required": [
+					"title",
+					"description"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Carousel": {
+				"properties": {
+					"type": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ItemsEntity"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"forwardable": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CarouselOutputsEntity": {
+				"properties": {
+					"carousel": {
+						"$ref": "#/components/schemas/Carousel"
+					}
+				},
+				"required": [
+					"carousel"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"QuickReplyModel": {
+				"properties": {
+					"messageText": {
+						"type": "string"
+					},
+					"action": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"blockId": {
+						"type": "string"
+					},
+					"extra": {}
+				},
+				"required": [
+					"messageText",
+					"action",
+					"label"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Template": {
+				"properties": {
+					"outputs": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/components/schemas/SimpleTextOutputsEntity"
+								},
+								{
+									"$ref": "#/components/schemas/SimpleImageOutputsEntity"
+								},
+								{
+									"$ref": "#/components/schemas/BasicCardOutputsEntity"
+								},
+								{
+									"$ref": "#/components/schemas/CommerceCardOutputsEntity"
+								},
+								{
+									"$ref": "#/components/schemas/ItemCardOutputsEntity"
+								},
+								{
+									"$ref": "#/components/schemas/CarouselOutputsEntity"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"quickReplies": {
+						"items": {
+							"$ref": "#/components/schemas/QuickReplyModel"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"KakaoChatResModel": {
+				"properties": {
+					"version": {
+						"type": "string"
+					},
+					"template": {
+						"$ref": "#/components/schemas/Template"
+					}
+				},
+				"required": [
+					"version",
+					"template"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"BlockOrIntentOrBot": {
 				"properties": {
 					"id": {
@@ -753,7 +1256,9 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/KakaoChatResModel"
+								}
 							}
 						}
 					}
