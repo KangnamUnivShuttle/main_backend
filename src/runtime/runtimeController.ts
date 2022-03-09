@@ -17,7 +17,7 @@ import logger from "../logger";
 import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
-import { ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
+import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
 import { returnErrorMessage } from "./runtimeHandler";
 
   @Tags("Runtime")
@@ -73,10 +73,21 @@ import { returnErrorMessage } from "./runtimeHandler";
         };
 
         const selectedkey = 'sample_weather'
+        if (selectedkey) {
+            logger.info(`[runtimeController] [kakaoChatRuntime] Current runtime is ${selectedkey}`)
+        } else {
+            logger.warn(`[runtimeController] [kakaoChatRuntime] Runtime not selected.`)
+        }
 
         if (kakaoChatRuntimeHashmap.hasOwnProperty(selectedkey)) {
             try {
                 const currentRuntime = kakaoChatRuntimeHashmap[selectedkey]
+
+                if (currentRuntime.pluginList.length <= 0) {
+                    logger.error(`[runtimeController] [kakaoChatRuntime] This runtime(${selectedkey})'s plugin list is empty.`)
+                    return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME)
+                }
+
                 let payload = body as any
                 for (let idx = 0; idx < currentRuntime.pluginList.length; idx ++) {
                     currentRuntime.processResult.push(await postRequestToInstance(currentRuntime.pluginList[idx].url, payload))
