@@ -26,6 +26,8 @@ describe("Run chatbot runtime", () => {
         })
     });
     it('Get current weather', done => {
+        const weatherPayload = JSON.parse(JSON.stringify(SAMPLE_KAKAO_REQ_OBJ))
+        weatherPayload.userRequest.utterance = '오늘 날씨 어때?'
         agent.post('/runtime/kakaochat')
         .type('application/json')
         .send(SAMPLE_KAKAO_REQ_OBJ)
