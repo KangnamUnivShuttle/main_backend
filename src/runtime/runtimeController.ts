@@ -15,6 +15,7 @@ import {
 import { postRequestToInstance } from "../lib/internalRequest";
 import logger from "../logger";
 import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model";
+import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
@@ -66,7 +67,11 @@ import { returnErrorMessage } from "./runtimeHandler";
 
         const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
             'sample_weather': {
-                pluginList: [],
+                pluginList: [
+                    {
+                        url: 'localhost'
+                    } as PluginInfoModel
+                ],
                 kakaoChatPayload: body,
                 processResult: []
             } as RuntimePayloadModel

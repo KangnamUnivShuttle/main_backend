@@ -33,6 +33,13 @@ describe("Run chatbot runtime", () => {
         .send(SAMPLE_KAKAO_REQ_OBJ)
         .then(result => {
             expect(result.status).toBe(200);
+
+            const data = JSON.parse(result.text)
+            expect(data.version).toBe('2.0')
+            expect(data.template.outputs.length).toBe(1)
+            // console.log('asdf', JSON.stringify(data.template.outputs[0].listCard), 'fff', JSON.stringify(data.template.outputs[0]))
+            expect(data.template.outputs[0].listCard.items.length).toBe(4)
+            expect(data.template.quickReplies.length).toBe(1)
             done();
         })
     });

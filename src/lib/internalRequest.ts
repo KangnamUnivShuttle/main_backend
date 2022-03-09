@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import logger from '../logger';
 
-export function postRequestToInstance(instanceName: string, payload: any, port: number = 10000, timeout: number = 1000, route: string = 'chat') {
+export function postRequestToInstance(instanceName: string, payload: any, port: number = 15000, timeout: number = 1500, route: string = 'chat') {
     logger.debug(`[internalRequest] [postRequestToInstance] Send payload to ${instanceName}:${port}, data:`, payload)
     return new Promise<any>((resolve, reject) => {
 
