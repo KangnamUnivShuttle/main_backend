@@ -10,7 +10,7 @@
     "dev": "concurrently \"tsoa spec-and-routes\" \"nodemon --config nodemon.json\"",
     "tslint": "tslint -c tslint.json 'src/**/*.ts'",
     "tslint:fix": "tslint -c tslint.json 'src/**/*.ts' --fix",
-    "test": "jest --forceExit --coverage --verbose --config ./jest.config.json --detectOpenHandles"
+    "test": "jest --forceExit --coverage --verbose --config ./jest.config.json --detectOpenHandles --maxWorkers=1"
   },
   "repository": {
     "type": "git",
