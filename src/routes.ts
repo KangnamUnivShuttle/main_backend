@@ -327,11 +327,11 @@ const models: TsoaRoute.Models = {
     "KakaoChatReqModel": {
         "dataType": "refObject",
         "properties": {
-            "intent": {"ref":"BlockOrIntentOrBot","required":true},
+            "intent": {"ref":"BlockOrIntentOrBot"},
             "userRequest": {"ref":"UserRequest","required":true},
             "contexts": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"enum","enums":[null]}},{"dataType":"enum","enums":[null]}]},
             "bot": {"ref":"BlockOrIntentOrBot","required":true},
-            "action": {"ref":"Action","required":true},
+            "action": {"ref":"Action"},
         },
         "additionalProperties": false,
     },

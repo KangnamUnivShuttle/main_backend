@@ -676,10 +676,8 @@
 					}
 				},
 				"required": [
-					"intent",
 					"userRequest",
-					"bot",
-					"action"
+					"bot"
 				],
 				"type": "object",
 				"additionalProperties": false

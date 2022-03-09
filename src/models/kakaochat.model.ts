@@ -1,9 +1,9 @@
 export interface KakaoChatReqModel {
-    intent: BlockOrIntentOrBot;
+    intent?: BlockOrIntentOrBot;
     userRequest: UserRequest;
     contexts?: (null)[] | null;
     bot: BlockOrIntentOrBot;
-    action: Action;
+    action?: Action;
 }
 export interface BlockOrIntentOrBot {
     id: string;
@@ -33,9 +33,9 @@ export interface Properties {
 export interface Action {
     name: string;
     clientExtra: string;
-    params: ParamsOrDetailParams;
+    params?: ParamsOrDetailParams;
     id: string;
-    detailParams: ParamsOrDetailParams;
+    detailParams?: ParamsOrDetailParams;
 }
 export interface ParamsOrDetailParams {
 }

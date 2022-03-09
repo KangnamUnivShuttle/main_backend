@@ -4,14 +4,14 @@ import request from 'supertest';
 let server: any;
 let agent: request.SuperAgentTest;
 
-beforeEach((done) => {
+beforeAll((done) => {
     const {app, httpServer} = require('../../src/server');
     server = httpServer
     agent = request.agent(server);
     done();
 });
 
-afterEach((done) => {
+afterAll((done) => {
     return  server && server.close(done);
 });
 
