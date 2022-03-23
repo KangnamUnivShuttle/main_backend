@@ -19,7 +19,7 @@ import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
-import { returnErrorMessage, updateUserState } from "./runtimeHandler";
+import { getRecentUserState, returnErrorMessage, updateUserState } from "./runtimeHandler";
 
   @Tags("Runtime")
   @Route("runtime")
@@ -64,6 +64,8 @@ import { returnErrorMessage, updateUserState } from "./runtimeHandler";
     public async kakaoChatRuntime(
         @Body() body: KakaoChatReqModel
     ): Promise<KakaoChatResModel> {
+
+        const currentUserRecentBlockId = await getRecentUserState(body.userRequest.user.id)
 
         const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
             'sample_weather': {

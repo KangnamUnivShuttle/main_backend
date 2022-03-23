@@ -25,6 +25,31 @@ export function returnErrorMessage(message: string = '오류가 발생하였습�
     }
 }
 
+export async function getRecentUserState(userkey: string) {
+
+    let lastBlockId = 'intro'
+
+    logger.debug(`[runtimeHandler] [getRecentUserState] userkey: ${userkey}`)
+
+    const connection = getConnection();
+
+    try {
+        const chatUserRepo = await connection.getRepository(ChatUser)
+        const chatUser = await chatUserRepo.findOne({userkey})
+
+        if (chatUser) {
+            logger.debug(`[runtimeHandler] [getRecentUserState] userkey: ${userkey}, last block: ${chatUser.currentBlockId}`)
+            return chatUser.currentBlockId;
+        } else {
+            throw new Error(`Not exist userkey ${userkey}`)
+        }
+    } catch (err: any) {
+        logger.error(`[runtimeHandler] [getRecentUserState] userkey: ${userkey} error: ${err.message}`)        
+    } finally {
+        return lastBlockId
+    }
+}
+
 export async function updateUserState(userkey: string, blockID: string) {
 
     logger.debug(`[runtimeHandler] [updateUserState] userkey: ${userkey}, set blockID: ${blockID}`)
