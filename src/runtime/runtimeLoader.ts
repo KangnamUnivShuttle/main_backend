@@ -18,8 +18,8 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
     'intro': {
         pluginList: [
             {
-                url: 'localhost',
-                port: '15001'
+                url: 'plugin_simple_toss_intro',
+                port: '15000'
             } as PluginInfoModel
         ],
         kakaoChatPayload: undefined,
@@ -46,7 +46,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
     'sample_weather': {
         pluginList: [
             {
-                url: 'localhost',
+                url: 'plugin_weather_1',
                 port: '15000'
             } as PluginInfoModel
         ],
@@ -186,8 +186,8 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
     'sample_shuttle_info_selector': {
         pluginList: [
             {
-                url: 'localhost',
-                port: '15008'
+                url: 'plugin_simple_toss_shuttle_selector',
+                port: '15000'
             } as PluginInfoModel
         ],
         kakaoChatPayload: undefined,
