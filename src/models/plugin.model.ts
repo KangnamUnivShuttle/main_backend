@@ -8,6 +8,7 @@ export interface PayloadPlugin {
 }
 
 export interface PluginInfoModel {
+    port: string;
     url: string;
     env: string;
     sampleOfResponse: any;
