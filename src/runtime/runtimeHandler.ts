@@ -40,13 +40,11 @@ export async function getRecentUserState(userkey: string) {
         if (chatUser) {
             logger.debug(`[runtimeHandler] [getRecentUserState] userkey: ${userkey}, last block: ${chatUser.currentBlockId}`)
             return chatUser.currentBlockId;
-        } else {
-            throw new Error(`Not exist userkey ${userkey}`)
         }
+        throw new Error(`Not exist userkey ${userkey}`)
     } catch (err: any) {
-        logger.error(`[runtimeHandler] [getRecentUserState] userkey: ${userkey} error: ${err.message}`)        
-    } finally {
-        return lastBlockId
+        logger.error(`[runtimeHandler] [getRecentUserState] userkey: ${userkey} error: ${err.message}`)       
+        return lastBlockId 
     }
 }
 
@@ -64,7 +62,7 @@ export async function updateUserState(userkey: string, blockID: string) {
         logger.debug(`[runtimeHandler] [updateUserState] userkey: ${userkey} start transaction`)
         
         const chatUserRepo = await connection.getRepository(ChatUser)
-        const isExistUser = await chatUserRepo.findOne({userkey})
+        const isExistUser = await chatUserRepo.findOne({userkey: userkey})
 
         if (isExistUser) {
             logger.debug(`[runtimeHandler] [updateUserState] userkey: ${userkey} already exist`)
@@ -74,6 +72,7 @@ export async function updateUserState(userkey: string, blockID: string) {
                 lastBlockId: isExistUser.currentBlockId,
                 updateDatetime: 'current_timestamp()'
             })
+            .where("userkey = :userkey", { userkey })
             .execute();
         } else {
             logger.debug(`[runtimeHandler] [updateUserState] userkey: ${userkey} newbie`)

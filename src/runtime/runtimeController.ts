@@ -20,6 +20,7 @@ import { BasicResponseModel } from "../models/response.model";
 import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
 import { getRecentUserState, returnErrorMessage, updateUserState } from "./runtimeHandler";
+import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
 
   @Tags("Runtime")
   @Route("runtime")
@@ -64,37 +65,15 @@ import { getRecentUserState, returnErrorMessage, updateUserState } from "./runti
     public async kakaoChatRuntime(
         @Body() body: KakaoChatReqModel
     ): Promise<KakaoChatResModel> {
+        const userKey = body.userRequest.user.id
+        const currentUserRecentBlockId = await getRecentUserState(userKey)
 
-        const currentUserRecentBlockId = await getRecentUserState(body.userRequest.user.id)
+        logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
-        const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
-            'sample_weather': {
-                pluginList: [
-                    {
-                        url: 'localhost'
-                    } as PluginInfoModel
-                ],
-                kakaoChatPayload: body,
-                processResult: [],
-                nextBlock: []
-            } as RuntimePayloadModel,
-            'sample_shuttle_route': {
-                
-            } as RuntimePayloadModel,
-            'sample_nearest_bus_time': {
+        const selectedkey = getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId) 
+        const currentRuntime = getRuntimePayload(selectedkey)
 
-            } as RuntimePayloadModel,
-            'sample_shuttle_route_station_list': {
-
-            } as RuntimePayloadModel,
-            'sample_shuttle_info_selector': {
-
-            } as RuntimePayloadModel
-        };
-
-        const selectedkey = 'sample_weather'
-
-        await updateUserState(body.userRequest.user.id, selectedkey)
+        await updateUserState(userKey, selectedkey || 'intro')
 
         if (selectedkey) {
             logger.info(`[runtimeController] [kakaoChatRuntime] Current runtime is ${selectedkey}`)
@@ -102,10 +81,8 @@ import { getRecentUserState, returnErrorMessage, updateUserState } from "./runti
             logger.warn(`[runtimeController] [kakaoChatRuntime] Runtime not selected.`)
         }
 
-        if (kakaoChatRuntimeHashmap.hasOwnProperty(selectedkey)) {
+        if (currentRuntime) {
             try {
-                const currentRuntime = kakaoChatRuntimeHashmap[selectedkey]
-
                 if (currentRuntime.pluginList.length <= 0) {
                     logger.error(`[runtimeController] [kakaoChatRuntime] This runtime(${selectedkey})'s plugin list is empty.`)
                     return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME)
