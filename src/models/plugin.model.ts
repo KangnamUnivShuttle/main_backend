@@ -10,6 +10,7 @@ export interface PayloadPlugin {
 export interface PluginInfoModel {
     port: string;
     url: string;
+    order: number;
     env: string;
     sampleOfResponse: any;
     sampleOfRequest: any;

@@ -4,7 +4,7 @@ import { BasicResponseModel } from "./response.model";
 
 export interface NextBlockModel {
     blockID: string;
-    blockInfo: QuickReplyModel;
+    quickReply: QuickReplyModel;
 }
 
 export interface RuntimePayloadModel {

@@ -1,5 +1,5 @@
 import { PluginInfoModel } from "../models/plugin.model";
-import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { NextBlockModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 
 const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
     'intro': {
@@ -11,12 +11,17 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
     'sample_weather': {
         pluginList: [
             {
-                url: 'localhost'
+                url: 'localhost',
+                port: '15000'
             } as PluginInfoModel
         ],
         kakaoChatPayload: undefined,
         processResult: [],
-        nextBlock: []
+        nextBlock: [
+            {
+                blockID: 'intro',
+            } as NextBlockModel
+        ]
     } as RuntimePayloadModel,
     'sample_shuttle_route': {
         pluginList: [],
@@ -55,7 +60,7 @@ const getBestRuntimeChoice = function(currentInputMsg: string, lastRuntimeKey: s
     const runtimeDB = loadRuntimeDB(isDev)
 
     const lastRuntimePayload = runtimeDB[lastRuntimeKey] || runtimeDB['intro']
-    const filtered = lastRuntimePayload.nextBlock.filter(block => block.blockInfo.messageText === currentInputMsg)
+    const filtered = lastRuntimePayload.nextBlock.filter(block => block.quickReply.messageText === currentInputMsg)
     if (filtered && filtered.length > 0) {
         return runtimeDB[filtered[0].blockID || 'intro']
     }
