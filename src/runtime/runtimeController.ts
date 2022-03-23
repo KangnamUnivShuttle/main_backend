@@ -19,7 +19,7 @@ import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
-import { returnErrorMessage } from "./runtimeHandler";
+import { returnErrorMessage, updateUserState } from "./runtimeHandler";
 
   @Tags("Runtime")
   @Route("runtime")
@@ -91,6 +91,9 @@ import { returnErrorMessage } from "./runtimeHandler";
         };
 
         const selectedkey = 'sample_weather'
+
+        await updateUserState(body.userRequest.user.id, selectedkey)
+
         if (selectedkey) {
             logger.info(`[runtimeController] [kakaoChatRuntime] Current runtime is ${selectedkey}`)
         } else {
