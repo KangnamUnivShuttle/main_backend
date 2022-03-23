@@ -642,9 +642,7 @@
 				"required": [
 					"name",
 					"clientExtra",
-					"params",
-					"id",
-					"detailParams"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false

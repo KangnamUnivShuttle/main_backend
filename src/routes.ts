@@ -317,9 +317,9 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string","required":true},
             "clientExtra": {"dataType":"string","required":true},
-            "params": {"ref":"ParamsOrDetailParams","required":true},
+            "params": {"ref":"ParamsOrDetailParams"},
             "id": {"dataType":"string","required":true},
-            "detailParams": {"ref":"ParamsOrDetailParams","required":true},
+            "detailParams": {"ref":"ParamsOrDetailParams"},
         },
         "additionalProperties": false,
     },
