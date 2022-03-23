@@ -113,7 +113,7 @@ import { getRecentUserState, returnErrorMessage, updateUserState } from "./runti
 
                 let payload = body as any
                 for (let idx = 0; idx < currentRuntime.pluginList.length; idx ++) {
-                    currentRuntime.processResult.push(await postRequestToInstance(currentRuntime.pluginList[idx].url, payload))
+                    currentRuntime.processResult.push(await postRequestToInstance(currentRuntime.pluginList[idx].url, payload, currentRuntime.pluginList[idx].port))
                     payload = currentRuntime.processResult[currentRuntime.processResult.length - 1]
                 }
 
