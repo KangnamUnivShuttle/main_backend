@@ -73,7 +73,20 @@ import { returnErrorMessage } from "./runtimeHandler";
                     } as PluginInfoModel
                 ],
                 kakaoChatPayload: body,
-                processResult: []
+                processResult: [],
+                nextBlock: []
+            } as RuntimePayloadModel,
+            'sample_shuttle_route': {
+                
+            } as RuntimePayloadModel,
+            'sample_nearest_bus_time': {
+
+            } as RuntimePayloadModel,
+            'sample_shuttle_route_station_list': {
+
+            } as RuntimePayloadModel,
+            'sample_shuttle_info_selector': {
+
             } as RuntimePayloadModel
         };
 
