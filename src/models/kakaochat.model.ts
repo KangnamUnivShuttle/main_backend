@@ -63,6 +63,7 @@ export interface QuickReplyModel {
     label: string;
     blockId?: string;
     extra?: any;
+    webLinkUrl?: string;
 }
 
 // ------------------------------------------------------------

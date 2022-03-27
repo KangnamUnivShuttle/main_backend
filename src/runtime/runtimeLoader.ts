@@ -1,7 +1,8 @@
 import logger from "../logger";
 import { QuickReplyModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
-import { NextBlockModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { NextBlockModel, RuntimeDBModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { getManager } from 'typeorm';
 
 // {
 //     "messageText": "홈 으로",
@@ -221,26 +222,74 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
     } as RuntimePayloadModel
 };
 
-const loadRuntimeDB = function(isDev: boolean = false): RuntimeHashmapModel {
-    if (isDev) {
-        logger.warn(`[runtimeLoader] [loadRuntimeDB] Current running on dev mode.`)
-        return kakaoChatRuntimeHashmap
+const runtimeDBModelConverter = function(runtimeList: RuntimeDBModel[]): RuntimeHashmapModel {
+    const result = {} as RuntimeHashmapModel;
+    runtimeList.forEach(runtime => {
+        if (runtime.blockID && !runtime.blockLinkedID && !runtime.blockRuntimeID && !runtime.imageID) {
+            result[runtime.blockID] = {
+                pluginList: [],
+                kakaoChatPayload: undefined,
+                processResult: [],
+                nextBlock: []
+            } as RuntimePayloadModel;
+        } else if (runtime.blockLinkedID) {
+            result[runtime.blockID].nextBlock.push(
+                {
+                    blockID: runtime.nextBlockID,
+                    quickReply: {
+                        messageText: runtime.messageText,
+                        action: runtime.action,
+                        label: runtime.label,
+                        webLinkUrl: runtime.webLinkUrl
+                    } as QuickReplyModel
+                } as NextBlockModel
+            )
+        } else if (runtime.blockRuntimeID) {
+            result[runtime.blockID].pluginList.push(
+                {
+                    url: runtime.container_url,
+                    port: runtime.container_port
+                } as PluginInfoModel
+            )
+        }
+    })
+
+    const len = Object.keys(result).length
+
+    logger.debug(`[runtimeLoader] [runtimeDBModelConverter] hashmap len: ${len}`)
+
+    if (len <= 0) {
+        logger.warn(`[runtimeLoader] [runtimeDBModelConverter] empty hashmap detected`)
     }
-    return {} as RuntimeHashmapModel
+
+    return result
 }
 
-export const getBestRuntimeChoice = function(currentInputMsg: string, lastRuntimeKey: string = 'intro', isDev: boolean = false): string | undefined {
-    const runtimeDB = loadRuntimeDB(true) // TODO: should change dev mode to false
+const loadRuntimeDB = async function(isDev: boolean = false): Promise<RuntimeHashmapModel> {
+    if (isDev) {
+        logger.warn(`[runtimeLoader] [loadRuntimeDB] Current running on dev mode.`)
+        return Promise.resolve(kakaoChatRuntimeHashmap);
+    }
+    const entityManager = getManager();
+    const runtimeList = (await entityManager.query(`
+        SELECT * FROM chat_block_runtime_map
+    `)) as RuntimeDBModel[];
+
+    return Promise.resolve(runtimeDBModelConverter(runtimeList))
+}
+
+export const getBestRuntimeChoice = async function(currentInputMsg: string, lastRuntimeKey: string = 'intro', isDev: boolean = false): Promise<string | undefined> {
+    const runtimeDB = await loadRuntimeDB(isDev) // TODO: should change dev mode to false
 
     const lastRuntimePayload = runtimeDB[lastRuntimeKey] || runtimeDB['intro']
     // console.log('key', lastRuntimeKey, 'input', currentInputMsg, 'payload', lastRuntimePayload)
     const filtered = lastRuntimePayload.nextBlock.filter(block => block.quickReply.messageText === currentInputMsg)
     if (filtered && filtered.length > 0) {
-        return filtered[0].blockID || 'intro'
+        return Promise.resolve(filtered[0].blockID || 'intro')
     }
-    return undefined
+    return Promise.resolve(undefined)
 }
 
-export const getRuntimePayload = function(blockKey: string = 'intro') {
-    return kakaoChatRuntimeHashmap[blockKey]
+export const getRuntimePayload = async function(blockKey: string = 'intro', isDev: boolean = false) {
+    return (await loadRuntimeDB(isDev))[blockKey]
 }

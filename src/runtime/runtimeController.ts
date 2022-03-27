@@ -80,8 +80,8 @@ import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
-        const selectedkey = getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId) 
-        const currentRuntime = getRuntimePayload(selectedkey)
+        const selectedkey = await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId) 
+        const currentRuntime = await getRuntimePayload(selectedkey)
 
         await updateUserState(userKey, selectedkey || 'intro')
 

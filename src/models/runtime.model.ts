@@ -17,3 +17,17 @@ export interface RuntimePayloadModel {
 export interface RuntimeHashmapModel {
     [key: string]: RuntimePayloadModel;
 }
+
+export interface RuntimeDBModel {
+    blockID: string;
+    blockLinkedID?: number;
+    blockRuntimeID?: number;
+    imageID?: number;
+    messageText?: string;
+    nextBlockID?: string;
+    action?: string;
+    label?: string;
+    webLinkUrl?: string;
+    container_url?: string;
+    container_port?: string;
+}

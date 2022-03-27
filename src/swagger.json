@@ -501,7 +501,10 @@
 					"blockId": {
 						"type": "string"
 					},
-					"extra": {}
+					"extra": {},
+					"webLinkUrl": {
+						"type": "string"
+					}
 				},
 				"required": [
 					"messageText",

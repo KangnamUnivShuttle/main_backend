@@ -255,6 +255,7 @@ const models: TsoaRoute.Models = {
             "label": {"dataType":"string","required":true},
             "blockId": {"dataType":"string"},
             "extra": {"dataType":"any"},
+            "webLinkUrl": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
