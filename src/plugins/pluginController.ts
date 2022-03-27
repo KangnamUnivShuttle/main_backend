@@ -33,7 +33,7 @@ export class PluginController extends Controller {
   @Get()
   public async getInfo(
     @Query() page: number = 1,
-    @Query() limit: number = PAGE_SIZE,
+    @Query() limit: number = 10,
     @Query() imageID?: string
   ): Promise<BasicResponseModel> {
 
