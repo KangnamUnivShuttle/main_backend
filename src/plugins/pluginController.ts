@@ -15,6 +15,7 @@ import { BasicResponseModel } from "../models/response.model";
 import { getConnection } from "typeorm";
 import { ChatImage } from "../orm/entities/ChatImage";
 import { PlugInImageModel } from "../models/plugin.model";
+import logger from "../logger";
 
 @Tags("Plugin")
 @Route("plugin")
@@ -45,24 +46,37 @@ export class PluginController extends Controller {
   @Post()
   public async registerPlugin(@Body() body: PlugInImageModel): Promise<BasicResponseModel> {
 
+    const result = {
+      success: false
+    } as BasicResponseModel
+
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatImage, 'registerPlugin', queryRunner);
     await queryRunner.startTransaction()
     try {
+      logger.debug(`[PluginController] [registerPlugin] Add new data: ${JSON.stringify(body)}`)
       queryBuilder.insert().into(ChatImage)
       .values([
         {
-          
+          name: body.name,
+          orderNum: body.order_num,
+          githubUrl: body.github_url,
         }
       ])
       await queryRunner.commitTransaction();
+      logger.debug(`[PluginController] [registerPlugin] Add new plugin ok`)
+      result.success = true
     } catch(err: any) {
       await queryRunner.rollbackTransaction();
+      logger.debug(`[PluginController] [registerPlugin] Add new plugin failed ${err.message}`)
+      result.success = false
+      result.message = err.message
     } finally {
       await queryRunner.release();
+      logger.debug(`[PluginController] [registerPlugin] Add new plugin done`)
     }
-    return {} as BasicResponseModel;
+    return result;
   }
 
   /**
