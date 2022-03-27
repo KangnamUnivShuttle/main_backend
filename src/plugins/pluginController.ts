@@ -16,6 +16,7 @@ import { getConnection } from "typeorm";
 import { ChatImage } from "../orm/entities/ChatImage";
 import { PlugInImageModel } from "../models/plugin.model";
 import logger from "../logger";
+import { PAGE_SIZE } from "../types/global.types";
 
 @Tags("Plugin")
 @Route("plugin")
@@ -23,7 +24,7 @@ export class PluginController extends Controller {
 
   /**
    * @summary 설치된 플러그인의 세부 정보를 반환
-   * @param pid 특정 플러그인 idx 에 해당하는 정보 반환, null 이면 리스트 반환
+   * @param imageID 특정 플러그인 idx 에 해당하는 정보 반환, null 이면 리스트 반환
    * @param page 페이지 번호
    * @param limit 한 페이지에 렌더링 할 데이터 건 수
    * 
@@ -33,9 +34,46 @@ export class PluginController extends Controller {
   public async getInfo(
     @Query() page: number = 1,
     @Query() limit: number = 10,
-    @Query() pid?: number
+    @Query() imageID?: string
   ): Promise<BasicResponseModel> {
-    return {} as BasicResponseModel;
+
+    const result = {
+      success: false
+    } as BasicResponseModel;
+
+    try {
+      const connection = getConnection();
+      const queryRunner = await connection.createQueryRunner()
+      const queryBuilder = await connection.createQueryBuilder(ChatImage, 'registerPlugin', queryRunner);
+
+      // https://jojoldu.tistory.com/579
+      let query = queryBuilder.select([
+        '_ChatImage.imageID',
+        '_ChatImage.name',
+        '_ChatImage.order_num',
+        '_ChatImage.github_url',
+        '_ChatImage.registerDatetime',
+        '_ChatImage.updateDatetime'
+      ])
+      .from(ChatImage, '_ChatImage')
+
+      // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
+      if (imageID) {
+        query = query.where("_ChatImage.imageID = :imageID", { imageID })
+      }
+      const pluginList = query.orderBy('_ChatImage.order_num', 'ASC')
+      .limit(limit)
+      .offset((page - 1) * limit)
+      .getMany()
+
+      queryRunner.release()
+
+      result.data = pluginList
+    } catch (err: any) { 
+      logger.error(`[PluginController] [getInfo] failed to load chat image data ${err.message}`)
+      result.message = err.message
+    }
+    return result;
   }
 
   /**
