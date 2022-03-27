@@ -69,12 +69,12 @@ export class PluginController extends Controller {
       result.success = true
     } catch(err: any) {
       await queryRunner.rollbackTransaction();
-      logger.debug(`[PluginController] [registerPlugin] Add new plugin failed ${err.message}`)
+      logger.error(`[PluginController] [registerPlugin] Add new plugin failed ${err.message}`)
       result.success = false
       result.message = err.message
     } finally {
       await queryRunner.release();
-      logger.debug(`[PluginController] [registerPlugin] Add new plugin done`)
+      logger.info(`[PluginController] [registerPlugin] Add new plugin done`)
     }
     return result;
   }
@@ -86,18 +86,39 @@ export class PluginController extends Controller {
   @Security('passport-cookie')
   @Put()
   public async modifyPlugin(@Body() body: PlugInImageModel): Promise<BasicResponseModel> {
+
+    const result = {
+      success: false
+    } as BasicResponseModel
+
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatImage, 'registerPlugin', queryRunner);
     await queryRunner.startTransaction()
     try {
-        await queryRunner.commitTransaction();
+      logger.debug(`[PluginController] [modifyPlugin] Modify data: ${JSON.stringify(body)}`)
+      queryBuilder.update(ChatImage)
+      .set({
+        name: body.name,
+        orderNum: body.order_num,
+        updateDatetime: 'current_timestamp()'
+      })
+      .where('imageID = :imageID', {imageID: body.imageID})
+      .execute()
+
+      await queryRunner.commitTransaction();
+      logger.debug(`[PluginController] [modifyPlugin] Modify data ok`)
+      result.success = true
     } catch(err: any) {
-        await queryRunner.rollbackTransaction();
+      await queryRunner.rollbackTransaction();
+      logger.error(`[PluginController] [modifyPlugin] Modify data error ${err.message}`)
+      result.success = false
+      result.message = err.message
     } finally {
-        await queryRunner.release();
+      await queryRunner.release();
+      logger.info(`[PluginController] [modifyPlugin] Modify data done`)
     }
-    return {} as BasicResponseModel;
+    return result
   }
 
   /**
@@ -109,17 +130,35 @@ export class PluginController extends Controller {
   public async deletePlugin(
     @Path() imageID: number
   ): Promise<BasicResponseModel> {
+
+    const result = {
+      success: false
+    } as BasicResponseModel
+
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatImage, 'registerPlugin', queryRunner);
     await queryRunner.startTransaction()
     try {
-        await queryRunner.commitTransaction();
+      logger.debug(`[PluginController] [deletePlugin] Delete data #${imageID}`)
+
+      queryBuilder.delete()
+      .from(ChatImage)
+      .where("imageID = :imageID", {imageID})
+      .execute()
+
+      await queryRunner.commitTransaction();
+
+      logger.debug(`[PluginController] [deletePlugin] Delete data done`)
     } catch(err: any) {
-        await queryRunner.rollbackTransaction();
+      await queryRunner.rollbackTransaction();
+      logger.error(`[PluginController] [deletePlugin] Delete data error ${err.message}`)
+      result.success = false
+      result.message = err.message
     } finally {
-        await queryRunner.release();
+      await queryRunner.release();
+      logger.info(`[PluginController] [deletePlugin] Delete data done`)
     }
-    return {} as BasicResponseModel;
+    return result
   }
 }
