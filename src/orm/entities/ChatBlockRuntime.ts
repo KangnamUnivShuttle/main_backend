@@ -22,7 +22,7 @@ export class ChatBlockRuntime {
   @Column("int", { name: "imageID" })
   imageId: number;
 
-  @Column("int", { name: "order_num" })
+  @Column("int", { name: "order_num", default: () => "'0'" })
   orderNum: number;
 
   @Column("varchar", {
@@ -38,6 +38,9 @@ export class ChatBlockRuntime {
     default: () => "'15000'",
   })
   containerPort: string;
+
+  @Column("text", { name: "container_env", nullable: true })
+  containerEnv: string | null;
 
   @Column("varchar", {
     name: "container_state",

@@ -29,6 +29,38 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PlugInImageModel": {
+				"properties": {
+					"imageID": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"order_num": {
+						"type": "number",
+						"format": "double"
+					},
+					"github_url": {
+						"type": "string"
+					},
+					"registerDatetime": {
+						"type": "string"
+					},
+					"updateDatetime": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"github_url",
+					"registerDatetime",
+					"updateDatetime"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SimpleText": {
 				"properties": {
 					"text": {
@@ -1091,7 +1123,17 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PlugInImageModel"
+							}
+						}
+					}
+				}
 			},
 			"put": {
 				"operationId": "ModifyPlugin",
@@ -1116,10 +1158,20 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PlugInImageModel"
+							}
+						}
+					}
+				}
 			}
 		},
-		"/plugin/{pid}": {
+		"/plugin/{imageID}": {
 			"delete": {
 				"operationId": "DeletePlugin",
 				"responses": {
@@ -1147,7 +1199,7 @@
 					{
 						"description": "삭제할 플러그인 idx",
 						"in": "path",
-						"name": "pid",
+						"name": "imageID",
 						"required": true,
 						"schema": {
 							"format": "double",

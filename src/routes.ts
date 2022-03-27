@@ -32,6 +32,19 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PlugInImageModel": {
+        "dataType": "refObject",
+        "properties": {
+            "imageID": {"dataType":"double"},
+            "name": {"dataType":"string","required":true},
+            "order_num": {"dataType":"double"},
+            "github_url": {"dataType":"string","required":true},
+            "registerDatetime": {"dataType":"string","required":true},
+            "updateDatetime": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SimpleText": {
         "dataType": "refObject",
         "properties": {
@@ -589,6 +602,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function PluginController_registerPlugin(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"PlugInImageModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -612,6 +626,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function PluginController_modifyPlugin(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"PlugInImageModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -630,12 +645,12 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/plugin/:pid',
+        app.delete('/plugin/:imageID',
             authenticateMiddleware([{"passport-cookie":[]}]),
 
             function PluginController_deletePlugin(request: any, response: any, next: any) {
             const args = {
-                    pid: {"in":"path","name":"pid","required":true,"dataType":"double"},
+                    imageID: {"in":"path","name":"imageID","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

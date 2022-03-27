@@ -15,3 +15,12 @@ export interface PluginInfoModel {
     sampleOfResponse: any;
     sampleOfRequest: any;
 }
+
+export interface PlugInImageModel {
+    imageID?: number;
+    name: string;
+    order_num?: number;
+    github_url: string;
+    registerDatetime: string;
+    updateDatetime: string;
+}

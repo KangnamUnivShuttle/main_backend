@@ -9,7 +9,7 @@ export class ChatImage {
   @Column("varchar", { name: "name", length: 50, default: () => "'Untitled'" })
   name: string;
 
-  @Column("int", { name: "order_num" })
+  @Column("int", { name: "order_num", default: () => "'0'" })
   orderNum: number;
 
   @Column("varchar", { name: "github_url", length: 500 })

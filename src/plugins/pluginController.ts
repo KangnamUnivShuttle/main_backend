@@ -8,11 +8,13 @@ import {
   Post,
   Put,
   Delete,
-  Security
+  Security,
+  Body
 } from "tsoa";
 import { BasicResponseModel } from "../models/response.model";
 import { getConnection } from "typeorm";
 import { ChatImage } from "../orm/entities/ChatImage";
+import { PlugInImageModel } from "../models/plugin.model";
 
 @Tags("Plugin")
 @Route("plugin")
@@ -41,18 +43,24 @@ export class PluginController extends Controller {
    */
   @Security('passport-cookie')
   @Post()
-  public async registerPlugin(): Promise<BasicResponseModel> {
+  public async registerPlugin(@Body() body: PlugInImageModel): Promise<BasicResponseModel> {
 
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatImage, 'registerPlugin', queryRunner);
     await queryRunner.startTransaction()
     try {
-        await queryRunner.commitTransaction();
+      queryBuilder.insert().into(ChatImage)
+      .values([
+        {
+          
+        }
+      ])
+      await queryRunner.commitTransaction();
     } catch(err: any) {
-        await queryRunner.rollbackTransaction();
+      await queryRunner.rollbackTransaction();
     } finally {
-        await queryRunner.release();
+      await queryRunner.release();
     }
     return {} as BasicResponseModel;
   }
@@ -63,7 +71,7 @@ export class PluginController extends Controller {
    */
   @Security('passport-cookie')
   @Put()
-  public async modifyPlugin(): Promise<BasicResponseModel> {
+  public async modifyPlugin(@Body() body: PlugInImageModel): Promise<BasicResponseModel> {
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatImage, 'registerPlugin', queryRunner);
@@ -80,12 +88,12 @@ export class PluginController extends Controller {
 
   /**
    * @summary 기존 설치된 플러그인 삭제
-   * @param pid 삭제할 플러그인 idx
+   * @param imageID 삭제할 플러그인 idx
    */
   @Security('passport-cookie')
-  @Delete("{pid}")
+  @Delete("{imageID}")
   public async deletePlugin(
-    @Path() pid: number
+    @Path() imageID: number
   ): Promise<BasicResponseModel> {
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()

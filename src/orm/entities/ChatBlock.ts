@@ -13,7 +13,7 @@ export class ChatBlock {
   @Column("tinyint", { name: "enabled", default: () => "'1'" })
   enabled: number;
 
-  @Column("int", { name: "order_num" })
+  @Column("int", { name: "order_num", default: () => "'0'" })
   orderNum: number;
 
   @Column("tinyint", { name: "deleteable", default: () => "'1'" })
