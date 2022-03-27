@@ -676,7 +676,7 @@ export function RegisterRoutes(app: express.Router) {
             const args = {
                     page: {"default":1,"in":"query","name":"page","dataType":"double"},
                     limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
-                    rid: {"in":"query","name":"rid","dataType":"double"},
+                    blockID: {"in":"query","name":"blockID","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

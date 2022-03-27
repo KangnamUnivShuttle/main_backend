@@ -1258,11 +1258,10 @@
 					{
 						"description": "런타임 idx",
 						"in": "query",
-						"name": "rid",
+						"name": "blockID",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]

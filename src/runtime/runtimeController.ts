@@ -26,9 +26,19 @@ import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
   @Route("runtime")
   export class RuntimeController extends Controller {
 
+    // delete from chat_image;
+    // delete from chat_block;
+    // delete from chat_block_link;
+    // delete from chat_block_runtime;
+    
+    // insert into chat_image(imageID, name, order_num, github_url) values (1, 'test1-1', 1, 'url'), (2, 'test1-2', 2, 'url'), (3, 'test2-1', 3, 'url');
+    // insert into chat_block(blockID, name, order_num, enabled) VALUES('intro', 'intro', 1, 1), ('hello', 'hello world', 2, 1);
+    // insert into chat_block_link(blockLinkID, blockID, order_num, nextBlockID, label) VALUES(1, 'intro', 1, 'hello', 'go to hello'), (2, 'intro', 1, 'intro', 'go to intro'), (3, 'hello', 3, 'intro', 'go to intro from hello');
+    // insert into chat_block_runtime (blockRuntimeID, blockID, imageID, order_num) values (1, 'intro', 1, 1), (2, 'intro', 2, 2), (3, 'hello', 3, 3);
+
     /**
      * @summary 런타임 내용 확인
-     * @param rid 런타임 idx
+     * @param blockID 런타임 idx
      * @param page 페이지 번호
      * @param limit 한 페이지에 렌더링 할 데이터 건 수
      * @returns 특정 런타임 세부 정보 혹은 런타임 목록
@@ -38,7 +48,7 @@ import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
     public async getInfo(
         @Query() page: number = 1,
         @Query() limit: number = 10,
-        @Query() rid?: number
+        @Query() blockID?: string
     ): Promise<BasicResponseModel> {
         return {
 

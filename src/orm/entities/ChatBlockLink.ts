@@ -21,17 +21,27 @@ export class ChatBlockLink {
   @Column("varchar", { name: "nextBlockID", nullable: true, length: 20 })
   nextBlockId: string | null;
 
-  @Column("varchar", { name: "messageText", length: 500 })
-  messageText: string;
+  @Column("varchar", {
+    name: "messageText",
+    nullable: true,
+    length: 500,
+    default: () => "'메시지를 입력하세요.'",
+  })
+  messageText: string | null;
 
   @Column("varchar", { name: "action", length: 20, default: () => "'message'" })
   action: string;
 
-  @Column("varchar", { name: "label", length: 20 })
+  @Column("varchar", { name: "label", length: 50 })
   label: string;
 
-  @Column("varchar", { name: "webLinkUrl", length: 500 })
-  webLinkUrl: string;
+  @Column("varchar", {
+    name: "webLinkUrl",
+    nullable: true,
+    length: 500,
+    default: () => "'https://github.com/KangnamUnivShuttle'",
+  })
+  webLinkUrl: string | null;
 
   @Column("tinyint", { name: "enabled", default: () => "'1'" })
   enabled: number;
