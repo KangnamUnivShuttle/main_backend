@@ -24,6 +24,7 @@ import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
 import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
 import { getConnection } from "typeorm";
+import { controlCLI, genDockerCompose, genDockerfile, genEcoSystem } from "./runtimeCliController";
 
 @Tags("Runtime")
 @Route("runtime")
@@ -58,10 +59,10 @@ export class RuntimeController extends Controller {
             success: false
         } as BasicResponseModel;
 
+        const connection = getConnection();
+        const queryRunner = await connection.createQueryRunner()
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
         try {
-            const connection = getConnection();
-            const queryRunner = await connection.createQueryRunner()
-            const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
 
             // https://jojoldu.tistory.com/579
             let query = queryBuilder.select([
@@ -76,27 +77,27 @@ export class RuntimeController extends Controller {
                 '_ChatBlockRuntime.registerDatetime',
                 '_ChatBlockRuntime.updateDatetime',
             ])
-            .from(ChatBlockRuntime, '_ChatBlockRuntime')
+                .from(ChatBlockRuntime, '_ChatBlockRuntime')
 
             // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
             if (blockRuntimeID) {
                 query = query.where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
             }
             if (blockID) {
-                query = query.where("_ChatBlockRuntime.blockID = :blockID", {blockID})
+                query = query.where("_ChatBlockRuntime.blockID = :blockID", { blockID })
             }
             const runtimeList = query.orderBy('_ChatBlockRuntime.order_num', 'ASC')
                 .limit(limit)
                 .offset((page - 1) * limit)
                 .getMany()
 
-            queryRunner.release()
-
             result.success = true
             result.data = runtimeList
         } catch (err: any) {
             logger.error(`[runtimeController] [getInfo] failed to load chat image data ${err.message}`)
             result.message = err.message
+        } finally {
+            queryRunner.release()
         }
         return result;
     }
@@ -126,8 +127,8 @@ export class RuntimeController extends Controller {
                         blockId: body.blockID,
                         imageId: body.imageID,
                         orderNum: body.order_num,
-                        containerUrl: body.container_url,
-                        containerPort: body.container_port,
+                        // containerUrl: body.container_url,
+                        // containerPort: body.container_port,
                         containerEnv: body.container_env,
                     }
                 ])
@@ -148,29 +149,70 @@ export class RuntimeController extends Controller {
         return result
     }
 
-    controlCLI(container: RuntimeControlModel): Promise<number> {
-        return new Promise<number>((resolve, rejects) => {
-            const process = spawn('jingisukan', ['service', '--name', container.container_name, '--path', `./${container.container_name}`, '--status', container.container_state]);
+    async recentRuntimeState(blockRuntimeID: number): Promise<ChatBlockRuntime | null> {
+        const connection = getConnection();
+        const queryRunner = await connection.createQueryRunner()
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
 
-            logger.debug(`[runtimeController] [containerStateControl] container : ${container.container_name} state: ${container.container_state}`)
+        let runtime = null;
+        try {
+            // https://jojoldu.tistory.com/579
+            runtime = await queryBuilder.select([
+                '_ChatBlockRuntime.blockRuntimeID',
+                '_ChatBlockRuntime.blockID',
+                '_ChatBlockRuntime.imageID',
+                '_ChatBlockRuntime.order_num',
+                '_ChatBlockRuntime.container_url',
+                '_ChatBlockRuntime.container_port',
+                '_ChatBlockRuntime.container_env',
+                '_ChatBlockRuntime.container_state',
+                '_ChatBlockRuntime.registerDatetime',
+                '_ChatBlockRuntime.updateDatetime',
+            ])
+            .from(ChatBlockRuntime, '_ChatBlockRuntime')
+            .where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
+            .getOneOrFail()
+        } catch (e: any) {
+            logger.error(`[runtimeController] [recentRuntimeState] error: ${e.message}`)
+        } finally {
+            queryRunner.release()
+        }
+        
+        return Promise.resolve(runtime);
+    }
 
-            process.stdout.on('data', (data) => {
-                logger.debug(`[runtimeController] [containerStateControl] ${data}`)
-                // console.log(`spawn stdout: ${data}`);
-            });
-            process.stderr.on('data', (data) => {
-                logger.error(`[runtimeController] [containerStateControl] ${data}`)
-            });
-            process.on('exit', (code, signal) => {
-                logger.debug(`[runtimeController] [containerStateControl] spawn on exit code: ${code} signal: ${signal}`)
+    async updateContainerStateToDB(runtime: RuntimeControlModel): Promise<BasicResponseModel> {
+        const result = {
+            success: false
+        } as BasicResponseModel
 
-                if (code === 0) {
-                    resolve(code)
-                } else {
-                    rejects(new Error(`Exit code is not zero.`))
-                }
-            });
-        })
+        const connection = getConnection();
+        const queryRunner = await connection.createQueryRunner()
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+        await queryRunner.startTransaction()
+        try {
+            logger.debug(`[runtimeController] [updateContainerStateToDB] update data: ${JSON.stringify(runtime)}`)
+
+            queryBuilder.update(ChatBlockRuntime)
+                .set({
+                    containerState: runtime.container_state
+                })
+                .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
+                .execute()
+
+            await queryRunner.commitTransaction();
+            logger.debug(`[runtimeController] [updateContainerStateToDB] update runtime state ok`)
+            result.success = true
+        } catch (err: any) {
+            await queryRunner.rollbackTransaction();
+            logger.error(`[runtimeController] [updateContainerStateToDB] update runtime state failed ${err.message}`)
+            result.success = false
+            result.message = err.message
+        } finally {
+            await queryRunner.release();
+            logger.info(`[runtimeController] [updateContainerStateToDB] update runtime state done`)
+        }
+        return Promise.resolve(result)
     }
 
     /**
@@ -189,33 +231,42 @@ export class RuntimeController extends Controller {
         } as BasicResponseModel;
 
         try {
-            const code = await this.controlCLI(body);
+            const recentRuntime = await this.recentRuntimeState(body.blockRuntimeID)
+            // 이미 컨테이너가 있는 상태일때
+            if (recentRuntime?.containerUrl) {
+                logger.info(`[runtimeController] [containerStateControl] runtime already exist in ${recentRuntime.containerUrl}:${recentRuntime.containerPort} / ${recentRuntime.containerState}`)
+                
+                const code = await controlCLI({
+                    container_name: recentRuntime.containerUrl,
+                    container_state: body.container_state
+                } as RuntimeControlModel);    
+                logger.debug(`[runtimeController] [containerStateControl] code: ${code}`)
+                const result_db = await this.updateContainerStateToDB({
+                    blockRuntimeID: body.blockRuntimeID,
+                    container_state: body.container_state
+                } as RuntimeControlModel)
+                logger.debug(`[runtimeController] [containerStateControl] write result to db: ${result_db.success}`)
 
-            const connection = getConnection();
-            const queryRunner = await connection.createQueryRunner()
-            const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
-            await queryRunner.startTransaction()
-            try {
-                logger.debug(`[runtimeController] [containerStateControl] update data: ${JSON.stringify(body)}`)
-
-                queryBuilder.update(ChatBlockRuntime)
-                    .set({
-                        containerState: body.container_state
-                    })
-                    .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: body.blockRuntimeID })
-                    .execute()
-
-                await queryRunner.commitTransaction();
-                logger.debug(`[runtimeController] [containerStateControl] update runtime state ok`)
                 result.success = true
-            } catch (err: any) {
-                await queryRunner.rollbackTransaction();
-                logger.error(`[runtimeController] [containerStateControl] update runtime state failed ${err.message}`)
-                result.success = false
-                result.message = err.message
-            } finally {
-                await queryRunner.release();
-                logger.info(`[runtimeController] [containerStateControl] update runtime state done`)
+            } else { // 컨테이너 새로 만들때
+                const init_result = await Promise.all([
+                    genDockerCompose(body.container_name), 
+                    genDockerfile(body.image_url, body.container_name),
+                    genEcoSystem(body.container_name)
+                ])
+
+                logger.debug(`[runtimeController] [containerStateControl] init result: ${JSON.stringify(init_result)}`)
+
+                const code = await controlCLI(body);
+
+                logger.debug(`[runtimeController] [containerStateControl] control code: ${code}`)
+
+                const result_db = await this.updateContainerStateToDB({
+                    container_name: body.container_name,
+                    container_state: body.container_state
+                } as RuntimeControlModel);
+                result.success = result_db.success;
+                result.message = result_db.message;
             }
         } catch (e: any) {
             logger.error(`[runtimeController] [containerStateControl] error :${e.message}`)
@@ -301,10 +352,41 @@ export class RuntimeController extends Controller {
      */
     @Security('passport-cookie')
     @Put("modify")
-    public async modifyRuntime(): Promise<BasicResponseModel> {
-        return {
+    public async modifyRuntime(@Body() body: RuntimeModel): Promise<BasicResponseModel> {
 
+        const result = {
+            success: false
         } as BasicResponseModel;
+
+        const connection = getConnection();
+        const queryRunner = await connection.createQueryRunner()
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+        await queryRunner.startTransaction()
+        try {
+            logger.debug(`[runtimeController] [modifyRuntime] Modify data: ${JSON.stringify(body)}`)
+            queryBuilder.update(ChatBlockRuntime)
+                .set({
+                    imageId: body.imageID,
+                    orderNum: body.order_num,
+                    containerEnv: body.container_env,
+                    updateDatetime: 'current_timestamp()'
+                })
+                .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: body.blockRuntimeID })
+                .execute()
+
+            await queryRunner.commitTransaction();
+            logger.debug(`[runtimeController] [modifyRuntime] Modify data ok`)
+            result.success = true
+        } catch (err: any) {
+            await queryRunner.rollbackTransaction();
+            logger.error(`[runtimeController] [modifyRuntime] Modify data error ${err.message}`)
+            result.success = false
+            result.message = err.message
+        } finally {
+            await queryRunner.release();
+            logger.info(`[runtimeController] [modifyRuntime] Modify data done`)
+        }
+        return result
     }
 
     /**

@@ -25,12 +25,8 @@ export class ChatBlockRuntime {
   @Column("int", { name: "order_num", default: () => "'0'" })
   orderNum: number;
 
-  @Column("varchar", {
-    name: "container_url",
-    length: 100,
-    default: () => "'localhost'",
-  })
-  containerUrl: string;
+  @Column("varchar", { name: "container_url", nullable: true, length: 100 })
+  containerUrl: string | null;
 
   @Column("varchar", {
     name: "container_port",

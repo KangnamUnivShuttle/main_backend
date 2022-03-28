@@ -36,6 +36,10 @@ export interface RuntimeControlModel {
     blockRuntimeID: number;
     container_name: string;
     container_state: string;
+    image_url: string;
+    cpu: string;
+    ram: string;
+    
 }
 
 export interface RuntimeModel {
