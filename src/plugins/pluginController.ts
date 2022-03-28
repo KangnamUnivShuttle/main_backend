@@ -68,6 +68,7 @@ export class PluginController extends Controller {
 
       queryRunner.release()
 
+      result.success = true
       result.data = pluginList
     } catch (err: any) { 
       logger.error(`[PluginController] [getInfo] failed to load chat image data ${err.message}`)

@@ -701,6 +701,7 @@ export function RegisterRoutes(app: express.Router) {
             const args = {
                     page: {"default":1,"in":"query","name":"page","dataType":"double"},
                     limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
+                    blockRuntimeID: {"in":"query","name":"blockRuntimeID","dataType":"double"},
                     blockID: {"in":"query","name":"blockID","dataType":"string"},
             };
 

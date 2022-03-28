@@ -1321,6 +1321,15 @@
 					{
 						"description": "런타임 idx",
 						"in": "query",
+						"name": "blockRuntimeID",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
 						"name": "blockID",
 						"required": false,
 						"schema": {

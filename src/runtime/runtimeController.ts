@@ -11,7 +11,7 @@ import {
     Security,
     Body,
     Response
-  } from "tsoa";
+} from "tsoa";
 import { postRequestToInstance } from "../lib/internalRequest";
 import logger from "../logger";
 import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model";
@@ -25,15 +25,15 @@ import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
 import { getConnection } from "typeorm";
 
-  @Tags("Runtime")
-  @Route("runtime")
-  export class RuntimeController extends Controller {
+@Tags("Runtime")
+@Route("runtime")
+export class RuntimeController extends Controller {
 
     // delete from chat_image;
     // delete from chat_block;
     // delete from chat_block_link;
     // delete from chat_block_runtime;
-    
+
     // insert into chat_image(imageID, name, order_num, github_url) values (1, 'test1-1', 1, 'url'), (2, 'test1-2', 2, 'url'), (3, 'test2-1', 3, 'url');
     // insert into chat_block(blockID, name, order_num, enabled) VALUES('intro', 'intro', 1, 1), ('hello', 'hello world', 2, 1);
     // insert into chat_block_link(blockLinkID, blockID, order_num, nextBlockID, label) VALUES(1, 'intro', 1, 'hello', 'go to hello'), (2, 'intro', 1, 'intro', 'go to intro'), (3, 'hello', 3, 'intro', 'go to intro from hello');
@@ -41,7 +41,7 @@ import { getConnection } from "typeorm";
 
     /**
      * @summary 런타임 내용 확인
-     * @param blockID 런타임 idx
+     * @param blockRuntimeID 런타임 idx
      * @param page 페이지 번호
      * @param limit 한 페이지에 렌더링 할 데이터 건 수
      * @returns 특정 런타임 세부 정보 혹은 런타임 목록
@@ -51,11 +51,54 @@ import { getConnection } from "typeorm";
     public async getInfo(
         @Query() page: number = 1,
         @Query() limit: number = 10,
-        @Query() blockID?: string
+        @Query() blockRuntimeID?: number,
+        @Query() blockID?: string,
     ): Promise<BasicResponseModel> {
-        return {
-
+        const result = {
+            success: false
         } as BasicResponseModel;
+
+        try {
+            const connection = getConnection();
+            const queryRunner = await connection.createQueryRunner()
+            const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+
+            // https://jojoldu.tistory.com/579
+            let query = queryBuilder.select([
+                '_ChatBlockRuntime.blockRuntimeID',
+                '_ChatBlockRuntime.blockID',
+                '_ChatBlockRuntime.imageID',
+                '_ChatBlockRuntime.order_num',
+                '_ChatBlockRuntime.container_url',
+                '_ChatBlockRuntime.container_port',
+                '_ChatBlockRuntime.container_env',
+                '_ChatBlockRuntime.container_state',
+                '_ChatBlockRuntime.registerDatetime',
+                '_ChatBlockRuntime.updateDatetime',
+            ])
+            .from(ChatBlockRuntime, '_ChatBlockRuntime')
+
+            // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
+            if (blockRuntimeID) {
+                query = query.where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
+            }
+            if (blockID) {
+                query = query.where("_ChatBlockRuntime.blockID = :blockID", {blockID})
+            }
+            const runtimeList = query.orderBy('_ChatBlockRuntime.order_num', 'ASC')
+                .limit(limit)
+                .offset((page - 1) * limit)
+                .getMany()
+
+            queryRunner.release()
+
+            result.success = true
+            result.data = runtimeList
+        } catch (err: any) {
+            logger.error(`[runtimeController] [getInfo] failed to load chat image data ${err.message}`)
+            result.message = err.message
+        }
+        return result;
     }
 
     /**
@@ -63,7 +106,7 @@ import { getConnection } from "typeorm";
      */
     @Security('passport-cookie')
     @Post("register")
-    public async registerNewRuntime( @Body() body: RuntimeModel): Promise<BasicResponseModel> {
+    public async registerNewRuntime(@Body() body: RuntimeModel): Promise<BasicResponseModel> {
 
         const result = {
             success: false
@@ -75,24 +118,24 @@ import { getConnection } from "typeorm";
         await queryRunner.startTransaction()
         try {
             logger.debug(`[runtimeController] [registerNewRuntime] add new data: ${JSON.stringify(body)}`)
-            
+
             queryBuilder.insert()
-            .into(ChatBlockRuntime)
-            .values([
-                {
-                    blockId: body.blockID,
-                    imageId: body.imageID,
-                    orderNum: body.order_num,
-                    containerUrl: body.container_url,
-                    containerPort: body.container_port,
-                    containerEnv: body.container_env,
-                }
-             ])
-            .execute();
+                .into(ChatBlockRuntime)
+                .values([
+                    {
+                        blockId: body.blockID,
+                        imageId: body.imageID,
+                        orderNum: body.order_num,
+                        containerUrl: body.container_url,
+                        containerPort: body.container_port,
+                        containerEnv: body.container_env,
+                    }
+                ])
+                .execute();
             await queryRunner.commitTransaction();
             logger.debug(`[runtimeController] [registerNewRuntime] add new runtime ok`)
             result.success = true
-        } catch(err: any) {
+        } catch (err: any) {
             await queryRunner.rollbackTransaction();
             logger.error(`[runtimeController] [registerNewRuntime] add new runtime failed ${err.message}`)
             result.success = false
@@ -105,10 +148,10 @@ import { getConnection } from "typeorm";
         return result
     }
 
-    controlCLI (container: RuntimeControlModel): Promise<number> {
+    controlCLI(container: RuntimeControlModel): Promise<number> {
         return new Promise<number>((resolve, rejects) => {
             const process = spawn('jingisukan', ['service', '--name', container.container_name, '--path', `./${container.container_name}`, '--status', container.container_state]);
-    
+
             logger.debug(`[runtimeController] [containerStateControl] container : ${container.container_name} state: ${container.container_state}`)
 
             process.stdout.on('data', (data) => {
@@ -154,18 +197,18 @@ import { getConnection } from "typeorm";
             await queryRunner.startTransaction()
             try {
                 logger.debug(`[runtimeController] [containerStateControl] update data: ${JSON.stringify(body)}`)
-                
+
                 queryBuilder.update(ChatBlockRuntime)
-                .set({
-                    containerState: body.container_state
-                })
-                .where('blockRuntimeID = :blockRuntimeID', {blockRuntimeID: body.blockRuntimeID})
-                .execute()
+                    .set({
+                        containerState: body.container_state
+                    })
+                    .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: body.blockRuntimeID })
+                    .execute()
 
                 await queryRunner.commitTransaction();
                 logger.debug(`[runtimeController] [containerStateControl] update runtime state ok`)
                 result.success = true
-            } catch(err: any) {
+            } catch (err: any) {
                 await queryRunner.rollbackTransaction();
                 logger.error(`[runtimeController] [containerStateControl] update runtime state failed ${err.message}`)
                 result.success = false
@@ -182,7 +225,7 @@ import { getConnection } from "typeorm";
     }
 
     requestLocalPlugin(input: KakaoChatReqModel): Promise<any> {
-        return new Promise<any>(() => {});
+        return new Promise<any>(() => { });
     }
 
     @Response<KakaoChatResModel>(200, 'Response ok')
@@ -195,7 +238,7 @@ import { getConnection } from "typeorm";
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
-        const selectedkey = await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId) 
+        const selectedkey = await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId)
         const currentRuntime = await getRuntimePayload(selectedkey)
 
         await updateUserState(userKey, selectedkey || 'intro')
@@ -214,7 +257,7 @@ import { getConnection } from "typeorm";
                 }
 
                 let payload = body as any
-                for (let idx = 0; idx < currentRuntime.pluginList.length; idx ++) {
+                for (let idx = 0; idx < currentRuntime.pluginList.length; idx++) {
                     currentRuntime.processResult.push(await postRequestToInstance(currentRuntime.pluginList[idx].url, payload, currentRuntime.pluginList[idx].port))
                     payload = currentRuntime.processResult[currentRuntime.processResult.length - 1]
                 }
