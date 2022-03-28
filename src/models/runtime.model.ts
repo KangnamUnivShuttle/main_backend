@@ -58,3 +58,15 @@ export interface RuntimeBlockModel {
     enabled: number;
     order_num: number;
 }
+
+export interface RuntimeBlockLinkModel {
+    blockLinkID?: number;
+    blockID: string;
+    nextBlockID?: string;
+    messageText?: string;
+    action: string;
+    label: string;
+    webLinkUrl?: string;
+    enabled: number;
+    order_num: number;
+}

@@ -813,6 +813,49 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RuntimeBlockLinkModel": {
+				"properties": {
+					"blockLinkID": {
+						"type": "number",
+						"format": "double"
+					},
+					"blockID": {
+						"type": "string"
+					},
+					"nextBlockID": {
+						"type": "string"
+					},
+					"messageText": {
+						"type": "string"
+					},
+					"action": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"webLinkUrl": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "number",
+						"format": "double"
+					},
+					"order_num": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"blockID",
+					"action",
+					"label",
+					"enabled",
+					"order_num"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserSample": {
 				"properties": {
 					"id": {
@@ -1775,11 +1818,10 @@
 				"parameters": [
 					{
 						"in": "query",
-						"name": "blockLinkID",
-						"required": false,
+						"name": "blockID",
+						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]
@@ -1806,7 +1848,17 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RuntimeBlockLinkModel"
+							}
+						}
+					}
+				}
 			},
 			"put": {
 				"operationId": "Update",
@@ -1830,7 +1882,17 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RuntimeBlockLinkModel"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/runtimeLink/{blockLinkID}": {

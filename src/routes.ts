@@ -392,6 +392,22 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RuntimeBlockLinkModel": {
+        "dataType": "refObject",
+        "properties": {
+            "blockLinkID": {"dataType":"double"},
+            "blockID": {"dataType":"string","required":true},
+            "nextBlockID": {"dataType":"string"},
+            "messageText": {"dataType":"string"},
+            "action": {"dataType":"string","required":true},
+            "label": {"dataType":"string","required":true},
+            "webLinkUrl": {"dataType":"string"},
+            "enabled": {"dataType":"double","required":true},
+            "order_num": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserSample": {
         "dataType": "refObject",
         "properties": {
@@ -984,7 +1000,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeLinkController_getInfo(request: any, response: any, next: any) {
             const args = {
-                    blockLinkID: {"in":"query","name":"blockLinkID","dataType":"double"},
+                    blockID: {"in":"query","name":"blockID","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1008,6 +1024,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeLinkController_insert(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"RuntimeBlockLinkModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1031,6 +1048,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeLinkController_update(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"RuntimeBlockLinkModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
