@@ -51,3 +51,10 @@ export interface RuntimeModel {
     container_port: string;
     container_env: string;
 }
+
+export interface RuntimeBlockModel {
+    blockID: string;
+    name: string;
+    enabled: number;
+    order_num: number;
+}

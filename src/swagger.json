@@ -61,6 +61,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RuntimeBlockModel": {
+				"properties": {
+					"blockID": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "number",
+						"format": "double"
+					},
+					"order_num": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"blockID",
+					"name",
+					"enabled",
+					"order_num"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RuntimeModel": {
 				"properties": {
 					"blockRuntimeID": {
@@ -1359,7 +1385,17 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RuntimeBlockModel"
+							}
+						}
+					}
+				}
 			},
 			"put": {
 				"operationId": "Update",
@@ -1383,7 +1419,17 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RuntimeBlockModel"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/runtimeBlock/{blockID}": {

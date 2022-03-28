@@ -49,6 +49,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RuntimeBlockModel": {
+        "dataType": "refObject",
+        "properties": {
+            "blockID": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "enabled": {"dataType":"double","required":true},
+            "order_num": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RuntimeModel": {
         "dataType": "refObject",
         "properties": {
@@ -732,6 +743,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeBlockController_insert(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"RuntimeBlockModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -755,6 +767,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeBlockController_update(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"RuntimeBlockModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
