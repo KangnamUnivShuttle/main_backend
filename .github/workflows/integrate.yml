@@ -36,3 +36,20 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "deploy.tar"
           target: "/home/stories2/"
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LIVE_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+        script: |
+          mkdir -p ./deploy && tar -xvf deploy.tar -C ./deploy
+          rm deploy.tar
+          mkdir -p $HOME/KangnamShuttle4.0/main_container/kws1/build
+          mv deploy/build/* $HOME/KangnamShuttle4.0/main_container/kws1/build/
+          cd $HOME/KangnamShuttle4.0/main_container/kws1
+          docker-compose build
+          docker-compose up -d
+
