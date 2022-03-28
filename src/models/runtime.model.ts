@@ -37,3 +37,13 @@ export interface RuntimeControlModel {
     container_name: string;
     container_state: string;
 }
+
+export interface RuntimeModel {
+    blockRuntimeID: number;
+    blockID: string;
+    imageID: number;
+    order_num: number;
+    container_url: string;
+    container_port: string;
+    container_env: string;
+}

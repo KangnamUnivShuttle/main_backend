@@ -61,6 +61,45 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RuntimeModel": {
+				"properties": {
+					"blockRuntimeID": {
+						"type": "number",
+						"format": "double"
+					},
+					"blockID": {
+						"type": "string"
+					},
+					"imageID": {
+						"type": "number",
+						"format": "double"
+					},
+					"order_num": {
+						"type": "number",
+						"format": "double"
+					},
+					"container_url": {
+						"type": "string"
+					},
+					"container_port": {
+						"type": "string"
+					},
+					"container_env": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"blockRuntimeID",
+					"blockID",
+					"imageID",
+					"order_num",
+					"container_url",
+					"container_port",
+					"container_env"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RuntimeControlModel": {
 				"properties": {
 					"blockRuntimeID": {
@@ -1315,7 +1354,17 @@
 						"passport-cookie": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RuntimeModel"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/runtime/state": {

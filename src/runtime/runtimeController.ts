@@ -17,7 +17,7 @@ import logger from "../logger";
 import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
-import { RuntimeControlModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { RuntimeControlModel, RuntimeHashmapModel, RuntimeModel, RuntimePayloadModel } from "../models/runtime.model";
 import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
 import { getRecentUserState, returnErrorMessage, updateUserState } from "./runtimeHandler";
 import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
@@ -63,10 +63,46 @@ import { getConnection } from "typeorm";
      */
     @Security('passport-cookie')
     @Post("register")
-    public async registerNewRuntime(): Promise<BasicResponseModel> {
-        return {
+    public async registerNewRuntime( @Body() body: RuntimeModel): Promise<BasicResponseModel> {
 
+        const result = {
+            success: false
         } as BasicResponseModel;
+
+        const connection = getConnection();
+        const queryRunner = await connection.createQueryRunner()
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+        await queryRunner.startTransaction()
+        try {
+            logger.debug(`[runtimeController] [registerNewRuntime] add new data: ${JSON.stringify(body)}`)
+            
+            queryBuilder.insert()
+            .into(ChatBlockRuntime)
+            .values([
+                {
+                    blockId: body.blockID,
+                    imageId: body.imageID,
+                    orderNum: body.order_num,
+                    containerUrl: body.container_url,
+                    containerPort: body.container_port,
+                    containerEnv: body.container_env,
+                }
+             ])
+            .execute();
+            await queryRunner.commitTransaction();
+            logger.debug(`[runtimeController] [registerNewRuntime] add new runtime ok`)
+            result.success = true
+        } catch(err: any) {
+            await queryRunner.rollbackTransaction();
+            logger.error(`[runtimeController] [registerNewRuntime] add new runtime failed ${err.message}`)
+            result.success = false
+            result.message = err.message
+        } finally {
+            await queryRunner.release();
+            logger.info(`[runtimeController] [registerNewRuntime] add new runtime done`)
+        }
+
+        return result
     }
 
     controlCLI (container: RuntimeControlModel): Promise<number> {

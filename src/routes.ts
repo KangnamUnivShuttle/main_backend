@@ -45,6 +45,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RuntimeModel": {
+        "dataType": "refObject",
+        "properties": {
+            "blockRuntimeID": {"dataType":"double","required":true},
+            "blockID": {"dataType":"string","required":true},
+            "imageID": {"dataType":"double","required":true},
+            "order_num": {"dataType":"double","required":true},
+            "container_url": {"dataType":"string","required":true},
+            "container_port": {"dataType":"string","required":true},
+            "container_env": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RuntimeControlModel": {
         "dataType": "refObject",
         "properties": {
@@ -711,6 +725,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function RuntimeController_registerNewRuntime(request: any, response: any, next: any) {
             const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"RuntimeModel"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
