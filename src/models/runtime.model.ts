@@ -31,3 +31,9 @@ export interface RuntimeDBModel {
     container_url?: string;
     container_port?: string;
 }
+
+export interface RuntimeControlModel {
+    blockRuntimeID: number;
+    container_name: string;
+    container_state: string;
+}

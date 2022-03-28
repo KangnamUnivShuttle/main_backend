@@ -17,10 +17,13 @@ import logger from "../logger";
 import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
-import { RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { RuntimeControlModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
 import { getRecentUserState, returnErrorMessage, updateUserState } from "./runtimeHandler";
 import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
+import { exec, execFile, fork, spawn } from "child_process";
+import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
+import { getConnection } from "typeorm";
 
   @Tags("Runtime")
   @Route("runtime")
@@ -64,6 +67,82 @@ import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
         return {
 
         } as BasicResponseModel;
+    }
+
+    controlCLI (container: RuntimeControlModel): Promise<number> {
+        return new Promise<number>((resolve, rejects) => {
+            const process = spawn('jingisukan', ['service', '--name', container.container_name, '--path', `./${container.container_name}`, '--status', container.container_state]);
+    
+            logger.debug(`[runtimeController] [containerStateControl] container : ${container.container_name} state: ${container.container_state}`)
+
+            process.stdout.on('data', (data) => {
+                logger.debug(`[runtimeController] [containerStateControl] ${data}`)
+                // console.log(`spawn stdout: ${data}`);
+            });
+            process.stderr.on('data', (data) => {
+                logger.error(`[runtimeController] [containerStateControl] ${data}`)
+            });
+            process.on('exit', (code, signal) => {
+                logger.debug(`[runtimeController] [containerStateControl] spawn on exit code: ${code} signal: ${signal}`)
+
+                if (code === 0) {
+                    resolve(code)
+                } else {
+                    rejects(new Error(`Exit code is not zero.`))
+                }
+            });
+        })
+    }
+
+    /**
+     * 
+     * @param input 
+     * @returns 
+     */
+    @Security('passport-cookie')
+    @Post("state")
+    public async containerStateControl(
+        @Body() body: RuntimeControlModel
+    ): Promise<BasicResponseModel> {
+
+        const result = {
+            success: false
+        } as BasicResponseModel;
+
+        try {
+            const code = await this.controlCLI(body);
+
+            const connection = getConnection();
+            const queryRunner = await connection.createQueryRunner()
+            const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+            await queryRunner.startTransaction()
+            try {
+                logger.debug(`[runtimeController] [containerStateControl] update data: ${JSON.stringify(body)}`)
+                
+                queryBuilder.update(ChatBlockRuntime)
+                .set({
+                    containerState: body.container_state
+                })
+                .where('blockRuntimeID = :blockRuntimeID', {blockRuntimeID: body.blockRuntimeID})
+                .execute()
+
+                await queryRunner.commitTransaction();
+                logger.debug(`[runtimeController] [containerStateControl] update runtime state ok`)
+                result.success = true
+            } catch(err: any) {
+                await queryRunner.rollbackTransaction();
+                logger.error(`[runtimeController] [containerStateControl] update runtime state failed ${err.message}`)
+                result.success = false
+                result.message = err.message
+            } finally {
+                await queryRunner.release();
+                logger.info(`[runtimeController] [containerStateControl] update runtime state done`)
+            }
+        } catch (e: any) {
+            logger.error(`[runtimeController] [containerStateControl] error :${e.message}`)
+            result.message = e.message
+        }
+        return result
     }
 
     requestLocalPlugin(input: KakaoChatReqModel): Promise<any> {
