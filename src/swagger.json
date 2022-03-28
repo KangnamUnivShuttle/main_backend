@@ -111,12 +111,24 @@
 					},
 					"container_state": {
 						"type": "string"
+					},
+					"image_url": {
+						"type": "string"
+					},
+					"cpu": {
+						"type": "string"
+					},
+					"ram": {
+						"type": "string"
 					}
 				},
 				"required": [
 					"blockRuntimeID",
 					"container_name",
-					"container_state"
+					"container_state",
+					"image_url",
+					"cpu",
+					"ram"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1515,7 +1527,7 @@
 				}
 			}
 		},
-		"/runtime/{rid}": {
+		"/runtime/{blockRuntimeID}": {
 			"delete": {
 				"operationId": "DeleteRuntime",
 				"responses": {
@@ -1543,7 +1555,7 @@
 					{
 						"description": "삭제할 런타임 idx",
 						"in": "path",
-						"name": "rid",
+						"name": "blockRuntimeID",
 						"required": true,
 						"schema": {
 							"format": "double",

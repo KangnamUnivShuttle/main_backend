@@ -65,6 +65,9 @@ const models: TsoaRoute.Models = {
             "blockRuntimeID": {"dataType":"double","required":true},
             "container_name": {"dataType":"string","required":true},
             "container_state": {"dataType":"string","required":true},
+            "image_url": {"dataType":"string","required":true},
+            "cpu": {"dataType":"string","required":true},
+            "ram": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -839,12 +842,12 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/runtime/:rid',
+        app.delete('/runtime/:blockRuntimeID',
             authenticateMiddleware([{"passport-cookie":[]}]),
 
             function RuntimeController_deleteRuntime(request: any, response: any, next: any) {
             const args = {
-                    rid: {"in":"path","name":"rid","required":true,"dataType":"double"},
+                    blockRuntimeID: {"in":"path","name":"blockRuntimeID","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

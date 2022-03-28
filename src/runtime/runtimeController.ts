@@ -391,15 +391,41 @@ export class RuntimeController extends Controller {
 
     /**
      * @summary 런타임 삭제
-     * @param rid 삭제할 런타임 idx
+     * @param blockRuntimeID 삭제할 런타임 idx
      */
     @Security('passport-cookie')
-    @Delete("{rid}")
+    @Delete("{blockRuntimeID}")
     public async deleteRuntime(
-        @Path() rid: number
+        @Path() blockRuntimeID: number
     ): Promise<BasicResponseModel> {
-        return {
 
+        const result = {
+            success: false
         } as BasicResponseModel;
+
+        const connection = getConnection();
+        const queryRunner = await connection.createQueryRunner()
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+        await queryRunner.startTransaction()
+        try {
+            logger.debug(`[runtimeController] [deleteRuntime] delete data: ${blockRuntimeID}`)
+            queryBuilder.delete()
+            .from(ChatBlockRuntime)
+            .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: blockRuntimeID })
+            .execute()
+
+            await queryRunner.commitTransaction();
+            logger.debug(`[runtimeController] [deleteRuntime] delete data ok`)
+            result.success = true
+        } catch (err: any) {
+            await queryRunner.rollbackTransaction();
+            logger.error(`[runtimeController] [deleteRuntime] delete data error ${err.message}`)
+            result.success = false
+            result.message = err.message
+        } finally {
+            await queryRunner.release();
+            logger.info(`[runtimeController] [deleteRuntime] delete data done`)
+        }
+        return result
     }
 }
