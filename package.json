@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "tsoa spec-and-routes && tsc && webpack --config webpack.config.js && npm run package:pass",
-    "package:pass": "cp package.json ../main_container/app/ && cp package-lock.json ../main_container/app/",
+    "package:pass": "cp package.json ../main_container/app/ && cp package-lock.json ../main_container/app/ && cp package.json ./build/ && cp package-lock.json ./build/",
     "start": "npm run build && nodemon ./src/server.ts",
     "dev": "concurrently \"tsoa spec-and-routes\" \"nodemon --config nodemon.json\"",
     "tslint": "tslint -c tslint.json 'src/**/*.ts'",
