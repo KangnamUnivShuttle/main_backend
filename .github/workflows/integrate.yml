@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           source: "deploy.tar"
-          target: "/home/stories2/"
+          target: ${{ secrets.DEPLOY_DIR }}
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
