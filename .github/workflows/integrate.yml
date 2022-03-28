@@ -19,8 +19,7 @@ jobs:
       # - run: npm test
       - run: npm run build
       - name: Zip files
-        run: |
-        tar -cvf deploy.tar ./build/
+        run: tar -cvf deploy.tar ./build/
       # https://stackoverflow.com/a/61236896/7270469
       # https://github.com/appleboy/scp-action
       - name: Deploy update file
