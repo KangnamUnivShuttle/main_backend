@@ -1283,6 +1283,144 @@
 				]
 			}
 		},
+		"/runtimeBlock": {
+			"get": {
+				"operationId": "GetInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeBlock"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "blockID",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Insert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeBlock"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeBlock"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/runtimeBlock/{blockID}": {
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeBlock"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "blockID",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/runtime": {
 			"get": {
 				"operationId": "GetInfo",
@@ -1556,6 +1694,126 @@
 						"description": "삭제할 런타임 idx",
 						"in": "path",
 						"name": "blockRuntimeID",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/runtimeLink": {
+			"get": {
+				"operationId": "GetInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeLink"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "blockLinkID",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Insert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeLink"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeLink"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/runtimeLink/{blockLinkID}": {
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"RuntimeLink"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "blockLinkID",
 						"required": true,
 						"schema": {
 							"format": "double",
