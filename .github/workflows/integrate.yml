@@ -16,7 +16,12 @@ jobs:
         with:
           node-version: 14
       - run: npm i
-      # - run: npm test
+      # - name: Run test
+      #   run: npm test
+      #   env:
+      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      #     DB_HOST: ${{ secrets.DB_HOST }}
+      #     DB_PORT: ${{ secrets.DB_PORT }}
       - run: npm run build
       - name: Zip files
         run: tar -cvf deploy.tar ./build/
