@@ -8,6 +8,6 @@ const ormconfig: ConnectionOptions = {
     database: process.env.DB_DATABASENAME || 'chatbot_system',
     synchronize: false,
     logging: false,
-    entities: ["./src/orm/entities/**/*.js"],
+    entities: ["./src/orm/entities/**/*.js", './src/orm/entities/**/*.ts'],
   };
 export default ormconfig;

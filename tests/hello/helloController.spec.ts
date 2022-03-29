@@ -3,16 +3,20 @@ import request from 'supertest';
 
 let server: any;
 let agent: request.SuperAgentTest;
+let _shutdownManager: any;
 
 beforeAll((done) => {
-    const {app, httpServer} = require('../../src/server');
+    const {app, httpServer, shutdownManager} = require('../../src/server');
     server = httpServer
     agent = request.agent(server);
+    _shutdownManager = shutdownManager
     done();
 });
 
 afterAll((done) => {
     return  server && server.close(done);
+    // _shutdownManager.terminate()
+    done()
 });
 
 describe("GET /hello", () => {
