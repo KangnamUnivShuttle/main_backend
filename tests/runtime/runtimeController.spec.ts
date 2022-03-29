@@ -4,8 +4,8 @@ import { SAMPLE_KAKAO_REQ_OBJ } from '../global';
 let server: any;
 let agent: request.SuperAgentTest;
 
-beforeAll((done) => {
-    const {app, httpServer} = require('../../src/server');
+beforeAll(async (done) => {
+    const {app, httpServer} = await require('../../src/server');
     server = httpServer
     agent = request.agent(server);
     done();

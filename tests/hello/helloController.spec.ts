@@ -5,8 +5,8 @@ let server: any;
 let agent: request.SuperAgentTest;
 let _shutdownManager: any;
 
-beforeAll((done) => {
-    const {app, httpServer, shutdownManager} = require('../../src/server');
+beforeAll(async (done) => {
+    const {app, httpServer, shutdownManager} = await require('../../src/server');
     server = httpServer
     agent = request.agent(server);
     _shutdownManager = shutdownManager
