@@ -1,3 +1,9 @@
+import { ConnectionOptions } from "typeorm";
+import { Guid } from "guid-typescript";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export const SAMPLE_KAKAO_REQ_OBJ = {
     "intent": {
         "id": "5a56ec0008cc1461d75291f6", /* block의 id */
@@ -34,3 +40,16 @@ export const SAMPLE_KAKAO_REQ_OBJ = {
         "detailParams": {} /* resolve 된 action parameter 내용 */
     }
 }
+
+export const ormconfig: ConnectionOptions = {
+    type: "mariadb",
+    host: process.env.DB_HOST || 'localhost',
+    port: Number(process.env.DB_PORT || 3306),
+    username: process.env.DB_USERNAME || 'root',
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASENAME || 'chatbot_system',
+    synchronize: false,
+    logging: false,
+    entities: ["./src/orm/entities/**/*.js", './src/orm/entities/**/*.ts'],
+    name: Guid.create().toString()
+  };

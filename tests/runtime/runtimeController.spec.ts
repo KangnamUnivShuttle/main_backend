@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { insertRuntimeTestData, resetRuntimeTestData } from '../db';
 import { SAMPLE_KAKAO_REQ_OBJ } from '../global';
 
 let server: any;
@@ -8,6 +9,9 @@ beforeAll(async (done) => {
     const {app, httpServer} = await require('../../src/server');
     server = httpServer
     agent = request.agent(server);
+
+    await resetRuntimeTestData();
+    await insertRuntimeTestData();
     done();
 });
 
