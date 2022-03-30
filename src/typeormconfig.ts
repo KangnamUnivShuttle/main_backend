@@ -3,7 +3,7 @@ import logger from "./logger";
 // https://github.com/nrwl/nx/issues/803#issuecomment-450642765
 
 function entityResolver() {
-  const contexts = (require as any).context('./orm/entities', true, /\.ts$/);
+  const contexts = (require as any).context('./src/orm/entities', true, /\.ts$/);
   console.log('contexts', contexts, contexts.keys())
   return contexts
   .keys()
@@ -14,6 +14,11 @@ function entityResolver() {
   .reduce((result: any, entityModule: any) => {
     console.log('result', result, 'entity module', entityModule)
     console.log('keys', Object.keys(entityModule), Object.keys(entityModule).map(key => entityModule[key]))
+    Object.keys(entityModule).forEach((key) => {
+      console.log('test', key, JSON.stringify(entityModule[key]))
+      console.log('test len', entityModule[key].length)
+      console.log('test execute', entityModule[key][0]())
+    })
     return result.concat(Object.keys(entityModule).map(key => entityModule[key]))
   }, []);
 }
