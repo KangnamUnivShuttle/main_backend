@@ -329,9 +329,14 @@ export class RuntimeController extends Controller {
 
                 let payload = body as any
                 for (let idx = 0; idx < currentRuntime.pluginList.length; idx++) {
-                    currentRuntime.processResult.push(await postRequestToInstance(currentRuntime.pluginList[idx].url, payload, currentRuntime.pluginList[idx].port))
+                    currentRuntime.processResult.push(await postRequestToInstance(`plugin_node_${currentRuntime.pluginList[idx].url}`, payload, currentRuntime.pluginList[idx].port))
                     payload = currentRuntime.processResult[currentRuntime.processResult.length - 1]
                 }
+
+                payload['template']['quickReplies'] = []
+                currentRuntime.nextBlock.forEach(block => {
+                    payload['template']['quickReplies'].push(block.quickReply)  
+                })
 
                 return payload
             } catch (err: unknown) {
