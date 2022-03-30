@@ -23,8 +23,6 @@ jobs:
       #     DB_HOST: ${{ secrets.DB_HOST }}
       #     DB_PORT: ${{ secrets.DB_PORT }}
       - run: npm run build
-      - run: ls -al
-      - run: pwd
       - run: mkdir -p ./build/src/orm
       - name: test secrets val
         env:
@@ -37,7 +35,9 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: npx typeorm-model-generator -h $DB_HOST -d chatbot_system -p $DB_PORT -u root -x $DB_PASSWORD -e mariadb -o "./build/src/orm"
       - name: Fuck model gen not work
-        run: mkdir -p build/src &&  cp -r src/orm build/src/orm
+        run: mkdir -p build/src/orm &&  cp -r src/orm/* build/src/orm
+      - name: File check before zip
+        run: ls -alR ./build
       - name: Zip files
         run: tar -cvf deploy.tar ./build/
       # https://stackoverflow.com/a/61236896/7270469
