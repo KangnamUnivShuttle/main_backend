@@ -133,7 +133,7 @@ export class RuntimeBlockController extends Controller {
                 enabled: body.enabled,
                 orderNum: body.order_num
             })
-            .where('blockID = :blockID', {blockID: body.blockID})
+            .where('blockId = :blockID', {blockID: body.blockID})
             .execute()
 
             await queryRunner.commitTransaction();
@@ -168,7 +168,7 @@ export class RuntimeBlockController extends Controller {
 
             queryBuilder.delete()
             .from(ChatBlock)
-            .where('blockID = :blockID', {blockID})
+            .where('blockId = :blockID', {blockID})
             .execute()
 
             await queryRunner.commitTransaction();

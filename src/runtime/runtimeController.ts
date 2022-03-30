@@ -159,7 +159,7 @@ export class RuntimeController extends Controller {
             logger.debug(`[runtimeController] [recentRuntimeState] get block runtime ${blockRuntimeID}`)
             
             // https://jojoldu.tistory.com/579
-            const runtimeList = await queryBuilder.select([
+            runtime = await queryBuilder.select([
                 '_ChatBlockRuntime.blockRuntimeId',
                 '_ChatBlockRuntime.blockId',
                 '_ChatBlockRuntime.imageId',
@@ -172,12 +172,8 @@ export class RuntimeController extends Controller {
                 '_ChatBlockRuntime.updateDatetime',
             ])
             .from(ChatBlockRuntime, '_ChatBlockRuntime')
-            .where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
-            .getMany()
-
-            logger.debug(`[runtimeController] [recentRuntimeState] block runtime ${JSON.stringify(runtimeList)}`)
-
-            runtime = runtimeList && runtimeList.length > 0 ? runtimeList[0] : undefined
+            .where("_ChatBlockRuntime.blockRuntimeId = :blockRuntimeID", { blockRuntimeID })
+            .getOne()
 
             logger.debug(`[runtimeController] [recentRuntimeState] block runtime ${JSON.stringify(runtime)}`)
         } catch (e: any) {
@@ -206,7 +202,7 @@ export class RuntimeController extends Controller {
                     containerState: runtime.container_state,
                     containerUrl: runtime.container_name
                 })
-                .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
+                .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
                 .execute()
 
             await queryRunner.commitTransaction();
@@ -259,6 +255,7 @@ export class RuntimeController extends Controller {
                 const result_db = await this.updateContainerStateToDB({
                     blockRuntimeID: body.blockRuntimeID,
                     container_state: body.container_state,
+                    container_name: recentRuntime.containerUrl,
                     path: process.env.PLUGIN_PATH || '.'
                 } as RuntimeControlModel)
                 logger.debug(`[runtimeController] [containerStateControl] write result to db: ${result_db.success}`)
@@ -393,7 +390,7 @@ export class RuntimeController extends Controller {
                     containerEnv: body.container_env,
                     updateDatetime: 'current_timestamp()'
                 })
-                .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: body.blockRuntimeID })
+                .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: body.blockRuntimeID })
                 .execute()
 
             await queryRunner.commitTransaction();

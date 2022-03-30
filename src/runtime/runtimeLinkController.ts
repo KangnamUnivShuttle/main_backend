@@ -139,7 +139,7 @@ export class RuntimeLinkController extends Controller {
                 enabled: body.enabled,
                 orderNum: body.order_num
             })
-            .where('blockLinkID = :blockLinkID', {blockLinkID: body.blockLinkID})
+            .where('blockLinkId = :blockLinkID', {blockLinkID: body.blockLinkID})
             .execute()
 
             await queryRunner.commitTransaction();
@@ -174,7 +174,7 @@ export class RuntimeLinkController extends Controller {
 
             queryBuilder.delete()
             .from(ChatBlockLink)
-            .where('blockLinkID = :blockLinkID', {blockLinkID})
+            .where('blockLinkId = :blockLinkID', {blockLinkID})
             .execute()
 
             await queryRunner.commitTransaction();
