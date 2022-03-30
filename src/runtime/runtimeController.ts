@@ -249,13 +249,14 @@ export class RuntimeController extends Controller {
 
                 result.success = true
             } else { // 컨테이너 새로 만들때
-                const init_result = await Promise.all([
-                    genDockerCompose(body.container_name), 
-                    genDockerfile(body.image_url, body.container_name),
-                    genEcoSystem(body.container_name)
-                ])
+                let init_result = await genDockerCompose(body.container_name)
+                logger.debug(`[runtimeController] [containerStateControl] init result docker-compose: ${JSON.stringify(init_result)}`)
 
-                logger.debug(`[runtimeController] [containerStateControl] init result: ${JSON.stringify(init_result)}`)
+                init_result = await genDockerfile(body.image_url, body.container_name)
+                logger.debug(`[runtimeController] [containerStateControl] init result dockerfile: ${JSON.stringify(init_result)}`)
+
+                init_result = await genEcoSystem(body.container_name)
+                logger.debug(`[runtimeController] [containerStateControl] init result ecosystem: ${JSON.stringify(init_result)}`)
 
                 const code = await controlCLI(body);
 
