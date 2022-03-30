@@ -137,7 +137,8 @@ export class RuntimeLinkController extends Controller {
                 label: body.label,
                 webLinkUrl: body.webLinkUrl,
                 enabled: body.enabled,
-                orderNum: body.order_num
+                orderNum: body.order_num,
+                updateDatetime: 'current_timestamp()'
             })
             .where('blockLinkId = :blockLinkID', {blockLinkID: body.blockLinkID})
             .execute()

@@ -131,7 +131,8 @@ export class RuntimeBlockController extends Controller {
             .set({
                 name: body.name,
                 enabled: body.enabled,
-                orderNum: body.order_num
+                orderNum: body.order_num,
+                updateDatetime: 'current_timestamp()'
             })
             .where('blockId = :blockID', {blockID: body.blockID})
             .execute()
