@@ -226,6 +226,8 @@ export class RuntimeController extends Controller {
         @Body() body: RuntimeControlModel
     ): Promise<BasicResponseModel> {
 
+        logger.debug(`[runtimeController] [containerStateControl] payload: ${JSON.stringify(body)}`)
+
         const result = {
             success: false
         } as BasicResponseModel;
