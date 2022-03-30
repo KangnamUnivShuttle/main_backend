@@ -23,6 +23,10 @@ jobs:
       #     DB_HOST: ${{ secrets.DB_HOST }}
       #     DB_PORT: ${{ secrets.DB_PORT }}
       - run: npm run build
+      - name: test secrets val
+        env:
+          TEST_VAL: ${{secrets.TEST_VAL}}
+        run: echo $TEST_VAL
       - name: run model gen
         env: 
           DB_HOST: ${{ secrets.DB_HOST }}
