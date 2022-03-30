@@ -200,7 +200,8 @@ export class RuntimeController extends Controller {
             queryBuilder.update(ChatBlockRuntime)
                 .set({
                     containerState: runtime.container_state,
-                    containerUrl: runtime.container_name
+                    containerUrl: runtime.container_name,
+                    updateDatetime: 'current_timestamp()'
                 })
                 .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
                 .execute()
