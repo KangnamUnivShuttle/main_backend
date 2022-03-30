@@ -235,8 +235,11 @@ export class RuntimeController extends Controller {
 
         try {
             const recentRuntime = await this.recentRuntimeState(body.blockRuntimeID)
+
+            logger.debug(`[runtimeController] [containerStateControl] is null? ${recentRuntime === null}, container url: ${recentRuntime !== null ? recentRuntime.containerUrl : 'NULL'}`)
+
             // 이미 컨테이너가 있는 상태일때
-            if (recentRuntime?.containerUrl) {
+            if (recentRuntime && recentRuntime.containerUrl) {
                 logger.info(`[runtimeController] [containerStateControl] runtime already exist in ${recentRuntime.containerUrl}:${recentRuntime.containerPort} / ${recentRuntime.containerState}`)
                 
                 const code = await controlCLI({
