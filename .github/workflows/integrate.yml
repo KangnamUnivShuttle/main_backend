@@ -23,6 +23,9 @@ jobs:
       #     DB_HOST: ${{ secrets.DB_HOST }}
       #     DB_PORT: ${{ secrets.DB_PORT }}
       - run: npm run build
+      - run: ls -al
+      - run: pwd
+      - run: mkdir -p ./build/src/orm
       - name: test secrets val
         env:
           TEST_VAL: ${{secrets.TEST_VAL}}
