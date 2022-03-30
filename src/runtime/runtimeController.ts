@@ -217,7 +217,7 @@ export class RuntimeController extends Controller {
     }
 
     /**
-     * 
+     * @summary 런타임 컨테이너 관리 API
      * @param input 
      * @returns 
      */

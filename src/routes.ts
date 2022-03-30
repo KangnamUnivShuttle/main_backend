@@ -83,6 +83,8 @@ const models: TsoaRoute.Models = {
             "image_url": {"dataType":"string","required":true},
             "cpu": {"dataType":"string","required":true},
             "ram": {"dataType":"string","required":true},
+            "path": {"dataType":"string","required":true},
+            "env": {"dataType":"array","array":{"dataType":"string"}},
         },
         "additionalProperties": false,
     },

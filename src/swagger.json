@@ -146,6 +146,15 @@
 					},
 					"ram": {
 						"type": "string"
+					},
+					"path": {
+						"type": "string"
+					},
+					"env": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -154,7 +163,8 @@
 					"container_state",
 					"image_url",
 					"cpu",
-					"ram"
+					"ram",
+					"path"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1630,6 +1640,7 @@
 						}
 					}
 				},
+				"summary": "런타임 컨테이너 관리 API",
 				"tags": [
 					"Runtime"
 				],
