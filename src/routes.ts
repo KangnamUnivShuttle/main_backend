@@ -331,22 +331,12 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Properties": {
-        "dataType": "refObject",
-        "properties": {
-            "appUserId": {"dataType":"string","required":true},
-            "appUserStatus": {"dataType":"string","required":true},
-            "plusfriend_user_key": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "User": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"string","required":true},
             "type": {"dataType":"string","required":true},
-            "properties": {"ref":"Properties","required":true},
+            "properties": {"dataType":"any"},
         },
         "additionalProperties": false,
     },
@@ -355,17 +345,11 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "timezone": {"dataType":"string","required":true},
+            "params": {"dataType":"any"},
             "block": {"ref":"BlockOrIntentOrBot","required":true},
             "utterance": {"dataType":"string","required":true},
-            "lang": {"dataType":"string","required":true},
+            "lang": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "user": {"ref":"User","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ParamsOrDetailParams": {
-        "dataType": "refObject",
-        "properties": {
         },
         "additionalProperties": false,
     },
@@ -374,10 +358,10 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true},
-            "clientExtra": {"dataType":"string","required":true},
-            "params": {"ref":"ParamsOrDetailParams"},
+            "clientExtra": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "params": {"dataType":"any"},
             "id": {"dataType":"string","required":true},
-            "detailParams": {"ref":"ParamsOrDetailParams"},
+            "detailParams": {"dataType":"any"},
         },
         "additionalProperties": false,
     },

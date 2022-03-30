@@ -691,26 +691,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Properties": {
-				"properties": {
-					"appUserId": {
-						"type": "string"
-					},
-					"appUserStatus": {
-						"type": "string"
-					},
-					"plusfriend_user_key": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"appUserId",
-					"appUserStatus",
-					"plusfriend_user_key"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"User": {
 				"properties": {
 					"id": {
@@ -719,14 +699,11 @@
 					"type": {
 						"type": "string"
 					},
-					"properties": {
-						"$ref": "#/components/schemas/Properties"
-					}
+					"properties": {}
 				},
 				"required": [
 					"id",
-					"type",
-					"properties"
+					"type"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -736,6 +713,7 @@
 					"timezone": {
 						"type": "string"
 					},
+					"params": {},
 					"block": {
 						"$ref": "#/components/schemas/BlockOrIntentOrBot"
 					},
@@ -743,7 +721,8 @@
 						"type": "string"
 					},
 					"lang": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"user": {
 						"$ref": "#/components/schemas/User"
@@ -753,14 +732,8 @@
 					"timezone",
 					"block",
 					"utterance",
-					"lang",
 					"user"
 				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ParamsOrDetailParams": {
-				"properties": {},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -770,21 +743,17 @@
 						"type": "string"
 					},
 					"clientExtra": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
-					"params": {
-						"$ref": "#/components/schemas/ParamsOrDetailParams"
-					},
+					"params": {},
 					"id": {
 						"type": "string"
 					},
-					"detailParams": {
-						"$ref": "#/components/schemas/ParamsOrDetailParams"
-					}
+					"detailParams": {}
 				},
 				"required": [
 					"name",
-					"clientExtra",
 					"id"
 				],
 				"type": "object",

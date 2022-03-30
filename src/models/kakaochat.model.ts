@@ -11,10 +11,10 @@ export interface BlockOrIntentOrBot {
 }
 export interface UserRequest {
     timezone: string;
-    // params: Params;
+    params?: any;
     block: BlockOrIntentOrBot;
     utterance: string;
-    lang: string;
+    lang?: string | null;
     user: User;
 }
 // export interface Params {
@@ -23,19 +23,19 @@ export interface UserRequest {
 export interface User {
     id: string;
     type: string;
-    properties: Properties;
+    properties?: any;
 }
 export interface Properties {
-    appUserId: string;
-    appUserStatus: string;
-    plusfriend_user_key: string;
+    appUserId?: string;
+    appUserStatus?: string;
+    plusfriend_user_key?: string;
 }
 export interface Action {
     name: string;
-    clientExtra: string;
-    params?: ParamsOrDetailParams;
+    clientExtra?: string | null;
+    params?: any;
     id: string;
-    detailParams?: ParamsOrDetailParams;
+    detailParams?: any;
 }
 export interface ParamsOrDetailParams {
 }
