@@ -236,6 +236,8 @@ export class RuntimeController extends Controller {
         try {
             const recentRuntime = await this.recentRuntimeState(body.blockRuntimeID)
 
+            console.log('recentRuntime', recentRuntime)
+
             logger.debug(`[runtimeController] [containerStateControl] is null? ${recentRuntime === null}, container url: ${recentRuntime !== null ? recentRuntime.containerUrl : 'NULL'}`)
 
             // 이미 컨테이너가 있는 상태일때
