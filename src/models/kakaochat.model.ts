@@ -8,11 +8,12 @@ export interface KakaoChatReqModel {
 export interface BlockOrIntentOrBot {
     id: string;
     name: string;
+    extra?: any;
 }
 export interface UserRequest {
     timezone: string;
     params?: any;
-    block?: any;
+    block?: BlockOrIntentOrBot;
     utterance: string;
     lang?: string | null;
     user: User;
@@ -32,7 +33,7 @@ export interface Properties {
 }
 export interface Action {
     name: string | null;
-    clientExtra?: string | null;
+    clientExtra?: any;
     params?: any;
     id: string | null;
     detailParams?: any;

@@ -682,7 +682,8 @@
 					},
 					"name": {
 						"type": "string"
-					}
+					},
+					"extra": {}
 				},
 				"required": [
 					"id",
@@ -714,7 +715,9 @@
 						"type": "string"
 					},
 					"params": {},
-					"block": {},
+					"block": {
+						"$ref": "#/components/schemas/BlockOrIntentOrBot"
+					},
 					"utterance": {
 						"type": "string"
 					},
@@ -740,10 +743,7 @@
 						"type": "string",
 						"nullable": true
 					},
-					"clientExtra": {
-						"type": "string",
-						"nullable": true
-					},
+					"clientExtra": {},
 					"params": {},
 					"id": {
 						"type": "string",

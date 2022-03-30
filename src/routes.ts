@@ -327,6 +327,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
+            "extra": {"dataType":"any"},
         },
         "additionalProperties": false,
     },
@@ -346,7 +347,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "timezone": {"dataType":"string","required":true},
             "params": {"dataType":"any"},
-            "block": {"dataType":"any"},
+            "block": {"ref":"BlockOrIntentOrBot"},
             "utterance": {"dataType":"string","required":true},
             "lang": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "user": {"ref":"User","required":true},
@@ -358,7 +359,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "clientExtra": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "clientExtra": {"dataType":"any"},
             "params": {"dataType":"any"},
             "id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "detailParams": {"dataType":"any"},
