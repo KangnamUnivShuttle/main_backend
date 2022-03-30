@@ -714,9 +714,7 @@
 						"type": "string"
 					},
 					"params": {},
-					"block": {
-						"$ref": "#/components/schemas/BlockOrIntentOrBot"
-					},
+					"block": {},
 					"utterance": {
 						"type": "string"
 					},
@@ -730,7 +728,6 @@
 				},
 				"required": [
 					"timezone",
-					"block",
 					"utterance",
 					"user"
 				],
@@ -740,7 +737,8 @@
 			"Action": {
 				"properties": {
 					"name": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"clientExtra": {
 						"type": "string",
@@ -748,7 +746,8 @@
 					},
 					"params": {},
 					"id": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"detailParams": {}
 				},
@@ -778,16 +777,13 @@
 						"type": "array",
 						"nullable": true
 					},
-					"bot": {
-						"$ref": "#/components/schemas/BlockOrIntentOrBot"
-					},
+					"bot": {},
 					"action": {
 						"$ref": "#/components/schemas/Action"
 					}
 				},
 				"required": [
-					"userRequest",
-					"bot"
+					"userRequest"
 				],
 				"type": "object",
 				"additionalProperties": false

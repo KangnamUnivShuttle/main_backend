@@ -2,7 +2,7 @@ export interface KakaoChatReqModel {
     intent?: BlockOrIntentOrBot;
     userRequest: UserRequest;
     contexts?: (null)[] | null;
-    bot: BlockOrIntentOrBot;
+    bot?: any;
     action?: Action;
 }
 export interface BlockOrIntentOrBot {
@@ -12,7 +12,7 @@ export interface BlockOrIntentOrBot {
 export interface UserRequest {
     timezone: string;
     params?: any;
-    block: BlockOrIntentOrBot;
+    block?: any;
     utterance: string;
     lang?: string | null;
     user: User;
@@ -31,10 +31,10 @@ export interface Properties {
     plusfriend_user_key?: string;
 }
 export interface Action {
-    name: string;
+    name: string | null;
     clientExtra?: string | null;
     params?: any;
-    id: string;
+    id: string | null;
     detailParams?: any;
 }
 export interface ParamsOrDetailParams {
