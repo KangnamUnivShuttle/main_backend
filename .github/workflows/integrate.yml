@@ -68,6 +68,7 @@ jobs:
             rm deploy.tar
             mkdir -p $HOME/KangnamShuttle4.0/main_container/kws1/build
             cp -rp deploy/build/* $HOME/KangnamShuttle4.0/main_container/kws1/build/
+            cp $HOME/tsconfig.json $HOME/KangnamShuttle4.0/main_container/kws1/build/
             cp $HOME/ormconfig.json $HOME/KangnamShuttle4.0/main_container/kws1/build/
             cd $HOME/KangnamShuttle4.0/main_container/kws1
             docker-compose build
