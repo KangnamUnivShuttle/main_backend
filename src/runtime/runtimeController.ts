@@ -156,6 +156,8 @@ export class RuntimeController extends Controller {
 
         let runtime = null;
         try {
+            logger.debug(`[runtimeController] [recentRuntimeState] get block runtime ${blockRuntimeID}`)
+            
             // https://jojoldu.tistory.com/579
             runtime = await queryBuilder.select([
                 '_ChatBlockRuntime.blockRuntimeID',
@@ -172,12 +174,14 @@ export class RuntimeController extends Controller {
             .from(ChatBlockRuntime, '_ChatBlockRuntime')
             .where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
             .getOneOrFail()
+
+            logger.debug(`[runtimeController] [recentRuntimeState] block runtime ${JSON.stringify(runtime)}`)
         } catch (e: any) {
             logger.error(`[runtimeController] [recentRuntimeState] error: ${e.message}`)
         } finally {
             queryRunner.release()
+            logger.info(`[runtimeController] [recentRuntimeState] done`)
         }
-        
         return Promise.resolve(runtime);
     }
 
@@ -236,9 +240,7 @@ export class RuntimeController extends Controller {
         try {
             const recentRuntime = await this.recentRuntimeState(body.blockRuntimeID)
 
-            console.log('recentRuntime', recentRuntime)
-
-            logger.debug(`[runtimeController] [containerStateControl] is null? ${recentRuntime === null}, container url: ${recentRuntime !== null ? recentRuntime.containerUrl : 'NULL'}`)
+            logger.debug(`[runtimeController] [containerStateControl] recentRuntime ${JSON.stringify(recentRuntime)}`)
 
             // 이미 컨테이너가 있는 상태일때
             if (recentRuntime && recentRuntime.containerUrl) {
