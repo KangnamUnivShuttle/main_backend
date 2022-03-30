@@ -8,6 +8,7 @@ const ormconfig: ConnectionOptions = {
     database: process.env.DB_DATABASENAME || 'chatbot_system',
     synchronize: false,
     logging: false,
-    entities: ["./src/orm/entities/**/*.js", './src/orm/entities/**/*.ts'],
+    entities: [__dirname + "/orm/entities/*.{js,ts}", ],//__dirname + 
   };
+// console.log('asdf', __dirname, __dirname + "src/orm/entities/*.{js,ts}")
 export default ormconfig;

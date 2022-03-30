@@ -37,6 +37,8 @@ jobs:
       - name: Fuck model gen not work
         run: mkdir -p build/src/orm &&  cp -r src/orm/* build/src/orm
       # - name: Fuck No metadata for "e" was found issue
+      #   run: rm build/src/orm/entities/*.ts
+      # - name: Fuck No metadata for "e" was found issue
       #   run: cp build/src/orm/tsconfig.json build/ && cp build/src/orm/ormconfig.json build/ 
       - name: File check before zip
         run: ls -alR ./build
