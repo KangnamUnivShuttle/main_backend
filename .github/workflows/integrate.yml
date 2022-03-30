@@ -23,7 +23,12 @@ jobs:
       #     DB_HOST: ${{ secrets.DB_HOST }}
       #     DB_PORT: ${{ secrets.DB_PORT }}
       - run: npm run build
-      - run: npx typeorm-model-generator -h ${{ secrets.DB_HOST }} -d chatbot_system -p ${{ secrets.DB_PORT }} -u root -x ${{ secrets.DB_PASSWORD }} -e mariadb -o "./build/src/orm"
+      - name: run model gen
+        run: npx typeorm-model-generator -h $DB_HOST -d chatbot_system -p $DB_PORT -u root -x $DB_PASSWORD -e mariadb -o "./build/src/orm"
+        env: 
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       - name: Zip files
         run: tar -cvf deploy.tar ./build/
       # https://stackoverflow.com/a/61236896/7270469
