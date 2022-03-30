@@ -8,7 +8,7 @@ function entityResolver() {
   return contexts
   .keys()
   .map((modulePath: any) => {
-    console.log('modulePath: ', modulePath)
+    console.log('modulePath: ', modulePath, contexts(modulePath))
     return contexts(modulePath)
   })
   .reduce((result: any, entityModule: any) => result.concat(Object.keys(entityModule).map(key => entityModule[key]), []))
