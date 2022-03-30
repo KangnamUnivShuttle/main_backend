@@ -20,7 +20,7 @@ export interface RuntimeHashmapModel {
 
 export interface RuntimeDBModel {
     blockID: string;
-    blockLinkedID?: number;
+    blockLinkID?: number;
     blockRuntimeID?: number;
     imageID?: number;
     messageText?: string;

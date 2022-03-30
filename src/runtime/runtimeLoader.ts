@@ -225,14 +225,19 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
 const runtimeDBModelConverter = function(runtimeList: RuntimeDBModel[]): RuntimeHashmapModel {
     const result = {} as RuntimeHashmapModel;
     runtimeList.forEach(runtime => {
-        if (runtime.blockID && !runtime.blockLinkedID && !runtime.blockRuntimeID && !runtime.imageID) {
+        // logger.debug(`runtime check, ${JSON.stringify(runtime)}, ${Object.keys(runtime)}`)
+        // logger.debug(`block id ${runtime.blockID}`)
+        // logger.debug(`block linked: ${runtime.blockLinkID} / ${runtime.blockLinkID}, asdf ${runtime['blockLinkID']}`)
+        // logger.debug(`image id: ${!runtime.imageID} / ${runtime.imageID}`)
+        // logger.debug(`runtime id: ${!runtime.blockRuntimeID} / ${runtime.blockRuntimeID}`)
+        if (runtime.blockID && !runtime.blockLinkID && !runtime.blockRuntimeID && !runtime.imageID) {
             result[runtime.blockID] = {
                 pluginList: [],
                 kakaoChatPayload: undefined,
                 processResult: [],
                 nextBlock: []
             } as RuntimePayloadModel;
-        } else if (runtime.blockLinkedID) {
+        } else if (runtime.blockLinkID) {
             result[runtime.blockID].nextBlock.push(
                 {
                     blockID: runtime.nextBlockID,
@@ -275,11 +280,15 @@ const loadRuntimeDB = async function(isDev: boolean = false): Promise<RuntimeHas
         SELECT * FROM chat_block_runtime_map
     `)) as RuntimeDBModel[];
 
+    // logger.debug(`[runtimeLoader] [loadRuntimeDB] total runtime list: ${JSON.stringify(runtimeList)}`)
+
     return Promise.resolve(runtimeDBModelConverter(runtimeList))
 }
 
 export const getBestRuntimeChoice = async function(currentInputMsg: string, lastRuntimeKey: string = 'intro', isDev: boolean = false): Promise<string | undefined> {
     const runtimeDB = await loadRuntimeDB(isDev) // TODO: should change dev mode to false
+
+    logger.debug(`[runtimeLoader] [getBestRuntimeChoice] total runtime list: ${JSON.stringify(runtimeDB)}`)
 
     const lastRuntimePayload = runtimeDB[lastRuntimeKey] || runtimeDB['intro']
     // console.log('key', lastRuntimeKey, 'input', currentInputMsg, 'payload', lastRuntimePayload)
