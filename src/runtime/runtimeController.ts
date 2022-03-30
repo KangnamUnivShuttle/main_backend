@@ -238,26 +238,29 @@ export class RuntimeController extends Controller {
                 
                 const code = await controlCLI({
                     container_name: recentRuntime.containerUrl,
-                    container_state: body.container_state
+                    container_state: body.container_state,
+                    path: process.env.PLUGIN_PATH || '.'
                 } as RuntimeControlModel);    
                 logger.debug(`[runtimeController] [containerStateControl] code: ${code}`)
                 const result_db = await this.updateContainerStateToDB({
                     blockRuntimeID: body.blockRuntimeID,
-                    container_state: body.container_state
+                    container_state: body.container_state,
+                    path: process.env.PLUGIN_PATH || '.'
                 } as RuntimeControlModel)
                 logger.debug(`[runtimeController] [containerStateControl] write result to db: ${result_db.success}`)
 
                 result.success = true
             } else { // 컨테이너 새로 만들때
-                let init_result = await genDockerCompose(body.container_name)
+                let init_result = await genDockerCompose(body.container_name, process.env.PLUGIN_PATH || '.')
                 logger.debug(`[runtimeController] [containerStateControl] init result docker-compose: ${JSON.stringify(init_result)}`)
 
-                init_result = await genDockerfile(body.image_url, body.container_name)
+                init_result = await genDockerfile(body.image_url, body.container_name, process.env.PLUGIN_PATH || '.')
                 logger.debug(`[runtimeController] [containerStateControl] init result dockerfile: ${JSON.stringify(init_result)}`)
 
-                init_result = await genEcoSystem(body.container_name)
+                init_result = await genEcoSystem(body.container_name, process.env.PLUGIN_PATH || '.')
                 logger.debug(`[runtimeController] [containerStateControl] init result ecosystem: ${JSON.stringify(init_result)}`)
 
+                body.path = process.env.PLUGIN_PATH || '.'
                 const code = await controlCLI(body);
 
                 logger.debug(`[runtimeController] [containerStateControl] control code: ${code}`)

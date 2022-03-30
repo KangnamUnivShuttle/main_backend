@@ -5,7 +5,7 @@ import { RuntimeControlModel } from "../models/runtime.model";
 
 export function controlCLI(container: RuntimeControlModel): Promise<number> {
     return new Promise<number>((resolve, rejects) => {
-        const process = spawn('jingisukan', ['service', '--name', container.container_name, '--path', `./${container.container_name}`, '--status', container.container_state]);
+        const process = spawn('jingisukan', ['service', '--name', container.container_name, '--path', `${container.path}`, '--status', container.container_state]);
 
         logger.debug(`[runtimeCliController] [containerStateControl] container : ${container.container_name} state: ${container.container_state}`)
 

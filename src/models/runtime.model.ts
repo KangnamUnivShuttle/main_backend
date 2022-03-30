@@ -39,7 +39,7 @@ export interface RuntimeControlModel {
     image_url: string;
     cpu: string;
     ram: string;
-    
+    path: string;
 }
 
 export interface RuntimeModel {
