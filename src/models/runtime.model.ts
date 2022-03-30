@@ -40,6 +40,7 @@ export interface RuntimeControlModel {
     cpu: string;
     ram: string;
     path: string;
+    env?: string[];
 }
 
 export interface RuntimeModel {

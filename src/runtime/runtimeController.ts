@@ -24,7 +24,7 @@ import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
 import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
 import { getConnection } from "typeorm";
-import { controlCLI, genDockerCompose, genDockerfile, genEcoSystem } from "./runtimeCliController";
+import { controlCLI, genDockerCompose, genDockerfile, genEcoSystem, genEnvFile } from "./runtimeCliController";
 
 @Tags("Runtime")
 @Route("runtime")
@@ -261,6 +261,9 @@ export class RuntimeController extends Controller {
                 logger.debug(`[runtimeController] [containerStateControl] init result dockerfile: ${JSON.stringify(init_result)}`)
 
                 init_result = await genEcoSystem(body.container_name, process.env.PLUGIN_PATH || '.')
+                logger.debug(`[runtimeController] [containerStateControl] init result ecosystem: ${JSON.stringify(init_result)}`)
+
+                init_result = await genEnvFile(body.container_name, process.env.PLUGIN_PATH || '.', body.env)
                 logger.debug(`[runtimeController] [containerStateControl] init result ecosystem: ${JSON.stringify(init_result)}`)
 
                 body.path = process.env.PLUGIN_PATH || '.'

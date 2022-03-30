@@ -53,9 +53,9 @@ export function genDockerfile(url: string, name: string, path: string = '.'): Pr
     })
 }
 
-export function genDockerCompose(name: string, path: string = '.', cpu: string = '0.1', ram: string = '128M', port: string = '15000'): Promise<number> {
+export function genDockerCompose(name: string, path: string = '.', cpu: string = '0.1', ram: string = '128M', port: string = '15000', env: string = 'true'): Promise<number> {
     return new Promise<number>((resolve, rejects) => {
-        const process = spawn('jingisukan', ['new', '--cpu', cpu, '--ram', ram, '--name', name, '--port', port, '--path', path]);
+        const process = spawn('jingisukan', ['new', '--cpu', cpu, '--ram', ram, '--name', name, '--port', port, '--path', path, '--env', env]);
 
         logger.debug(`[runtimeCliController] [genDockerCompose] container : ${name}`)
 
@@ -68,6 +68,36 @@ export function genDockerCompose(name: string, path: string = '.', cpu: string =
         });
         process.on('exit', (code, signal) => {
             logger.debug(`[runtimeCliController] [genDockerCompose] spawn on exit code: ${code} signal: ${signal}`)
+
+            if (code === 0) {
+                resolve(code)
+            } else {
+                rejects(new Error(`Exit code is not zero.`))
+            }
+        });
+    })
+}
+
+export function genEnvFile(name: string, path: string = '.', env: string[] = []): Promise<number> {
+    return new Promise<number>((resolve, rejects) => {
+        const params = ['env', '--name', name, '--path', path, ]
+        env.forEach(val => {
+            params.push('--data')
+            params.push(val)
+        })
+        const process = spawn('jingisukan', params);
+
+        logger.debug(`[runtimeCliController] [genEnvFile] container : ${name}`)
+
+        process.stdout.on('data', (data) => {
+            logger.debug(`[runtimeCliController] [genEnvFile] ${data}`)
+            // console.log(`spawn stdout: ${data}`);
+        });
+        process.stderr.on('data', (data) => {
+            logger.error(`[runtimeCliController] [genEnvFile] ${data}`)
+        });
+        process.on('exit', (code, signal) => {
+            logger.debug(`[runtimeCliController] [genEnvFile] spawn on exit code: ${code} signal: ${signal}`)
 
             if (code === 0) {
                 resolve(code)
