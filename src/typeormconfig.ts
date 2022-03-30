@@ -11,7 +11,11 @@ function entityResolver() {
     console.log('modulePath: ', modulePath, contexts(modulePath))
     return contexts(modulePath)
   })
-  .reduce((result: any, entityModule: any) => result.concat(Object.keys(entityModule).map(key => entityModule[key]), []))
+  .reduce((result: any, entityModule: any) => {
+    console.log('result', result, 'entity module', entityModule)
+    console.log('keys', Object.keys(entityModule), Object.keys(entityModule).map(key => entityModule[key]))
+    return result.concat(Object.keys(entityModule).map(key => entityModule[key]))
+  }, []);
 }
 
 const ormconfig: ConnectionOptions = {
