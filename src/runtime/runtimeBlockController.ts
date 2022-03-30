@@ -59,8 +59,6 @@ export class RuntimeBlockController extends Controller {
                 .offset((page - 1) * limit)
                 .getMany()
 
-            console.log('runtime list', runtimeList)
-
             result.success = true
             result.data = runtimeList
         } catch (err: any) {
