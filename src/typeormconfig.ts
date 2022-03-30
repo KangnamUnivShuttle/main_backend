@@ -1,4 +1,5 @@
 import { ConnectionOptions } from "typeorm";
+import logger from "./logger";
 const ormconfig: ConnectionOptions = {
     type: "mariadb",
     host: process.env.DB_HOST || 'localhost',
@@ -11,4 +12,5 @@ const ormconfig: ConnectionOptions = {
     entities: [__dirname + "/**/entities/*.{js,ts}", ],//__dirname + 
   };
 // console.log('asdf', __dirname, __dirname + "src/orm/entities/*.{js,ts}")
+logger.debug(`[tyeormconfig] [config] entities: ${JSON.stringify(ormconfig.entities)}`)
 export default ormconfig;
