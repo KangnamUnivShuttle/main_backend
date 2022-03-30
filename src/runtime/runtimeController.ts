@@ -66,14 +66,14 @@ export class RuntimeController extends Controller {
 
             // https://jojoldu.tistory.com/579
             let query = queryBuilder.select([
-                '_ChatBlockRuntime.blockRuntimeID',
-                '_ChatBlockRuntime.blockID',
-                '_ChatBlockRuntime.imageID',
-                '_ChatBlockRuntime.order_num',
-                '_ChatBlockRuntime.container_url',
-                '_ChatBlockRuntime.container_port',
-                '_ChatBlockRuntime.container_env',
-                '_ChatBlockRuntime.container_state',
+                '_ChatBlockRuntime.blockRuntimeId',
+                '_ChatBlockRuntime.blockId',
+                '_ChatBlockRuntime.imageId',
+                '_ChatBlockRuntime.orderNum',
+                '_ChatBlockRuntime.containerUrl',
+                '_ChatBlockRuntime.containerPort',
+                '_ChatBlockRuntime.containerEnv',
+                '_ChatBlockRuntime.containerState',
                 '_ChatBlockRuntime.registerDatetime',
                 '_ChatBlockRuntime.updateDatetime',
             ])
@@ -81,12 +81,12 @@ export class RuntimeController extends Controller {
 
             // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
             if (blockRuntimeID) {
-                query = query.where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
+                query = query.where("_ChatBlockRuntime.blockRuntimeId = :blockRuntimeID", { blockRuntimeID })
             }
             if (blockID) {
-                query = query.where("_ChatBlockRuntime.blockID = :blockID", { blockID })
+                query = query.where("_ChatBlockRuntime.blockId = :blockID", { blockID })
             }
-            const runtimeList = await query.orderBy('_ChatBlockRuntime.order_num', 'ASC')
+            const runtimeList = await query.orderBy('_ChatBlockRuntime.orderNum', 'ASC')
                 .limit(limit)
                 .offset((page - 1) * limit)
                 .getMany()
@@ -149,31 +149,35 @@ export class RuntimeController extends Controller {
         return result
     }
 
-    async recentRuntimeState(blockRuntimeID: number): Promise<ChatBlockRuntime | null> {
+    async recentRuntimeState(blockRuntimeID: number): Promise<ChatBlockRuntime | undefined> {
         const connection = getConnection();
         const queryRunner = await connection.createQueryRunner()
-        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'registerPlugin', queryRunner);
+        const queryBuilder = await connection.createQueryBuilder(ChatBlockRuntime, 'asdfsadf', queryRunner);
 
-        let runtime = null;
+        let runtime = undefined;
         try {
             logger.debug(`[runtimeController] [recentRuntimeState] get block runtime ${blockRuntimeID}`)
             
             // https://jojoldu.tistory.com/579
-            runtime = await queryBuilder.select([
-                '_ChatBlockRuntime.blockRuntimeID',
-                '_ChatBlockRuntime.blockID',
-                '_ChatBlockRuntime.imageID',
-                '_ChatBlockRuntime.order_num',
-                '_ChatBlockRuntime.container_url',
-                '_ChatBlockRuntime.container_port',
-                '_ChatBlockRuntime.container_env',
-                '_ChatBlockRuntime.container_state',
+            const runtimeList = await queryBuilder.select([
+                '_ChatBlockRuntime.blockRuntimeId',
+                '_ChatBlockRuntime.blockId',
+                '_ChatBlockRuntime.imageId',
+                '_ChatBlockRuntime.orderNum',
+                '_ChatBlockRuntime.containerUrl',
+                '_ChatBlockRuntime.containerPort',
+                '_ChatBlockRuntime.containerEnv',
+                '_ChatBlockRuntime.containerState',
                 '_ChatBlockRuntime.registerDatetime',
                 '_ChatBlockRuntime.updateDatetime',
             ])
             .from(ChatBlockRuntime, '_ChatBlockRuntime')
             .where("_ChatBlockRuntime.blockRuntimeID = :blockRuntimeID", { blockRuntimeID })
-            .getOneOrFail()
+            .getMany()
+
+            logger.debug(`[runtimeController] [recentRuntimeState] block runtime ${JSON.stringify(runtimeList)}`)
+
+            runtime = runtimeList && runtimeList.length > 0 ? runtimeList[0] : undefined
 
             logger.debug(`[runtimeController] [recentRuntimeState] block runtime ${JSON.stringify(runtime)}`)
         } catch (e: any) {

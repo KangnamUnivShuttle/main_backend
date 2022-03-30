@@ -38,23 +38,23 @@ export class RuntimeLinkController extends Controller {
 
             // https://jojoldu.tistory.com/579
             const runtimeList = queryBuilder.select([
-                '_ChatBlockLink.blockLinkID',
-                '_ChatBlockLink.blockID',
-                '_ChatBlockLink.nextBlockID',
+                '_ChatBlockLink.blockLinkId',
+                '_ChatBlockLink.blockId',
+                '_ChatBlockLink.nextBlockId',
                 '_ChatBlockLink.messageText',
                 '_ChatBlockLink.action',
                 '_ChatBlockLink.label',
                 '_ChatBlockLink.webLinkUrl',
                 '_ChatBlockLink.enabled',
-                '_ChatBlockLink.order_num',
+                '_ChatBlockLink.orderNum',
                 '_ChatBlockLink.registerDatetime',
                 '_ChatBlockLink.updateDatetime'
             ])
                 .from(ChatBlockLink, '_ChatBlockLink')
 
             // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
-            .where("_ChatBlockLink.blockID = :blockID", { blockID })
-            .orderBy('_ChatBlockLink.order_num', 'ASC')
+            .where("_ChatBlockLink.blockId = :blockID", { blockID })
+            .orderBy('_ChatBlockLink.orderNum', 'ASC')
                 .getMany()
 
             result.success = true

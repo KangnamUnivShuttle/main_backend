@@ -40,10 +40,10 @@ export class RuntimeBlockController extends Controller {
 
             // https://jojoldu.tistory.com/579
             let query = queryBuilder.select([
-                '_ChatBlock.blockID',
+                '_ChatBlock.blockId',
                 '_ChatBlock.name',
                 '_ChatBlock.enabled',
-                '_ChatBlock.order_num',
+                '_ChatBlock.orderNum',
                 '_ChatBlock.deleteable',
                 '_ChatBlock.registerDatetime',
                 '_ChatBlock.updateDatetime'
@@ -52,9 +52,9 @@ export class RuntimeBlockController extends Controller {
 
             // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
             if (blockID) {
-                query = query.where("_ChatBlock.blockID = :blockID", { blockID })
+                query = query.where("_ChatBlock.blockId = :blockID", { blockID })
             }
-            const runtimeList = await query.orderBy('_ChatBlock.order_num', 'ASC')
+            const runtimeList = await query.orderBy('_ChatBlock.orderNum', 'ASC')
                 .limit(limit)
                 .offset((page - 1) * limit)
                 .getMany()
