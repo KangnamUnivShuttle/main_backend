@@ -86,7 +86,7 @@ export class RuntimeController extends Controller {
             if (blockID) {
                 query = query.where("_ChatBlockRuntime.blockID = :blockID", { blockID })
             }
-            const runtimeList = query.orderBy('_ChatBlockRuntime.order_num', 'ASC')
+            const runtimeList = await query.orderBy('_ChatBlockRuntime.order_num', 'ASC')
                 .limit(limit)
                 .offset((page - 1) * limit)
                 .getMany()

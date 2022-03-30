@@ -58,7 +58,7 @@ export class RuntimeLinkController extends Controller {
                 .getMany()
 
             result.success = true
-            result.data = runtimeList
+            result.data = await runtimeList
         } catch (err: any) {
             logger.error(`[runtimeLinkController] [getInfo] failed to load chat image data ${err.message}`)
             result.message = err.message
