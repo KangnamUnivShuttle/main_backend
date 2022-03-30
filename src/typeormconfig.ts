@@ -3,7 +3,7 @@ import logger from "./logger";
 // https://github.com/nrwl/nx/issues/803#issuecomment-450642765
 
 function entityResolver() {
-  const contexts = (require as any).context('./src/orm/entities', true, /\.ts$/);
+  const contexts = (require as any).context('./orm/entities', true, /\.ts$/);
   console.log('contexts', contexts, contexts.keys())
   return contexts
   .keys()
