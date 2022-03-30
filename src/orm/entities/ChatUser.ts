@@ -2,7 +2,7 @@ import { Column, Entity } from "typeorm";
 
 @Entity("chat_user", { schema: "chatbot_system" })
 export class ChatUser {
-  @Column("varchar", { primary: true, name: "userkey", length: 20 })
+  @Column("varchar", { primary: true, name: "userkey", length: 80 })
   userkey: string;
 
   @Column("varchar", {
