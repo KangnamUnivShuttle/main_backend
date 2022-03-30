@@ -9,7 +9,14 @@ const ormconfig: ConnectionOptions = {
     database: process.env.DB_DATABASENAME || 'chatbot_system',
     synchronize: false,
     logging: false,
-    entities: [__dirname + "/**/entities/*.{js,ts}", ],//__dirname + 
+    entities: [__dirname + "/orm/entities/*.{js,ts}", ],//__dirname + ,
+    migrations: [
+      __dirname + "/migrations/entities/*.{js,ts}"
+    ],
+    cli: {
+        entitiesDir: "src/orm",
+        migrationsDir: "src/migrations"
+    }
   };
 // console.log('asdf', __dirname, __dirname + "src/orm/entities/*.{js,ts}")
 logger.debug(`[tyeormconfig] [config] entities: ${JSON.stringify(ormconfig.entities)}`)
