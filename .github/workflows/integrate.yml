@@ -36,6 +36,8 @@ jobs:
         run: npx typeorm-model-generator -h $DB_HOST -d chatbot_system -p $DB_PORT -u root -x $DB_PASSWORD -e mariadb -o "./build/src/orm"
       - name: Fuck model gen not work
         run: mkdir -p build/src/orm &&  cp -r src/orm/* build/src/orm
+      # - name: Fuck No metadata for "e" was found issue
+      #   run: cp build/src/orm/tsconfig.json build/ && cp build/src/orm/ormconfig.json build/ 
       - name: File check before zip
         run: ls -alR ./build
       - name: Zip files
