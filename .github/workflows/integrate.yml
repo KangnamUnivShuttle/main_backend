@@ -24,6 +24,7 @@ jobs:
       #     DB_PORT: ${{ secrets.DB_PORT }}
       - run: npm run build
       - run: mkdir -p ./build/src/orm
+      - run: cp tsconfig.json ./build/
       - name: test secrets val
         env:
           TEST_VAL: ${{secrets.TEST_VAL}}
@@ -68,7 +69,6 @@ jobs:
             rm deploy.tar
             mkdir -p $HOME/KangnamShuttle4.0/main_container/kws1/build
             cp -rp deploy/build/* $HOME/KangnamShuttle4.0/main_container/kws1/build/
-            cp $HOME/tsconfig.json $HOME/KangnamShuttle4.0/main_container/kws1/build/
             cp $HOME/ormconfig.json $HOME/KangnamShuttle4.0/main_container/kws1/build/
             cd $HOME/KangnamShuttle4.0/main_container/kws1
             docker-compose build
