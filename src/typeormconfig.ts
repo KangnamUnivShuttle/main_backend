@@ -9,7 +9,7 @@ const ormconfig: ConnectionOptions = {
     database: process.env.DB_DATABASENAME || 'chatbot_system',
     synchronize: false,
     logging: false,
-    entities: process.env.NODE_ENV === 'production' ? ['dist/entities/*.js'] : [__dirname + "/orm/entities/*.{js,ts}", ],//__dirname + ,
+    entities: process.env.NODE_ENV === 'production' ? [__dirname + 'dist/entities/*.js'] : [__dirname + "/orm/entities/*.{js,ts}", ],//__dirname + ,
     migrations: [
       __dirname + "/migrations/entities/*.{js,ts}"
     ],
