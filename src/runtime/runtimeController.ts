@@ -195,7 +195,8 @@ export class RuntimeController extends Controller {
 
             queryBuilder.update(ChatBlockRuntime)
                 .set({
-                    containerState: runtime.container_state
+                    containerState: runtime.container_state,
+                    containerUrl: runtime.container_name
                 })
                 .where('blockRuntimeID = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
                 .execute()
@@ -269,7 +270,8 @@ export class RuntimeController extends Controller {
 
                 const result_db = await this.updateContainerStateToDB({
                     container_name: body.container_name,
-                    container_state: body.container_state
+                    container_state: body.container_state,
+                    blockRuntimeID: body.blockRuntimeID
                 } as RuntimeControlModel);
                 result.success = result_db.success;
                 result.message = result_db.message;
