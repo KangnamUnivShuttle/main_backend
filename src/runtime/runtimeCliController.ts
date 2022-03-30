@@ -85,6 +85,7 @@ export function genEnvFile(name: string, path: string = '.', env: string[] = [])
             params.push('--data')
             params.push(val)
         })
+        logger.debug(`[runtimeCliController] [genEnvFile] params: ${JSON.stringify(params)}`)
         const process = spawn('jingisukan', params);
 
         logger.debug(`[runtimeCliController] [genEnvFile] container : ${name}`)
