@@ -305,14 +305,14 @@ export class RuntimeController extends Controller {
         @Body() body: KakaoChatReqModel
     ): Promise<KakaoChatResModel> {
         const userKey = body.userRequest.user.id
-        const currentUserRecentBlockId = await getRecentUserState(userKey)
+        const {blockID: currentUserRecentBlockId, inputMsg} = await getRecentUserState(userKey)
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
         const selectedkey = await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId)
         const currentRuntime = await getRuntimePayload(selectedkey)
 
-        await updateUserState(userKey, selectedkey || 'intro')
+        await updateUserState(userKey, selectedkey || 'intro', body.userRequest.utterance)
 
         if (selectedkey) {
             logger.info(`[runtimeController] [kakaoChatRuntime] Current runtime is ${selectedkey}`)

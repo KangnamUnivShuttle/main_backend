@@ -25,7 +25,7 @@ export function returnErrorMessage(message: string = '오류가 발생하였습�
     }
 }
 
-export async function getRecentUserState(userkey: string) {
+export async function getRecentUserState(userkey: string): Promise<{blockID: string, inputMsg: string | null }> {
 
     let lastBlockId = 'intro'
 
@@ -39,16 +39,22 @@ export async function getRecentUserState(userkey: string) {
 
         if (chatUser) {
             logger.debug(`[runtimeHandler] [getRecentUserState] userkey: ${userkey}, last block: ${chatUser.currentBlockId}`)
-            return chatUser.currentBlockId;
+            return Promise.resolve({
+                blockID: chatUser.currentBlockId,
+                inputMsg: chatUser.lastInputMsg
+            });
         }
         throw new Error(`Not exist userkey ${userkey}`)
     } catch (err: any) {
         logger.error(`[runtimeHandler] [getRecentUserState] userkey: ${userkey} error: ${err.message}`)       
-        return lastBlockId 
+        return Promise.resolve({
+            blockID: lastBlockId,
+            inputMsg: null
+        })
     }
 }
 
-export async function updateUserState(userkey: string, blockID: string) {
+export async function updateUserState(userkey: string, blockID: string, inputMsg: string) {
 
     logger.debug(`[runtimeHandler] [updateUserState] userkey: ${userkey}, set blockID: ${blockID}`)
 
@@ -70,6 +76,7 @@ export async function updateUserState(userkey: string, blockID: string) {
             .set({
                 currentBlockId: blockID,
                 lastBlockId: isExistUser.currentBlockId,
+                lastInputMsg: inputMsg,
                 updateDatetime: 'current_timestamp()'
             })
             .where("userkey = :userkey", { userkey })

@@ -19,6 +19,9 @@ export class ChatUser {
   })
   lastBlockId: string;
 
+  @Column("varchar", { name: "last_input_msg", nullable: true, length: 500 })
+  lastInputMsg: string | null;
+
   @Column("timestamp", {
     name: "registerDatetime",
     default: () => "CURRENT_TIMESTAMP",
