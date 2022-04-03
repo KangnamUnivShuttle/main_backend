@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { ChatLog } from "./ChatLog";
+import { ChatFallback } from "./ChatFallback";
 
 @Entity("chat_user", { schema: "chatbot_system" })
 export class ChatUser {
@@ -37,4 +38,7 @@ export class ChatUser {
 
   @OneToMany(() => ChatLog, (chatLog) => chatLog.userKey2)
   chatLogs: ChatLog[];
+
+  @OneToMany(() => ChatFallback, (chatFallback) => chatFallback.userKey2)
+  chatFallbacks: ChatFallback[];
 }

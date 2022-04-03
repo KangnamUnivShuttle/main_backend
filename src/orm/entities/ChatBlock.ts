@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import { ChatBlockRuntime } from "./ChatBlockRuntime";
 import { ChatLog } from "./ChatLog";
 import { ChatBlockLink } from "./ChatBlockLink";
+import { ChatFallback } from "./ChatFallback";
 
 @Entity("chat_block", { schema: "chatbot_system" })
 export class ChatBlock {
@@ -49,4 +50,7 @@ export class ChatBlock {
 
   @OneToMany(() => ChatBlockLink, (chatBlockLink) => chatBlockLink.nextBlock)
   chatBlockLinks2: ChatBlockLink[];
+
+  @OneToMany(() => ChatFallback, (chatFallback) => chatFallback.cameFromBlock)
+  chatFallbacks: ChatFallback[];
 }
