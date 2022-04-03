@@ -3,7 +3,7 @@ import { QuickReplyModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
 import { NextBlockModel, RuntimeDBModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { getManager } from 'typeorm';
-import { BLOCK_ID_FALLBACK } from "../types/global.types";
+import { BLOCK_ID_FALLBACK, FALLBACK_RECOMMEND_SIZE } from "../types/global.types";
 
 // {
 //     "messageText": "홈 으로",
@@ -302,4 +302,47 @@ export const getBestRuntimeChoice = async function(currentInputMsg: string, last
 
 export const getRuntimePayload = async function(blockKey: string = 'intro', isDev: boolean = false) {
     return (await loadRuntimeDB(isDev))[blockKey]
+}
+
+function getRandomInt(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+}
+
+export const getRecommendedReplyList = async function (isDev: boolean = false): Promise<NextBlockModel[]> {
+
+    const totalNextBlockList: NextBlockModel[] = [];
+    const randomRecommendNextBlockList: NextBlockModel[] = [];
+
+    const runtimeDB = await loadRuntimeDB(isDev)
+
+    Object.keys(runtimeDB).forEach(key => {
+        runtimeDB[key].nextBlock.forEach(next => {
+            totalNextBlockList.push({
+                blockID: key,
+                quickReply: {
+                    ...next.quickReply
+                } as QuickReplyModel
+            } as NextBlockModel)
+        })
+    })
+
+    logger.info(`[runtimeLoader] [getRecommendedReplyList] current total next block list len: ${totalNextBlockList.length}`)
+
+    if (totalNextBlockList.length < FALLBACK_RECOMMEND_SIZE) {
+        logger.warn(`[runtimeLoader] [getRecommendedReplyList] total next block len is less than fallback recommend size, ${totalNextBlockList.length} < ${FALLBACK_RECOMMEND_SIZE}`)
+        return Promise.resolve(randomRecommendNextBlockList);
+    }
+
+    let cnt = 0;
+
+    while (cnt <= FALLBACK_RECOMMEND_SIZE) {
+        randomRecommendNextBlockList.push(totalNextBlockList.splice(getRandomInt(0, totalNextBlockList.length), 1)[0])
+        cnt ++
+    }
+
+    logger.info(`[runtimeLoader] [getRecommendedReplyList] random recommend ready.`)
+
+    return Promise.resolve(randomRecommendNextBlockList);
 }

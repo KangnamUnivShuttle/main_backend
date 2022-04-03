@@ -2,6 +2,7 @@ import { KakaoChatResModel } from "../models/kakaochat.model";
 import { getManager, getConnection } from 'typeorm'
 import { ChatUser } from "../orm/entities/ChatUser";
 import logger from "../logger";
+import { NextBlockModel } from "../models/runtime.model";
 
 export function returnErrorMessage(message: string = '오류가 발생하였습니다.'): KakaoChatResModel {
     return {
@@ -60,7 +61,11 @@ export async function getRecentUserState(userkey: string): Promise<{blockID: str
     }
 }
 
-export async function writeFallbackLog(fromBlockID: string, selectedBlockID: string, ) {
+export async function writeFallbackEscapeLog() {
+    
+}
+
+export async function openFallbackBlock(userKey: string, cameBlockID: string, recommendNextBlockList: NextBlockModel[]) {
     
 }
 

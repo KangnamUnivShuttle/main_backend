@@ -20,7 +20,7 @@ import { BasicResponseModel } from "../models/response.model";
 import { RuntimeControlModel, RuntimeHashmapModel, RuntimeModel, RuntimePayloadModel } from "../models/runtime.model";
 import { BLOCK_ID_FALLBACK, ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
 import { getRecentUserState, returnErrorMessage, returnRecommendedMessage, updateUserState } from "./runtimeHandler";
-import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
+import { getBestRuntimeChoice, getRecommendedReplyList, getRuntimePayload } from './runtimeLoader'
 import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
 import { getConnection } from "typeorm";
@@ -352,6 +352,8 @@ export class RuntimeController extends Controller {
             }
         } else if(selectedkey === BLOCK_ID_FALLBACK) { // recommend what user will want
             logger.warn(`[runtimeController] [kakaoChatRuntime] current selected key is in fallback block`)
+
+            const randomNextBlockList = await getRecommendedReplyList();
 
             return returnRecommendedMessage()
         }

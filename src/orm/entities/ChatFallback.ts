@@ -36,6 +36,9 @@ export class ChatFallback {
   )
   chatFallbackRecommends: ChatFallbackRecommend[];
 
+  @OneToMany(() => ChatUser, (chatUser) => chatUser.fallback)
+  chatUsers: ChatUser[];
+
   @ManyToOne(() => ChatUser, (chatUser) => chatUser.chatFallbacks, {
     onDelete: "SET NULL",
     onUpdate: "RESTRICT",
