@@ -1,4 +1,5 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
+import { ChatLog } from "./ChatLog";
 
 @Entity("chat_user", { schema: "chatbot_system" })
 export class ChatUser {
@@ -33,4 +34,7 @@ export class ChatUser {
     default: () => "CURRENT_TIMESTAMP",
   })
   updateDatetime: Date;
+
+  @OneToMany(() => ChatLog, (chatLog) => chatLog.userKey2)
+  chatLogs: ChatLog[];
 }
