@@ -18,8 +18,8 @@ import { KakaoChatReqModel, KakaoChatResModel } from "../models/kakaochat.model"
 import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeControlModel, RuntimeHashmapModel, RuntimeModel, RuntimePayloadModel } from "../models/runtime.model";
-import { ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
-import { getRecentUserState, returnErrorMessage, updateUserState } from "./runtimeHandler";
+import { BLOCK_ID_FALLBACK, ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
+import { getRecentUserState, returnErrorMessage, returnRecommendedMessage, updateUserState } from "./runtimeHandler";
 import { getBestRuntimeChoice, getRuntimePayload } from './runtimeLoader'
 import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
@@ -309,10 +309,11 @@ export class RuntimeController extends Controller {
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
-        const selectedkey = await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId)
+        const selectedkey = (await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId)) || BLOCK_ID_FALLBACK
+
         const currentRuntime = await getRuntimePayload(selectedkey)
 
-        await updateUserState(userKey, selectedkey || 'intro', body.userRequest.utterance)
+        await updateUserState(userKey, selectedkey, body.userRequest.utterance)
 
         if (selectedkey) {
             logger.info(`[runtimeController] [kakaoChatRuntime] Current runtime is ${selectedkey}`)
@@ -349,6 +350,10 @@ export class RuntimeController extends Controller {
                     return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR);
                 }
             }
+        } else if(selectedkey === BLOCK_ID_FALLBACK) { // recommend what user will want
+            logger.warn(`[runtimeController] [kakaoChatRuntime] current selected key is in fallback block`)
+
+            return returnRecommendedMessage()
         }
 
         logger.error(`[runtimeController] [kakaoChatRuntime] Undefined chat request type: ${selectedkey}`)

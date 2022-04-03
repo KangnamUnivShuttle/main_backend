@@ -25,6 +25,12 @@ export function returnErrorMessage(message: string = '오류가 발생하였습�
     }
 }
 
+export function returnRecommendedMessage(): KakaoChatResModel {
+    return {
+
+    } as KakaoChatResModel
+}
+
 export async function getRecentUserState(userkey: string): Promise<{blockID: string, inputMsg: string | null }> {
 
     let lastBlockId = 'intro'
@@ -52,6 +58,10 @@ export async function getRecentUserState(userkey: string): Promise<{blockID: str
             inputMsg: null
         })
     }
+}
+
+export async function writeFallbackLog(fromBlockID: string, selectedBlockID: string, ) {
+    
 }
 
 export async function updateUserState(userkey: string, blockID: string, inputMsg: string) {

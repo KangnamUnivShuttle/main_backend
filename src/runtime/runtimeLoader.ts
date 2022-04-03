@@ -3,6 +3,7 @@ import { QuickReplyModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
 import { NextBlockModel, RuntimeDBModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { getManager } from 'typeorm';
+import { BLOCK_ID_FALLBACK } from "../types/global.types";
 
 // {
 //     "messageText": "홈 으로",
