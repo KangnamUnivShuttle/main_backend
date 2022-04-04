@@ -4,8 +4,10 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { ChatFallbackRecommend } from "./ChatFallbackRecommend";
 import { ChatBlock } from "./ChatBlock";
 
 @Index("blockID", ["blockId"], {})
@@ -60,6 +62,12 @@ export class ChatBlockLink {
     default: () => "CURRENT_TIMESTAMP",
   })
   updateDatetime: Date;
+
+  @OneToMany(
+    () => ChatFallbackRecommend,
+    (chatFallbackRecommend) => chatFallbackRecommend.blockLink
+  )
+  chatFallbackRecommends: ChatFallbackRecommend[];
 
   @ManyToOne(() => ChatBlock, (chatBlock) => chatBlock.chatBlockLinks, {
     onDelete: "CASCADE",

@@ -2,8 +2,13 @@ import logger from "../logger";
 import { QuickReplyModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
 import { NextBlockModel, RuntimeDBModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
-import { getManager } from 'typeorm';
+import { getConnection, getManager } from 'typeorm';
 import { BLOCK_ID_FALLBACK, FALLBACK_RECOMMEND_SIZE } from "../types/global.types";
+import { ChatUser } from "../orm/entities/ChatUser";
+import { ChatFallback } from "../orm/entities/ChatFallback";
+import { ChatFallbackRecommend } from "../orm/entities/ChatFallbackRecommend";
+import { ChatBlockLink } from "../orm/entities/ChatBlockLink";
+import { ChatBlock } from "../orm/entities/ChatBlock";
 
 // {
 //     "messageText": "홈 으로",
@@ -305,12 +310,23 @@ export const getBestRuntimeChoice = async function(currentInputMsg: string, last
     return Promise.resolve(undefined)
 }
 
+export const getFallbackRuntimePayload = async function (userKey: string) {
+    const connection = getConnection();
+    const queryRunner = await connection.createQueryRunner()
+    const queryBuilder = await connection.createQueryBuilder(ChatUser, 'asdfsadf', queryRunner);
+
+    queryBuilder.select([
+
+    ])
+    .from(ChatUser, '_ChatUser')
+    .where("_ChatUser.userkey = :userKey", { userKey })
+    .leftJoinAndSelect(ChatFallback, "_ChatFallback", "_ChatFallback.fallbackId = _ChatUser.fallbackId")
+    .leftJoinAndSelect(ChatFallbackRecommend, "_ChatFallbackRecommend", "_ChatFallback.fallbackId = _ChatFallbackRecommend.fallbackId")
+    .leftJoinAndSelect(ChatBlockLink, "_ChatBlockLink", "_ChatBlockLink.blockLinkId = _ChatFallbackRecommend.fallbackId")
+    .leftJoinAndSelect(ChatBlock, "_ChatBlock", "_ChatBlock.blockId = _ChatBlockLink.blockId")
+}
+
 export const getRuntimePayload = async function(blockKey: string = 'intro', isDev: boolean = false) {
-
-    if (blockKey === BLOCK_ID_FALLBACK) {
-        
-    }
-
     return (await loadRuntimeDB(isDev))[blockKey]
 }
 

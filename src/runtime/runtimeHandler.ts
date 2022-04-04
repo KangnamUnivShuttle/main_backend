@@ -111,7 +111,8 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
         .values(recommendNextBlockList.map(item => {
             return {
                 fallbackId: fallbackID,
-                blockRuntimeId: item.blockLinkedID
+                blockLinkId: item.blockLinkedID
+                // blockRuntimeId: 
             } as ChatFallbackRecommend
         }))
 

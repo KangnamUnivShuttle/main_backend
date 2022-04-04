@@ -4,12 +4,10 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ChatBlock } from "./ChatBlock";
 import { ChatImage } from "./ChatImage";
-import { ChatFallbackRecommend } from "./ChatFallbackRecommend";
 
 @Index("blockID", ["blockId"], {})
 @Index("imageID", ["imageId"], {})
@@ -72,10 +70,4 @@ export class ChatBlockRuntime {
   })
   @JoinColumn([{ name: "imageID", referencedColumnName: "imageId" }])
   image: ChatImage;
-
-  @OneToMany(
-    () => ChatFallbackRecommend,
-    (chatFallbackRecommend) => chatFallbackRecommend.blockRuntime
-  )
-  chatFallbackRecommends: ChatFallbackRecommend[];
 }
