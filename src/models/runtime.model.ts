@@ -5,9 +5,12 @@ import { BasicResponseModel } from "./response.model";
 export interface NextBlockModel {
     blockID: string;
     quickReply: QuickReplyModel;
+    link_order_num?: number;
+    blockLinkedID?: number;
 }
 
 export interface RuntimePayloadModel {
+    block_order_num?: number;
     pluginList: PluginInfoModel[];
     kakaoChatPayload?: KakaoChatReqModel;
     processResult: BasicResponseModel[];
@@ -20,9 +23,12 @@ export interface RuntimeHashmapModel {
 
 export interface RuntimeDBModel {
     blockID: string;
+    block_order_num?: number;
     blockLinkID?: number;
+    link_order_num?: number;
     blockRuntimeID?: number;
     imageID?: number;
+    runtime_order_num?: number;
     messageText?: string;
     nextBlockID?: string;
     action?: string;

@@ -14,6 +14,8 @@ export interface PluginInfoModel {
     env: string;
     sampleOfResponse: any;
     sampleOfRequest: any;
+    runtime_order_num?: number;
+    runtimeID?: number;
 }
 
 export interface PlugInImageModel {

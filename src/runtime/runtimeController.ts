@@ -19,7 +19,7 @@ import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeControlModel, RuntimeHashmapModel, RuntimeModel, RuntimePayloadModel } from "../models/runtime.model";
 import { BLOCK_ID_FALLBACK, ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
-import { getRecentUserState, returnErrorMessage, returnRecommendedMessage, updateUserState } from "./runtimeHandler";
+import { getRecentUserState, openFallbackBlock, returnErrorMessage, returnRecommendedMessage, updateUserState } from "./runtimeHandler";
 import { getBestRuntimeChoice, getRecommendedReplyList, getRuntimePayload } from './runtimeLoader'
 import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
@@ -354,8 +354,9 @@ export class RuntimeController extends Controller {
             logger.warn(`[runtimeController] [kakaoChatRuntime] current selected key is in fallback block`)
 
             const randomNextBlockList = await getRecommendedReplyList();
+            await openFallbackBlock(userKey, currentUserRecentBlockId, randomNextBlockList)
 
-            return returnRecommendedMessage()
+            return returnRecommendedMessage(randomNextBlockList)
         }
 
         logger.error(`[runtimeController] [kakaoChatRuntime] Undefined chat request type: ${selectedkey}`)

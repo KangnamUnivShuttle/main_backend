@@ -236,12 +236,15 @@ const runtimeDBModelConverter = function(runtimeList: RuntimeDBModel[]): Runtime
                 pluginList: [],
                 kakaoChatPayload: undefined,
                 processResult: [],
-                nextBlock: []
+                nextBlock: [],
+                block_order_num: runtime.block_order_num
             } as RuntimePayloadModel;
         } else if (runtime.blockLinkID) {
             result[runtime.blockID].nextBlock.push(
                 {
                     blockID: runtime.nextBlockID,
+                    link_order_num: runtime.link_order_num,
+                    blockLinkedID: runtime.blockLinkID,
                     quickReply: {
                         messageText: runtime.messageText,
                         action: runtime.action,
@@ -254,7 +257,9 @@ const runtimeDBModelConverter = function(runtimeList: RuntimeDBModel[]): Runtime
             result[runtime.blockID].pluginList.push(
                 {
                     url: runtime.container_url,
-                    port: runtime.container_port
+                    port: runtime.container_port,
+                    runtime_order_num: runtime.runtime_order_num,
+                    runtimeID: runtime.blockRuntimeID
                 } as PluginInfoModel
             )
         }
@@ -301,6 +306,11 @@ export const getBestRuntimeChoice = async function(currentInputMsg: string, last
 }
 
 export const getRuntimePayload = async function(blockKey: string = 'intro', isDev: boolean = false) {
+
+    if (blockKey === BLOCK_ID_FALLBACK) {
+        
+    }
+
     return (await loadRuntimeDB(isDev))[blockKey]
 }
 
@@ -320,10 +330,8 @@ export const getRecommendedReplyList = async function (isDev: boolean = false): 
     Object.keys(runtimeDB).forEach(key => {
         runtimeDB[key].nextBlock.forEach(next => {
             totalNextBlockList.push({
-                blockID: key,
-                quickReply: {
-                    ...next.quickReply
-                } as QuickReplyModel
+                ...next,
+                blockID: key
             } as NextBlockModel)
         })
     })

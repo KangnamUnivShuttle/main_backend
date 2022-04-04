@@ -1,8 +1,10 @@
-import { KakaoChatResModel } from "../models/kakaochat.model";
+import { KakaoChatResModel, QuickReplyModel } from "../models/kakaochat.model";
 import { getManager, getConnection } from 'typeorm'
 import { ChatUser } from "../orm/entities/ChatUser";
 import logger from "../logger";
 import { NextBlockModel } from "../models/runtime.model";
+import { ChatFallback } from "../orm/entities/ChatFallback";
+import { ChatFallbackRecommend } from "../orm/entities/ChatFallbackRecommend";
 
 export function returnErrorMessage(message: string = '오류가 발생하였습니다.'): KakaoChatResModel {
     return {
@@ -26,10 +28,28 @@ export function returnErrorMessage(message: string = '오류가 발생하였습�
     }
 }
 
-export function returnRecommendedMessage(): KakaoChatResModel {
-    return {
+export function returnRecommendedMessage(recommendNextBlockList: NextBlockModel[]): KakaoChatResModel {
+    const returnMsg = {
+        version: "2.0",
+        template: {
+            outputs: [
+                {
+                    simpleText: {
+                        text: '잘 이해하지 못 했습니다.\n이걸 원하셨나요?'
+                    }
+                }
+            ],
+            quickReplies: [
+            ] as QuickReplyModel[]
+        }
+    }
 
-    } as KakaoChatResModel
+    returnMsg.template.quickReplies = recommendNextBlockList.map(item => {
+        return {
+            ...item.quickReply
+        } as QuickReplyModel;
+    })
+    return returnMsg
 }
 
 export async function getRecentUserState(userkey: string): Promise<{blockID: string, inputMsg: string | null }> {
@@ -66,7 +86,55 @@ export async function writeFallbackEscapeLog() {
 }
 
 export async function openFallbackBlock(userKey: string, cameBlockID: string, recommendNextBlockList: NextBlockModel[]) {
-    
+
+    const connection = getConnection();
+    const queryRunner = await connection.createQueryRunner()
+    const queryBuilder = await connection.createQueryBuilder(ChatUser, 'test', queryRunner);
+    // https://stackoverflow.com/a/47064558/7270469
+    await queryRunner.startTransaction()
+    try {
+
+        const result = await queryBuilder.insert()
+        .into(ChatFallback)
+        .values([
+            {
+                userKey,
+                cameFromBlockId: cameBlockID
+            }
+        ]).execute()
+
+        const fallbackID = result.raw.insertId
+        logger.debug(`[runtimeHandler] [openFallbackBlock] fallback idx: ${fallbackID}`)
+
+        await queryBuilder.insert()
+        .into(ChatFallbackRecommend)
+        .values(recommendNextBlockList.map(item => {
+            return {
+                fallbackId: fallbackID,
+                blockRuntimeId: item.blockLinkedID
+            } as ChatFallbackRecommend
+        }))
+
+        await queryBuilder.update(ChatUser)
+        .set({
+            fallbackId: fallbackID,
+            updateDatetime: 'current_timestamp()'
+        })
+        .where("userkey = :userKey", { userKey })
+        .execute()
+
+        logger.info(`[runtimeHandler] [openFallbackBlock] userkey: ${userKey} fallback idx updated: ${fallbackID}`)
+
+        await queryRunner.commitTransaction();
+
+        logger.debug(`[runtimeHandler] [openFallbackBlock] userkey: ${userKey} / ${cameBlockID} transaction committed`)
+    } catch(err: any) {
+        logger.error(`[runtimeHandler] [openFallbackBlock] userkey: ${userKey} / ${cameBlockID} transaction rollback: ${err.message}`)
+        await queryRunner.rollbackTransaction();
+    } finally {
+        logger.info(`[runtimeHandler] [openFallbackBlock] userkey: ${userKey} / ${cameBlockID} transaction done.`)
+        await queryRunner.release();
+    }
 }
 
 export async function updateUserState(userkey: string, blockID: string, inputMsg: string) {
