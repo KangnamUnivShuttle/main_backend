@@ -24,6 +24,9 @@ export class ChatFallback {
   @Column("varchar", { name: "came_from_block_id", nullable: true, length: 20 })
   cameFromBlockId: string | null;
 
+  @Column("varchar", { name: "inputMsg", nullable: true, length: 500 })
+  inputMsg: string | null;
+
   @Column("timestamp", {
     name: "registerDatetime",
     default: () => "CURRENT_TIMESTAMP",

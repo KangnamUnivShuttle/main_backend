@@ -1,7 +1,7 @@
 import logger from "../logger";
 import { QuickReplyModel } from "../models/kakaochat.model";
 import { PluginInfoModel } from "../models/plugin.model";
-import { NextBlockModel, RuntimeDBModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
+import { FallbackStatusModel, NextBlockModel, RuntimeDBModel, RuntimeHashmapModel, RuntimePayloadModel } from "../models/runtime.model";
 import { getConnection, getManager } from 'typeorm';
 import { BLOCK_ID_FALLBACK, FALLBACK_RECOMMEND_SIZE } from "../types/global.types";
 import { ChatUser } from "../orm/entities/ChatUser";
@@ -310,26 +310,15 @@ export const getBestRuntimeChoice = async function(currentInputMsg: string, last
     return Promise.resolve(undefined)
 }
 
-export const getFallbackRuntimePayload = async function (userKey: string, messageText: string) {
-    const connection = getConnection();
-    const queryRunner = await connection.createQueryRunner()
-    const queryBuilder = await connection.createQueryBuilder(ChatUser, 'asdfsadf', queryRunner);
-
-    // const result = await queryBuilder.select([
-    //     "_ChatUser.userkey",
-    //     "_ChatFallback.fallbackId",
-    //     "_ChatBlockLink.blockLinkId",
-    //     "_ChatBlockLink.nextBlockId",
-    //     "_ChatBlockLink.messageText",
-    //     "_ChatBlock.blockLinkId"
-    // ])
-    // .from(ChatUser, '_ChatUser')
-    // .where("_ChatUser.userkey = :userKey", { userKey })
-    // .leftJoinAndSelect(ChatFallback, "_ChatFallback", "_ChatFallback.fallbackId = _ChatUser.fallbackId")
-    // .leftJoinAndSelect(ChatFallbackRecommend, "_ChatFallbackRecommend", "_ChatFallback.fallbackId = _ChatFallbackRecommend.fallbackId")
-    // .leftJoinAndSelect(ChatBlockLink, "_ChatBlockLink", "_ChatBlockLink.blockLinkId = _ChatFallbackRecommend.fallbackId")
-    // .leftJoinAndSelect(ChatBlock, "_ChatBlock", "_ChatBlock.blockId = _ChatBlockLink.blockId")
-    // .getMany()
+export const getFallbackRuntimePayload = async function (userKey: string, messageText: string): Promise<string | undefined> {
+    const entityManager = getManager();
+    const fallbackStatus = (await entityManager.query(`
+        SELECT * FROM chat_fallback_status WHERE userKey = '${userKey}' AND messageText = '${messageText}'
+    `)) as FallbackStatusModel[];
+    if (fallbackStatus && fallbackStatus.length > 0) {
+        return fallbackStatus[0].blockID
+    }
+    return undefined
 }
 
 export const getRuntimePayload = async function(blockKey: string = 'intro', isDev: boolean = false) {

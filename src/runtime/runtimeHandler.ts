@@ -86,7 +86,7 @@ export async function writeFallbackEscapeLog() {
     
 }
 
-export async function openFallbackBlock(userKey: string, cameBlockID: string, recommendNextBlockList: NextBlockModel[]) {
+export async function openFallbackBlock(userKey: string, cameBlockID: string, recommendNextBlockList: NextBlockModel[], messageText: string) {
 
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
@@ -103,7 +103,8 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
             .values([
                 {
                     userKey,
-                    cameFromBlockId: cameBlockID
+                    cameFromBlockId: cameBlockID,
+                    inputMsg: messageText
                 }
             ]).execute()
             fallbackID = result.raw.insertId
@@ -118,6 +119,13 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
 
             if (result && result.fallbackId) {
                 fallbackID = result.fallbackId
+
+                await queryBuilder.update(ChatFallback)
+                .set({
+                    inputMsg: messageText
+                })
+                .where('fallbackId = :fallbackID', {fallbackID})
+                .execute()
 
                 await queryBuilder.delete()
                 .from(ChatFallbackRecommend)

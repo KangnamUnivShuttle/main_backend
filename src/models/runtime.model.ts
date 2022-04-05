@@ -77,3 +77,17 @@ export interface RuntimeBlockLinkModel {
     enabled: number;
     order_num: number;
 }
+
+export interface FallbackStatusModel {
+    fallback_id: number;
+    userKey: string;
+    came_from_block_id: string;
+    blockLinkID: number;
+    blockID: string;
+    enabled: number;
+    label: string;
+    action: string;
+    messageText: string;
+    order_num: number;
+    webLinkUrl: string;
+}

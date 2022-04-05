@@ -19,8 +19,8 @@ import { PluginInfoModel } from "../models/plugin.model";
 import { BasicResponseModel } from "../models/response.model";
 import { RuntimeControlModel, RuntimeHashmapModel, RuntimeModel, RuntimePayloadModel } from "../models/runtime.model";
 import { BLOCK_ID_FALLBACK, ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME, ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR, ERROR_CHAT_RESPONSE_MSG_UNDEFINED_RECOMMAND_KEY } from "../types/global.types";
-import { getRecentUserState, openFallbackBlock, returnErrorMessage, returnRecommendedMessage, updateUserState } from "./runtimeHandler";
-import { getBestRuntimeChoice, getRecommendedReplyList, getRuntimePayload } from './runtimeLoader'
+import { getRecentUserState, openFallbackBlock, returnErrorMessage, returnRecommendedMessage, updateUserState, writeFallbackEscapeLog } from "./runtimeHandler";
+import { getBestRuntimeChoice, getFallbackRuntimePayload, getRecommendedReplyList, getRuntimePayload } from './runtimeLoader'
 import { exec, execFile, fork, spawn } from "child_process";
 import { ChatBlockRuntime } from "../orm/entities/ChatBlockRuntime";
 import { getConnection } from "typeorm";
@@ -305,15 +305,23 @@ export class RuntimeController extends Controller {
         @Body() body: KakaoChatReqModel
     ): Promise<KakaoChatResModel> {
         const userKey = body.userRequest.user.id
+        const messageText = body.userRequest.utterance
         const {blockID: currentUserRecentBlockId, inputMsg} = await getRecentUserState(userKey)
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
-        const selectedkey = (await getBestRuntimeChoice(body.userRequest.utterance, currentUserRecentBlockId)) || BLOCK_ID_FALLBACK
+        const selectedkey = (await getBestRuntimeChoice(messageText, currentUserRecentBlockId))
+                            || (await getFallbackRuntimePayload(userKey, messageText))
+                            || BLOCK_ID_FALLBACK
+
+        if (selectedkey !== BLOCK_ID_FALLBACK && currentUserRecentBlockId === BLOCK_ID_FALLBACK) {
+            logger.debug(`[runtimeController] [kakaoChatRuntime] Hurry! User escaped fallback block!`)
+            await writeFallbackEscapeLog()
+        }
 
         const currentRuntime = await getRuntimePayload(selectedkey)
 
-        await updateUserState(userKey, selectedkey, body.userRequest.utterance)
+        await updateUserState(userKey, selectedkey, messageText)
 
         if (selectedkey) {
             logger.info(`[runtimeController] [kakaoChatRuntime] Current runtime is ${selectedkey}`)
@@ -336,7 +344,7 @@ export class RuntimeController extends Controller {
 
                 payload['template']['quickReplies'] = []
                 currentRuntime.nextBlock.forEach(block => {
-                    payload['template']['quickReplies'].push(block.quickReply)  
+                    payload['template']['quickReplies'].push(block.quickReply)
                 })
 
                 return payload
@@ -354,7 +362,7 @@ export class RuntimeController extends Controller {
             logger.warn(`[runtimeController] [kakaoChatRuntime] current selected key is in fallback block`)
 
             const randomNextBlockList = await getRecommendedReplyList();
-            await openFallbackBlock(userKey, currentUserRecentBlockId, randomNextBlockList)
+            await openFallbackBlock(userKey, currentUserRecentBlockId, randomNextBlockList, messageText)
 
             return returnRecommendedMessage(randomNextBlockList)
         }
