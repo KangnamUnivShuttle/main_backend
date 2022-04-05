@@ -109,6 +109,8 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
         await queryBuilder.insert()
         .into(ChatFallbackRecommend)
         .values(recommendNextBlockList.map(item => {
+
+            logger.debug(`[runtimeHandler] [openFallbackBlock] fallback id: ${fallbackID} / block link id: ${item.blockLinkedID}`)
             return {
                 fallbackId: fallbackID,
                 blockLinkId: item.blockLinkedID
