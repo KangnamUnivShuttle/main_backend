@@ -110,11 +110,10 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
         } else {
             logger.info(`[runtimeHandler] [openFallbackBlock] continue fallback`)
             const result = await queryBuilder.select([
-                '_ChatUser.userkey',
                 '_ChatUser.fallbackId'
             ])
             .from(ChatUser, '_ChatUser')
-            .where('_ChatUser.userkey = userKey', {userKey})
+            .where('_ChatUser.userkey = :userKey', {userKey})
             .getOne()
 
             if (result && result.fallbackId) {
