@@ -117,6 +117,7 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
                 // blockRuntimeId: 
             } as ChatFallbackRecommend
         }))
+        .execute()
 
         await queryBuilder.update(ChatUser)
         .set({
