@@ -310,20 +310,26 @@ export const getBestRuntimeChoice = async function(currentInputMsg: string, last
     return Promise.resolve(undefined)
 }
 
-export const getFallbackRuntimePayload = async function (userKey: string) {
+export const getFallbackRuntimePayload = async function (userKey: string, messageText: string) {
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatUser, 'asdfsadf', queryRunner);
 
-    queryBuilder.select([
-
-    ])
-    .from(ChatUser, '_ChatUser')
-    .where("_ChatUser.userkey = :userKey", { userKey })
-    .leftJoinAndSelect(ChatFallback, "_ChatFallback", "_ChatFallback.fallbackId = _ChatUser.fallbackId")
-    .leftJoinAndSelect(ChatFallbackRecommend, "_ChatFallbackRecommend", "_ChatFallback.fallbackId = _ChatFallbackRecommend.fallbackId")
-    .leftJoinAndSelect(ChatBlockLink, "_ChatBlockLink", "_ChatBlockLink.blockLinkId = _ChatFallbackRecommend.fallbackId")
-    .leftJoinAndSelect(ChatBlock, "_ChatBlock", "_ChatBlock.blockId = _ChatBlockLink.blockId")
+    // const result = await queryBuilder.select([
+    //     "_ChatUser.userkey",
+    //     "_ChatFallback.fallbackId",
+    //     "_ChatBlockLink.blockLinkId",
+    //     "_ChatBlockLink.nextBlockId",
+    //     "_ChatBlockLink.messageText",
+    //     "_ChatBlock.blockLinkId"
+    // ])
+    // .from(ChatUser, '_ChatUser')
+    // .where("_ChatUser.userkey = :userKey", { userKey })
+    // .leftJoinAndSelect(ChatFallback, "_ChatFallback", "_ChatFallback.fallbackId = _ChatUser.fallbackId")
+    // .leftJoinAndSelect(ChatFallbackRecommend, "_ChatFallbackRecommend", "_ChatFallback.fallbackId = _ChatFallbackRecommend.fallbackId")
+    // .leftJoinAndSelect(ChatBlockLink, "_ChatBlockLink", "_ChatBlockLink.blockLinkId = _ChatFallbackRecommend.fallbackId")
+    // .leftJoinAndSelect(ChatBlock, "_ChatBlock", "_ChatBlock.blockId = _ChatBlockLink.blockId")
+    // .getMany()
 }
 
 export const getRuntimePayload = async function(blockKey: string = 'intro', isDev: boolean = false) {
@@ -359,7 +365,7 @@ export const getRecommendedReplyList = async function (isDev: boolean = false): 
         return Promise.resolve(randomRecommendNextBlockList);
     }
 
-    let cnt = 0;
+    let cnt = 1;
 
     while (cnt <= FALLBACK_RECOMMEND_SIZE) {
         randomRecommendNextBlockList.push(totalNextBlockList.splice(getRandomInt(0, totalNextBlockList.length), 1)[0])
