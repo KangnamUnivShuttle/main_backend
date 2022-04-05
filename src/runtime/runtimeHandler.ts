@@ -113,7 +113,7 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
                 '_ChatUser.fallbackId'
             ])
             .from(ChatUser, '_ChatUser')
-            .where('_ChatUser.userkey = userkey', {userkey: userKey})
+            .where('_ChatUser.userkey = userKey', {userKey})
             .getOne()
 
             if (result && result.fallbackId) {
