@@ -5,6 +5,7 @@ import logger from "../logger";
 import { NextBlockModel } from "../models/runtime.model";
 import { ChatFallback } from "../orm/entities/ChatFallback";
 import { ChatFallbackRecommend } from "../orm/entities/ChatFallbackRecommend";
+import { BLOCK_ID_FALLBACK } from "../types/global.types";
 
 export function returnErrorMessage(message: string = '오류가 발생하였습니다.'): KakaoChatResModel {
     return {
@@ -94,16 +95,38 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
     await queryRunner.startTransaction()
     try {
 
-        const result = await queryBuilder.insert()
-        .into(ChatFallback)
-        .values([
-            {
-                userKey,
-                cameFromBlockId: cameBlockID
-            }
-        ]).execute()
+        let fallbackID = 0
+        if (cameBlockID !== BLOCK_ID_FALLBACK) {
+            const result = await queryBuilder.insert()
+            .into(ChatFallback)
+            .values([
+                {
+                    userKey,
+                    cameFromBlockId: cameBlockID
+                }
+            ]).execute()
+            fallbackID = result.raw.insertId
+        } else {
+            const result = await queryBuilder.select([
+                '_ChatUser.fallbackId'
+            ])
+            .from(ChatUser, '_ChatUser')
+            .where('_ChatUser.userkey = userkey', {userkey: userKey})
+            .getOne()
 
-        const fallbackID = result.raw.insertId
+            if (result && result.fallbackId) {
+                fallbackID = result.fallbackId
+
+                await queryBuilder.delete()
+                .from(ChatFallbackRecommend)
+                .where('fallbackId = :fallbackId', {fallbackId: fallbackID})
+                .execute()
+            } else {
+                // logger.warn(`[runtimeHandler] [openFallbackBlock] user not found or fallback id not found`)
+                throw new Error(`user not found or fallback id not found`)
+            }
+        }
+
         logger.debug(`[runtimeHandler] [openFallbackBlock] fallback idx: ${fallbackID}`)
 
         await queryBuilder.insert()
