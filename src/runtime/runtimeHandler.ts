@@ -97,6 +97,7 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
 
         let fallbackID = 0
         if (cameBlockID !== BLOCK_ID_FALLBACK) {
+            logger.info(`[runtimeHandler] [openFallbackBlock] new fallback start`)
             const result = await queryBuilder.insert()
             .into(ChatFallback)
             .values([
@@ -107,6 +108,7 @@ export async function openFallbackBlock(userKey: string, cameBlockID: string, re
             ]).execute()
             fallbackID = result.raw.insertId
         } else {
+            logger.info(`[runtimeHandler] [openFallbackBlock] continue fallback`)
             const result = await queryBuilder.select([
                 '_ChatUser.fallbackId'
             ])
