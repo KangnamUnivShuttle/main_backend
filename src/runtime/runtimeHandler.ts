@@ -6,6 +6,7 @@ import { NextBlockModel } from "../models/runtime.model";
 import { ChatFallback } from "../orm/entities/ChatFallback";
 import { ChatFallbackRecommend } from "../orm/entities/ChatFallbackRecommend";
 import { BLOCK_ID_FALLBACK } from "../types/global.types";
+import { ChatLog } from "../orm/entities/ChatLog";
 
 export function returnErrorMessage(message: string = '오류가 발생하였습니다.'): KakaoChatResModel {
     return {
@@ -74,7 +75,7 @@ export async function getRecentUserState(userkey: string): Promise<{blockID: str
         }
         throw new Error(`Not exist userkey ${userkey}`)
     } catch (err: any) {
-        logger.error(`[runtimeHandler] [getRecentUserState] userkey: ${userkey} error: ${err.message}`)       
+        logger.error(`[runtimeHandler] [getRecentUserState] userkey: ${userkey} error: ${err.message}`)
         return Promise.resolve({
             blockID: lastBlockId,
             inputMsg: null
@@ -82,8 +83,54 @@ export async function getRecentUserState(userkey: string): Promise<{blockID: str
     }
 }
 
-export async function writeFallbackEscapeLog() {
-    
+export async function writeFallbackEscapeLog(userKey: string, selectedRecommendedBlockId: string) {
+    const connection = getConnection();
+    const queryRunner = await connection.createQueryRunner()
+    const queryBuilder = await connection.createQueryBuilder(ChatFallback, 'test', queryRunner);
+    try {
+
+        const fallback = await queryBuilder.select([
+            '_ChatFallback.fallbackId',
+            '_ChatFallback.userKey',
+            '_ChatFallback.cameFromBlockId',
+            '_ChatFallback.inputMsg',
+            '_ChatFallback.registerDatetime',
+        ])
+        .from(ChatFallback, '_ChatFallback')
+        .where('_ChatFallback.userKey = :userKey', {userKey})
+        .getOne()
+
+        if (!fallback) {
+            logger.error(`[runtimeHandler] [writeFallbackEscapeLog] User ${userKey}, is not in fallback`)
+            throw new Error(`User ${userKey}, is not in fallback`)
+        }
+
+        await queryBuilder.insert()
+        .into(ChatLog)
+        .values([
+            {
+                userKey: fallback.userKey,
+                lastBlockId: fallback.cameFromBlockId,
+                selectedRecommendedBlockId,
+                msg: fallback.inputMsg || undefined
+            }
+        ]).execute()
+
+        await queryBuilder.delete()
+        .from(ChatFallback)
+        .where('_ChatFallback.userKey = :userKey', {userKey})
+        .execute()
+        
+        await queryRunner.commitTransaction();
+
+        logger.debug(`[runtimeHandler] [writeFallbackEscapeLog] transaction committed`)
+    } catch(err: any) {
+        logger.error(`[runtimeHandler] [writeFallbackEscapeLog] transaction rollback: ${err.message}`)
+        await queryRunner.rollbackTransaction();
+    } finally {
+        logger.info(`[runtimeHandler] [writeFallbackEscapeLog] transaction done.`)
+        await queryRunner.release();
+    }
 }
 
 export async function openFallbackBlock(userKey: string, cameBlockID: string, recommendNextBlockList: NextBlockModel[], messageText: string) {

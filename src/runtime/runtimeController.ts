@@ -316,7 +316,7 @@ export class RuntimeController extends Controller {
 
         if (selectedkey !== BLOCK_ID_FALLBACK && currentUserRecentBlockId === BLOCK_ID_FALLBACK) {
             logger.debug(`[runtimeController] [kakaoChatRuntime] Hurry! User escaped fallback block!`)
-            await writeFallbackEscapeLog()
+            await writeFallbackEscapeLog(userKey, selectedkey)
         }
 
         const currentRuntime = await getRuntimePayload(selectedkey)
