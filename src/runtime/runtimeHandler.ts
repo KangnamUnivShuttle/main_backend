@@ -89,6 +89,7 @@ export async function writeFallbackEscapeLog(userKey: string, selectedRecommende
     const queryBuilder = await connection.createQueryBuilder(ChatFallback, 'test', queryRunner);
     try {
 
+        logger.debug(`[runtimeHandler] [writeFallbackEscapeLog] Fallback escape log for ${userKey}`)
         const fallback = await queryBuilder.select([
             '_ChatFallback.fallbackId',
             '_ChatFallback.userKey',
@@ -105,6 +106,8 @@ export async function writeFallbackEscapeLog(userKey: string, selectedRecommende
             throw new Error(`User ${userKey}, is not in fallback`)
         }
 
+        logger.debug(`[runtimeHandler] [writeFallbackEscapeLog] Fallback id: ${fallback.fallbackId}`)
+
         await queryBuilder.insert()
         .into(ChatLog)
         .values([
@@ -118,7 +121,7 @@ export async function writeFallbackEscapeLog(userKey: string, selectedRecommende
 
         await queryBuilder.delete()
         .from(ChatFallback)
-        .where('_ChatFallback.userKey = :userKey', {userKey})
+        .where('userKey = :userKey', {userKey})
         .execute()
         
         await queryRunner.commitTransaction();
