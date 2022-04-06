@@ -310,8 +310,8 @@ export class RuntimeController extends Controller {
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
 
-        const selectedkey = (await getBestRuntimeChoice(messageText, currentUserRecentBlockId))
-                            || (await getFallbackRuntimePayload(userKey, messageText))
+        const selectedkey = (await getBestRuntimeChoice(messageText,
+            currentUserRecentBlockId === BLOCK_ID_FALLBACK ? (await getFallbackRuntimePayload(userKey, messageText)) : currentUserRecentBlockId))
                             || BLOCK_ID_FALLBACK
 
         if (selectedkey !== BLOCK_ID_FALLBACK && currentUserRecentBlockId === BLOCK_ID_FALLBACK) {
