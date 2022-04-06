@@ -88,6 +88,7 @@ export async function writeFallbackEscapeLog(userKey: string, selectedRecommende
     const queryRunner = await connection.createQueryRunner()
     const queryBuilder = await connection.createQueryBuilder(ChatFallback, 'test', queryRunner);
     try {
+        await queryRunner.startTransaction()
 
         logger.debug(`[runtimeHandler] [writeFallbackEscapeLog] Fallback escape log for ${userKey}`)
         const fallback = await queryBuilder.select([
