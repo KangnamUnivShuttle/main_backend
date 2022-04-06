@@ -13,10 +13,17 @@ import logger from './logger';
 import "reflect-metadata";
 import redis from 'redis';
 import connectRedis from 'connect-redis';
+import cors, { CorsOptions } from 'cors'
 
 const LocalStrategy = passportLocal.Strategy;
 
 export const app = express();
+
+const corsOptions = {
+  origin : "http://localhost:4200",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+} as CorsOptions
+app.use(cors(corsOptions))
 
 // Use body parser to read sent json payloads
 app.use(
