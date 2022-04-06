@@ -309,10 +309,11 @@ export class RuntimeController extends Controller {
         const {blockID: currentUserRecentBlockId, inputMsg} = await getRecentUserState(userKey)
 
         logger.debug(`[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`)
+        const lastRuntimeKey = currentUserRecentBlockId === BLOCK_ID_FALLBACK ? (await getFallbackRuntimePayload(userKey, messageText)) : currentUserRecentBlockId
 
-        const selectedkey = (await getBestRuntimeChoice(messageText,
-            currentUserRecentBlockId === BLOCK_ID_FALLBACK ? (await getFallbackRuntimePayload(userKey, messageText)) : currentUserRecentBlockId))
-                            || BLOCK_ID_FALLBACK
+        logger.debug(`[runtimeController] [kakaoChatRuntime] last runtime key: ${lastRuntimeKey}`)
+
+        const selectedkey = (await getBestRuntimeChoice(messageText, lastRuntimeKey)) || BLOCK_ID_FALLBACK
 
         if (selectedkey !== BLOCK_ID_FALLBACK && currentUserRecentBlockId === BLOCK_ID_FALLBACK) {
             logger.debug(`[runtimeController] [kakaoChatRuntime] Hurry! User escaped fallback block! Now: ${selectedkey}`)
