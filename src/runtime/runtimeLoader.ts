@@ -305,6 +305,12 @@ export const getBestRuntimeChoice = async function(currentInputMsg: string, last
     // console.log('key', lastRuntimeKey, 'input', currentInputMsg, 'payload', lastRuntimePayload)
     const filtered = lastRuntimePayload.nextBlock.filter(block => block.quickReply.messageText === currentInputMsg)
     if (filtered && filtered.length > 0) {
+        if (!filtered[0].blockID) {
+            logger.warn(`[runtimeLoader] [getBestRuntimeChoice] ${lastRuntimeKey} -> ${currentInputMsg} : id is null`)
+        }
+        if (filtered.length > 1) {
+            logger.warn(`[runtimeLoader] [getBestRuntimeChoice] First ordered block selected automatically ${filtered[0].blockID}`)
+        }
         return Promise.resolve(filtered[0].blockID || 'intro')
     }
     return Promise.resolve(undefined)
