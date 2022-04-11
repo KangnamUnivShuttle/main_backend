@@ -74,7 +74,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
-    httpOnly: true,
+    httpOnly: false,
     secure: true,
     sameSite: 'none',
     domain: '*'
