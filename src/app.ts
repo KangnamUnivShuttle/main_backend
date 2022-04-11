@@ -68,7 +68,8 @@ passport.use(new LocalStrategy(
     }
 ));
 app.use(session({
-  secret: process.env.SESSION_KEY || 'testSecret', 
+  name: 'chatbot',
+  secret: process.env.SESSION_KEY || 'testSecret',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -82,7 +83,7 @@ app.use(session({
     port: Number(process.env.REDIS_PORT || '6379'),
     client: redisClient,
     disableTouch: true
-   }) 
+   })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
