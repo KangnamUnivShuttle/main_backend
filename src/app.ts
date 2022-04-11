@@ -75,7 +75,7 @@ app.use(session({
   cookie: {
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: 'none',
     domain: '*'
   },
