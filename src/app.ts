@@ -22,6 +22,7 @@ export const app = express();
 const corsOptions = {
   origin : "http://localhost:4200",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true
 } as CorsOptions
 app.use(cors(corsOptions))
 
