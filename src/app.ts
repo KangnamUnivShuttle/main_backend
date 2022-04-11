@@ -76,7 +76,7 @@ app.use(session({
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
     httpOnly: true,
     secure: true,
-    // sameSite: 'none',
+    sameSite: 'none',
   },
   store: new RedisStore({
     host: process.env.REDIS_HOST || '127.0.0.1',
