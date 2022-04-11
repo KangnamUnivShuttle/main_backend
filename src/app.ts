@@ -66,17 +66,17 @@ passport.use(new LocalStrategy(
         }
     }
 ));
-app.use(session({ 
+app.use(session({
   secret: process.env.SESSION_KEY || 'testSecret', 
-  resave: false, 
-  saveUninitialized: false, 
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: 'none'
   },
-  store: new RedisStore({ 
+  store: new RedisStore({
     host: process.env.REDIS_HOST || '127.0.0.1',
     port: Number(process.env.REDIS_PORT || '6379'),
     client: redisClient,
