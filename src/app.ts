@@ -72,8 +72,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
-    httpOnly: true,
-    secure: true,
+    httpOnly: false,
+    secure: false,
     sameSite: 'none'
   },
   store: new RedisStore({
