@@ -22,7 +22,8 @@ export const app = express();
 const corsOptions = {
   origin : "http://localhost:4200",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true
+  credentials: true,
+  allowedHeaders: 'X-Requested-With, content-type, enctype'
 } as CorsOptions
 app.use(cors(corsOptions))
 
@@ -72,7 +73,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
-    httpOnly: false,
+    httpOnly: true,
     secure: false,
     sameSite: 'none'
   },
