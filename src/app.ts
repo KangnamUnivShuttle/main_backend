@@ -19,13 +19,15 @@ const LocalStrategy = passportLocal.Strategy;
 
 export const app = express();
 
-const corsOptions = {
-  origin : "http://localhost:4200",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
-} as CorsOptions
-app.use(cors(corsOptions))
+if (process.env.NODE_ENV === 'production') {
+  const corsOptions = {
+    origin : "http://localhost:4200",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
+  } as CorsOptions
+  app.use(cors(corsOptions))
+}
 
 // Use body parser to read sent json payloads
 app.use(
@@ -76,7 +78,7 @@ app.use(session({
     maxAge: Number(process.env.SESSION_TIME) || 1800000 ,
     httpOnly: true,
     secure: false,
-    sameSite: 'none',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   },
   store: new RedisStore({
     host: process.env.REDIS_HOST || '127.0.0.1',

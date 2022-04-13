@@ -34,6 +34,7 @@ export class PluginController extends Controller {
   public async getInfo(
     @Query() page: number = 1,
     @Query() limit: number = 10,
+    @Query() name?: string,
     @Query() imageID?: string
   ): Promise<BasicResponseModel> {
 
@@ -48,10 +49,10 @@ export class PluginController extends Controller {
 
       // https://jojoldu.tistory.com/579
       let query = queryBuilder.select([
-        '_ChatImage.imageID',
+        '_ChatImage.imageId',
         '_ChatImage.name',
-        '_ChatImage.order_num',
-        '_ChatImage.github_url',
+        '_ChatImage.orderNum',
+        '_ChatImage.githubUrl',
         '_ChatImage.registerDatetime',
         '_ChatImage.updateDatetime'
       ])
@@ -59,9 +60,12 @@ export class PluginController extends Controller {
 
       // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
       if (imageID) {
-        query = query.where("_ChatImage.imageID = :imageID", { imageID })
+        query = query.where("_ChatImage.imageId = :imageID", { imageID })
       }
-      const pluginList = query.orderBy('_ChatImage.order_num', 'ASC')
+      if (name) {
+        query = query.where("_ChatImage.name like :name", {name})
+      }
+      const pluginList = await query.orderBy('_ChatImage.order_num', 'ASC')
       .limit(limit)
       .offset((page - 1) * limit)
       .getMany()

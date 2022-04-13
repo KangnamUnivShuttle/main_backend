@@ -78,6 +78,7 @@ export class RuntimeController extends Controller {
                 '_ChatBlockRuntime.updateDatetime',
             ])
                 .from(ChatBlockRuntime, '_ChatBlockRuntime')
+                .leftJoinAndSelect('_ChatBlockRuntime.image', "_ChatImage")
 
             // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
             if (blockRuntimeID) {
