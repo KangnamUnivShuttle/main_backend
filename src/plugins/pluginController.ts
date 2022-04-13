@@ -63,7 +63,9 @@ export class PluginController extends Controller {
         query = query.where("_ChatImage.imageId = :imageID", { imageID })
       }
       if (name) {
-        query = query.where("_ChatImage.name like :name", {name})
+        // https://stackoverflow.com/a/57359319/7270469
+        // https://stackoverflow.com/a/52111153/7270469
+        query = query.where("_ChatImage.name like :name", {name: `%${name}%`})
       }
       const pluginList = await query.orderBy('_ChatImage.order_num', 'ASC')
       .limit(limit)
