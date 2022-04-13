@@ -28,6 +28,7 @@ export class RuntimeBlockController extends Controller {
         @Query() page: number = 1,
         @Query() limit: number = 10,
         @Query() blockID?: string,
+        @Query() name?: string
     ): Promise<BasicResponseModel> {
         const result = {
             success: false
@@ -53,6 +54,9 @@ export class RuntimeBlockController extends Controller {
             // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
             if (blockID) {
                 query = query.where("_ChatBlock.blockId = :blockID", { blockID })
+            }
+            if (name) {
+                query = query.where("_ChatBlock.name = :name", {name: `%${name}%`})
             }
             const runtimeList = await query.orderBy('_ChatBlock.orderNum', 'ASC')
                 .limit(limit)
