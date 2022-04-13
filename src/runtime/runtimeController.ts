@@ -204,7 +204,7 @@ export class RuntimeController extends Controller {
                     containerState: runtime.container_state,
                     containerUrl: runtime.container_name,
                     updateDatetime: 'current_timestamp()',
-                    containerEnv: runtime.env.join('\r\n')
+                    containerEnv: runtime.env.join('\n')
                 })
                 .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
                 .execute()
