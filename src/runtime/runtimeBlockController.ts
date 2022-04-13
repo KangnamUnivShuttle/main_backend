@@ -56,7 +56,7 @@ export class RuntimeBlockController extends Controller {
                 query = query.where("_ChatBlock.blockId = :blockID", { blockID })
             }
             if (name) {
-                query = query.where("_ChatBlock.name = :name", {name: `%${name}%`})
+                query = query.where("_ChatBlock.name like :name", {name: `%${name}%`})
             }
             const runtimeList = await query.orderBy('_ChatBlock.orderNum', 'ASC')
                 .limit(limit)
