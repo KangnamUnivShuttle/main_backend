@@ -198,14 +198,27 @@ export class RuntimeController extends Controller {
         try {
             logger.debug(`[runtimeController] [updateContainerStateToDB] update data: ${JSON.stringify(runtime)}`)
 
-            queryBuilder.update(ChatBlockRuntime)
+            if (runtime.env) {
+                queryBuilder.update(ChatBlockRuntime)
                 .set({
                     containerState: runtime.container_state,
                     containerUrl: runtime.container_name,
-                    updateDatetime: 'current_timestamp()'
+                    updateDatetime: 'current_timestamp()',
+                    containerEnv: runtime.env.join('\r\n')
                 })
                 .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
                 .execute()
+            } else {
+                queryBuilder.update(ChatBlockRuntime)
+                .set({
+                    containerState: runtime.container_state,
+                    containerUrl: runtime.container_name,
+                    updateDatetime: 'current_timestamp()',
+                })
+                .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: runtime.blockRuntimeID })
+                .execute()
+            }
+                
 
             await queryRunner.commitTransaction();
             logger.debug(`[runtimeController] [updateContainerStateToDB] update runtime state ok`)
@@ -284,7 +297,8 @@ export class RuntimeController extends Controller {
                 const result_db = await this.updateContainerStateToDB({
                     container_name: body.container_name,
                     container_state: body.container_state,
-                    blockRuntimeID: body.blockRuntimeID
+                    blockRuntimeID: body.blockRuntimeID,
+                    env: body.env
                 } as RuntimeControlModel);
                 result.success = result_db.success;
                 result.message = result_db.message;
