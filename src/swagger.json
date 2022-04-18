@@ -797,7 +797,8 @@
 						"type": "string"
 					},
 					"nextBlockID": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"messageText": {
 						"type": "string"
@@ -809,7 +810,8 @@
 						"type": "string"
 					},
 					"webLinkUrl": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"enabled": {
 						"type": "number",

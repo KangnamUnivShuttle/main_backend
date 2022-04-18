@@ -384,11 +384,11 @@ const models: TsoaRoute.Models = {
         "properties": {
             "blockLinkID": {"dataType":"double"},
             "blockID": {"dataType":"string","required":true},
-            "nextBlockID": {"dataType":"string"},
+            "nextBlockID": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "messageText": {"dataType":"string"},
             "action": {"dataType":"string","required":true},
             "label": {"dataType":"string","required":true},
-            "webLinkUrl": {"dataType":"string"},
+            "webLinkUrl": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "enabled": {"dataType":"double","required":true},
             "order_num": {"dataType":"double","required":true},
         },

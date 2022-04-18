@@ -69,11 +69,11 @@ export interface RuntimeBlockModel {
 export interface RuntimeBlockLinkModel {
     blockLinkID?: number;
     blockID: string;
-    nextBlockID?: string;
+    nextBlockID?: string | null;
     messageText?: string;
     action: string;
     label: string;
-    webLinkUrl?: string;
+    webLinkUrl?: string | null;
     enabled: number;
     order_num: number;
 }

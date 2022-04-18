@@ -128,8 +128,8 @@ export class RuntimeController extends Controller {
                         blockId: body.blockID,
                         imageId: body.imageID,
                         orderNum: body.order_num,
-                        // containerUrl: body.container_url,
-                        // containerPort: body.container_port,
+                        containerUrl: body.container_url,
+                        containerPort: body.container_port,
                         containerEnv: body.container_env,
                     }
                 ])
