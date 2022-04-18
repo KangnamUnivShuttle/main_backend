@@ -115,7 +115,6 @@
 					}
 				},
 				"required": [
-					"blockRuntimeID",
 					"blockID",
 					"imageID",
 					"order_num",

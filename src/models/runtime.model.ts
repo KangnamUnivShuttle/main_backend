@@ -50,7 +50,7 @@ export interface RuntimeControlModel {
 }
 
 export interface RuntimeModel {
-    blockRuntimeID: number;
+    blockRuntimeID?: number;
     blockID: string;
     imageID: number;
     order_num: number;

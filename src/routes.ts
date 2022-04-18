@@ -63,7 +63,7 @@ const models: TsoaRoute.Models = {
     "RuntimeModel": {
         "dataType": "refObject",
         "properties": {
-            "blockRuntimeID": {"dataType":"double","required":true},
+            "blockRuntimeID": {"dataType":"double"},
             "blockID": {"dataType":"string","required":true},
             "imageID": {"dataType":"double","required":true},
             "order_num": {"dataType":"double","required":true},
