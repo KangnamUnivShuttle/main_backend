@@ -24,6 +24,12 @@ export class ChatBlock {
   @Column("int", { name: "y", default: () => "'0'" })
   y: number;
 
+  @Column("int", { name: "link_x", default: () => "'0'" })
+  linkX: number;
+
+  @Column("int", { name: "link_y", default: () => "'0'" })
+  linkY: number;
+
   @Column("tinyint", { name: "deleteable", default: () => "'1'" })
   deleteable: number;
 
