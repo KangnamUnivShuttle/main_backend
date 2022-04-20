@@ -57,6 +57,8 @@ export interface RuntimeModel {
     container_url: string;
     container_port: string;
     container_env: string;
+    x: number;
+    y: number;
 }
 
 export interface RuntimeBlockModel {
@@ -64,6 +66,10 @@ export interface RuntimeBlockModel {
     name: string;
     enabled: number;
     order_num: number;
+    x: number;
+    y: number;
+    linkX: number;
+    linkY: number;
 }
 
 export interface RuntimeBlockLinkModel {

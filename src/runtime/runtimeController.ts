@@ -69,6 +69,8 @@ export class RuntimeController extends Controller {
                 '_ChatBlockRuntime.blockRuntimeId',
                 '_ChatBlockRuntime.blockId',
                 '_ChatBlockRuntime.imageId',
+                '_ChatBlockRuntime.x',
+                '_ChatBlockRuntime.y',
                 '_ChatBlockRuntime.orderNum',
                 '_ChatBlockRuntime.containerUrl',
                 '_ChatBlockRuntime.containerPort',
@@ -131,6 +133,8 @@ export class RuntimeController extends Controller {
                         containerUrl: body.container_url,
                         containerPort: body.container_port,
                         containerEnv: body.container_env,
+                        x: body.x,
+                        y: body.y
                     }
                 ])
                 .execute();
@@ -426,6 +430,8 @@ export class RuntimeController extends Controller {
                     imageId: body.imageID,
                     orderNum: body.order_num,
                     containerEnv: body.container_env,
+                    x: body.x,
+                    y: body.y,
                     updateDatetime: 'current_timestamp()'
                 })
                 .where('blockRuntimeId = :blockRuntimeID', { blockRuntimeID: body.blockRuntimeID })

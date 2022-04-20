@@ -76,13 +76,33 @@
 					"order_num": {
 						"type": "number",
 						"format": "double"
+					},
+					"x": {
+						"type": "number",
+						"format": "double"
+					},
+					"y": {
+						"type": "number",
+						"format": "double"
+					},
+					"linkX": {
+						"type": "number",
+						"format": "double"
+					},
+					"linkY": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"blockID",
 					"name",
 					"enabled",
-					"order_num"
+					"order_num",
+					"x",
+					"y",
+					"linkX",
+					"linkY"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -112,6 +132,14 @@
 					},
 					"container_env": {
 						"type": "string"
+					},
+					"x": {
+						"type": "number",
+						"format": "double"
+					},
+					"y": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -120,7 +148,9 @@
 					"order_num",
 					"container_url",
 					"container_port",
-					"container_env"
+					"container_env",
+					"x",
+					"y"
 				],
 				"type": "object",
 				"additionalProperties": false

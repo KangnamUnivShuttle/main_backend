@@ -44,6 +44,10 @@ export class RuntimeBlockController extends Controller {
                 '_ChatBlock.blockId',
                 '_ChatBlock.name',
                 '_ChatBlock.enabled',
+                '_ChatBlock.x',
+                '_ChatBlock.y',
+                '_ChatBlock.linkX',
+                '_ChatBlock.linkY',
                 '_ChatBlock.orderNum',
                 '_ChatBlock.deleteable',
                 '_ChatBlock.registerDatetime',
@@ -96,7 +100,11 @@ export class RuntimeBlockController extends Controller {
                     blockId: body.blockID,
                     name: body.name,
                     enabled: body.enabled,
-                    orderNum: body.order_num
+                    orderNum: body.order_num,
+                    x: body.x,
+                    y: body.y,
+                    linkX: body.linkX,
+                    linkY: body.linkY
                 }
             ])
             .execute()
@@ -136,6 +144,10 @@ export class RuntimeBlockController extends Controller {
                 name: body.name,
                 enabled: body.enabled,
                 orderNum: body.order_num,
+                x: body.x,
+                y: body.y,
+                linkX: body.linkX,
+                linkY: body.linkY,
                 updateDatetime: 'current_timestamp()'
             })
             .where('blockId = :blockID', {blockID: body.blockID})
