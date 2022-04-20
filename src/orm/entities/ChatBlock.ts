@@ -18,6 +18,12 @@ export class ChatBlock {
   @Column("int", { name: "order_num", default: () => "'0'" })
   orderNum: number;
 
+  @Column("int", { name: "x", default: () => "'0'" })
+  x: number;
+
+  @Column("int", { name: "y", default: () => "'0'" })
+  y: number;
+
   @Column("tinyint", { name: "deleteable", default: () => "'1'" })
   deleteable: number;
 
