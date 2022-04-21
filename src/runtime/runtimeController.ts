@@ -363,6 +363,7 @@ export class RuntimeController extends Controller {
                 }
 
                 payload['template']['quickReplies'] = []
+                currentRuntime.nextBlock.sort((a, b) => (a.link_order_num || 0) - (b.link_order_num || 0))
                 currentRuntime.nextBlock.forEach(block => {
                     payload['template']['quickReplies'].push(block.quickReply)
                 })
