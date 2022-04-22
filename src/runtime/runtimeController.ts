@@ -273,7 +273,7 @@ export class RuntimeController extends Controller {
                 logger.debug(`[runtimeController] [containerStateControl] code: ${code}`)
                 const result_db = await this.updateContainerStateToDB({
                     blockRuntimeID: body.blockRuntimeID,
-                    container_state: body.container_state,
+                    container_state: body.container_state === 'build' ? recentRuntime.containerState : body.container_state,
                     container_name: recentRuntime.containerUrl,
                     path: process.env.PLUGIN_PATH || '.'
                 } as RuntimeControlModel)
