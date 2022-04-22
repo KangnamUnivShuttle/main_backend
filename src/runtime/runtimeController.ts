@@ -265,6 +265,10 @@ export class RuntimeController extends Controller {
             if (recentRuntime && recentRuntime.containerUrl) {
                 logger.info(`[runtimeController] [containerStateControl] runtime already exist in ${recentRuntime.containerUrl}:${recentRuntime.containerPort} / ${recentRuntime.containerState}`)
                 
+                const selectedEnv = body.env || (recentRuntime.containerEnv || '').split('\n')
+                const init_result = await genEnvFile(body.container_name, process.env.PLUGIN_PATH || '.', body.env || (recentRuntime.containerEnv || '').split('\n'))
+                logger.debug(`[runtimeController] [containerStateControl] init result env: ${JSON.stringify(init_result)}`)
+                
                 const code = await controlCLI({
                     container_name: recentRuntime.containerUrl,
                     container_state: body.container_state,
@@ -275,6 +279,7 @@ export class RuntimeController extends Controller {
                     blockRuntimeID: body.blockRuntimeID,
                     container_state: body.container_state === 'build' ? recentRuntime.containerState : body.container_state,
                     container_name: recentRuntime.containerUrl,
+                    env: selectedEnv,
                     path: process.env.PLUGIN_PATH || '.'
                 } as RuntimeControlModel)
                 logger.debug(`[runtimeController] [containerStateControl] write result to db: ${result_db.success}`)
@@ -291,7 +296,7 @@ export class RuntimeController extends Controller {
                 logger.debug(`[runtimeController] [containerStateControl] init result ecosystem: ${JSON.stringify(init_result)}`)
 
                 init_result = await genEnvFile(body.container_name, process.env.PLUGIN_PATH || '.', body.env)
-                logger.debug(`[runtimeController] [containerStateControl] init result ecosystem: ${JSON.stringify(init_result)}`)
+                logger.debug(`[runtimeController] [containerStateControl] init result env: ${JSON.stringify(init_result)}`)
 
                 body.path = process.env.PLUGIN_PATH || '.'
                 const code = await controlCLI(body);
