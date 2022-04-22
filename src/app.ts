@@ -96,7 +96,7 @@ app.use("/docs", swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
   );
 });
 
-app.use('/', (req: ExRequest, res: ExResponse) => {
+app.get('/', (req: ExRequest, res: ExResponse) => {
   return res.redirect('https://flowchat.gapmoe.net')
 })
 
