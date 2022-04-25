@@ -980,15 +980,6 @@
 							"format": "double",
 							"type": "number"
 						}
-					},
-					{
-						"in": "query",
-						"name": "uid",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
 					}
 				]
 			},
