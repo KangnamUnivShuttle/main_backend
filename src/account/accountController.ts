@@ -19,6 +19,7 @@ import logger from "../logger";
 import { AdminUser } from "../orm/entities/AdminUser";
 import { getConnection, getManager } from "typeorm";
 import { ChatBlock } from "../orm/entities/ChatBlock";
+import { pagingQuerySelection } from "../lib/queryUtils";
 
 @Tags("Account")
 @Route("account")
@@ -49,34 +50,24 @@ export class AccountController extends Controller {
     try {
       // https://jojoldu.tistory.com/579
       // https://kmseop.tistory.com/186
+
+      const { countCols, dataCols } = pagingQuerySelection("_AdminUser", [
+        "uid",
+        "email",
+        "enabled",
+        "memo",
+        "deleteable",
+        "registerDatetime",
+        "updateDatetime",
+        "lastLoginDatetime",
+      ]);
       let countQuery = countQueryBuilder
-        .select([
-          "COUNT(*) AS cnt",
-          "NULL AS uid",
-          "NULL AS email",
-          "NULL AS enabled",
-          "NULL AS memo",
-          "NULL AS deleteable",
-          "NULL AS registerDatetime",
-          "NULL AS updateDatetime",
-          "NULL AS lastLoginDatetime",
-        ])
+        .select(countCols)
         .from(AdminUser, "_AdminUser")
         .getQuery();
 
       let query = queryBuilder
-        .select([
-          "NULL AS cnt",
-          "_AdminUser.uid AS uid",
-          "_AdminUser.email AS email",
-          // '_AdminUser.passwd',
-          "_AdminUser.enabled AS enabled",
-          "_AdminUser.memo AS memo",
-          "_AdminUser.deleteable AS deleteable",
-          "_AdminUser.registerDatetime AS registerDatetime",
-          "_AdminUser.updateDatetime AS updateDatetime",
-          "_AdminUser.lastLoginDatetime AS lastLoginDatetime",
-        ])
+        .select(dataCols)
         .from(AdminUser, "_AdminUser")
         .orderBy("_AdminUser.uid", "ASC")
         .limit(limit)
