@@ -19,7 +19,7 @@ import logger from "../logger";
 import { AdminUser } from "../orm/entities/AdminUser";
 import { getConnection, getManager } from "typeorm";
 import { ChatBlock } from "../orm/entities/ChatBlock";
-import { pagingQuerySelection } from "../lib/queryUtils";
+import { pagingQuerySelection, pagingUnionQuery } from "../lib/queryUtils";
 
 @Tags("Account")
 @Route("account")
@@ -38,13 +38,13 @@ export class AccountController extends Controller {
     const queryRunner = await connection.createQueryRunner();
     const queryBuilder = await connection.createQueryBuilder(
       AdminUser,
-      "registerPlugin",
+      "_AdminUser",
       queryRunner
     );
 
     const countQueryBuilder = await connection.createQueryBuilder(
       AdminUser,
-      "countQueryBuilder",
+      "_AdminUser",
       queryRunner
     );
     try {
@@ -63,12 +63,12 @@ export class AccountController extends Controller {
       ]);
       let countQuery = countQueryBuilder
         .select(countCols)
-        .from(AdminUser, "_AdminUser")
+        // .from(AdminUser, "_AdminUser")
         .getQuery();
 
       let query = queryBuilder
         .select(dataCols)
-        .from(AdminUser, "_AdminUser")
+        // .from(AdminUser, "_AdminUser")
         .orderBy("_AdminUser.uid", "ASC")
         .limit(limit)
         .offset((page - 1) * limit)
@@ -76,20 +76,7 @@ export class AccountController extends Controller {
       //   console.log("query", query);
 
       // https://github.com/typeorm/typeorm/issues/2992#issuecomment-876965843
-      const entityManager = getManager();
-
-      // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
-      // if (blockID) {
-      //     query = query.where("_ChatBlock.blockId = :blockID", { blockID })
-      // }
-      // if (name) {
-      //     query = query.where("_ChatBlock.name like :name", {name: `%${name}%`})
-      // }
-
-      //   console.log(`${countQuery} UNION SELECT * FROM (${query})`);
-      const runtimeList = await entityManager.query(
-        `${countQuery} UNION SELECT * FROM (${query}) AS Data`
-      );
+      const runtimeList = await pagingUnionQuery(countQuery, query);
       result.success = true;
       result.data = runtimeList;
     } catch (err: any) {
