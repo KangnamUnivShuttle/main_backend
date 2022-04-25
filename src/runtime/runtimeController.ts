@@ -155,7 +155,12 @@ export class RuntimeController extends Controller {
       const countQuery = cntQuery.getQuery();
 
       result.success = true;
-      result.data = await pagingUnionQuery(countQuery, dataQuery);
+      result.data = await pagingUnionQuery(
+        countQuery,
+        dataQuery,
+        [],
+        "order by `orderNum` ASC"
+      );
     } catch (err: any) {
       logger.error(
         `[runtimeController] [getInfo] failed to load chat image data ${err.message}`

@@ -21,10 +21,11 @@ export function pagingQuerySelection(
 export function pagingUnionQuery(
   cntQuery: string,
   dataQuery: string,
-  params: any[] = []
+  params: any[] = [],
+  rawQuery: string = ""
 ) {
   const entityManager = getManager();
-  const query = `SELECT * FROM (${cntQuery}) AS CntRow UNION SELECT * FROM (${dataQuery}) AS DataRow`;
+  const query = `SELECT * FROM (${cntQuery}) AS CntRow UNION SELECT * FROM (${dataQuery}) AS DataRow ${rawQuery}`;
   logger.debug(`[queryUtils] [pagingUnionQuery] query: ${query}`);
   return entityManager.query(query, params);
 }

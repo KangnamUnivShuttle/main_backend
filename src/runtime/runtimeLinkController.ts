@@ -70,14 +70,16 @@ export class RuntimeLinkController extends Controller {
 
         // https://github.com/typeorm/typeorm/issues/3103#issuecomment-445497288
         .where("_ChatBlockLink.blockId = ?")
-        .orderBy("_ChatBlockLink.orderNum", "ASC")
+        // .orderBy("_ChatBlockLink.orderNum", "ASC")
         .getQuery();
 
       result.success = true;
-      result.data = await pagingUnionQuery(countQuery, dataQuery, [
-        blockID,
-        blockID,
-      ]);
+      result.data = await pagingUnionQuery(
+        countQuery,
+        dataQuery,
+        [blockID, blockID],
+        "order by `orderNum` ASC"
+      );
     } catch (err: any) {
       logger.error(
         `[runtimeLinkController] [getInfo] failed to load chat image data ${err.message}`
