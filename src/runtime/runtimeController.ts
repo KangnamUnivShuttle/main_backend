@@ -519,23 +519,24 @@ export class RuntimeController extends Controller {
     logger.debug(
       `[runtimeController] [kakaoChatRuntime] current user: ${userKey} blockID: ${currentUserRecentBlockId}`
     );
-    // fallback 상태에서 강제 탈출 입력시 intro 블럭으로 이동
-    // fallback 상태에서 추천된 블럭을 입력시 해당 블럭으로 이동
-    // 기본 정석대로 움직이는 블럭 상태
     const lastRuntimeKey =
       currentUserRecentBlockId === BLOCK_ID_FALLBACK
-        ? messageText === FALLBACK_ESCAPE_MSG
-          ? FALLBACK_ESCAPE_BLOCK_ID
-          : await getFallbackRuntimePayload(userKey, messageText)
+        ? await getFallbackRuntimePayload(userKey, messageText)
         : currentUserRecentBlockId;
 
     logger.debug(
       `[runtimeController] [kakaoChatRuntime] last runtime key: ${lastRuntimeKey}`
     );
 
+    // fallback 상태에서 강제 탈출 입력시 intro 블럭으로 이동
+    // 그게 아니라면 이전 대화에서 이동할 퀵 응답 베이스 이동
+    // 이외 경우 fallback 시작
     const selectedkey =
-      (await getBestRuntimeChoice(messageText, lastRuntimeKey)) ||
-      BLOCK_ID_FALLBACK;
+      currentUserRecentBlockId === BLOCK_ID_FALLBACK &&
+      messageText === FALLBACK_ESCAPE_MSG
+        ? FALLBACK_ESCAPE_BLOCK_ID
+        : (await getBestRuntimeChoice(messageText, lastRuntimeKey)) ||
+          BLOCK_ID_FALLBACK;
 
     if (
       selectedkey !== BLOCK_ID_FALLBACK &&
