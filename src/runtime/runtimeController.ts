@@ -622,7 +622,7 @@ export class RuntimeController extends Controller {
       lastRuntimeKey
     );
 
-    this.chatTrafficLogger(userKey, selectedkey, inputMsg);
+    this.chatTrafficLogger(userKey, selectedkey, messageText);
 
     if (
       selectedkey !== BLOCK_ID_FALLBACK &&
