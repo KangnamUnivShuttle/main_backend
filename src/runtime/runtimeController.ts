@@ -524,7 +524,7 @@ export class RuntimeController extends Controller {
     // 기본 정석대로 움직이는 블럭 상태
     const lastRuntimeKey =
       currentUserRecentBlockId === BLOCK_ID_FALLBACK
-        ? inputMsg === FALLBACK_ESCAPE_MSG
+        ? messageText === FALLBACK_ESCAPE_MSG
           ? FALLBACK_ESCAPE_BLOCK_ID
           : await getFallbackRuntimePayload(userKey, messageText)
         : currentUserRecentBlockId;
