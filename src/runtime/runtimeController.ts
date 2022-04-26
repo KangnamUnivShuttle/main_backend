@@ -59,6 +59,7 @@ import {
   genEnvFile,
 } from "./runtimeCliController";
 import { pagingQuerySelection, pagingUnionQuery } from "../lib/queryUtils";
+import { ChatTraffic } from "../orm/entities/ChatTraffic";
 
 @Tags("Runtime")
 @Route("runtime")
@@ -502,8 +503,47 @@ export class RuntimeController extends Controller {
     return result;
   }
 
-  requestLocalPlugin(input: KakaoChatReqModel): Promise<any> {
-    return new Promise<any>(() => {});
+  async chatTrafficLogger(
+    userKey: string,
+    blockID: string,
+    msg: string | null
+  ) {
+    const connection = getConnection();
+    const queryRunner = await connection.createQueryRunner();
+    const queryBuilder = await connection.createQueryBuilder(
+      ChatTraffic,
+      "_ChatTraffic",
+      queryRunner
+    );
+    await queryRunner.startTransaction();
+    try {
+      logger.debug(
+        `[runtimeController] [chatTrafficLogger] write data: ${userKey} / ${blockID} / ${msg}`
+      );
+
+      queryBuilder
+        .insert()
+        .into(ChatTraffic)
+        .values([
+          {
+            userKey,
+            blockId: blockID,
+            msg: msg,
+          },
+        ])
+        .execute();
+
+      await queryRunner.commitTransaction();
+      logger.debug(`[runtimeController] [chatTrafficLogger] commit data ok`);
+    } catch (err: any) {
+      await queryRunner.rollbackTransaction();
+      logger.error(
+        `[runtimeController] [chatTrafficLogger] commit data error ${err.message}`
+      );
+    } finally {
+      await queryRunner.release();
+      logger.info(`[runtimeController] [chatTrafficLogger] transaction done`);
+    }
   }
 
   async blockKeySelector(
@@ -581,6 +621,8 @@ export class RuntimeController extends Controller {
       messageText,
       lastRuntimeKey
     );
+
+    this.chatTrafficLogger(userKey, selectedkey, inputMsg);
 
     if (
       selectedkey !== BLOCK_ID_FALLBACK &&

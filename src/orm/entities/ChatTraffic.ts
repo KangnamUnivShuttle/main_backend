@@ -5,14 +5,14 @@ export class ChatTraffic {
   @PrimaryGeneratedColumn({ type: "int", name: "ct_id" })
   ctId: number;
 
-  @Column("varchar", { name: "userKey", length: 80 })
-  userKey: string;
+  @Column("varchar", { name: "userKey", nullable: true, length: 80 })
+  userKey: string | null;
 
-  @Column("varchar", { name: "blockID", length: 20 })
-  blockId: string;
+  @Column("varchar", { name: "blockID", nullable: true, length: 20 })
+  blockId: string | null;
 
-  @Column("varchar", { name: "msg", length: 500 })
-  msg: string;
+  @Column("varchar", { name: "msg", nullable: true, length: 500 })
+  msg: string | null;
 
   @Column("timestamp", {
     name: "registerDatetime",
