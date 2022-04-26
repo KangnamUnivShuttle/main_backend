@@ -337,9 +337,15 @@ export const getBestRuntimeChoice = async function (
   const lastRuntimePayload = lastRuntimeKey
     ? runtimeDB[lastRuntimeKey]
     : runtimeDB["intro"];
+  logger.debug(
+    `[runtimeLoader] [getBestRuntimeChoice] lastRuntimePayload key: ${lastRuntimeKey}`
+  );
   // console.log('key', lastRuntimeKey, 'input', currentInputMsg, 'payload', lastRuntimePayload)
   const filtered = lastRuntimePayload.nextBlock.filter(
     (block) => block.quickReply.messageText === currentInputMsg
+  );
+  logger.debug(
+    `[runtimeLoader] [getBestRuntimeChoice] filtered len: ${filtered.length}`
   );
   if (filtered && filtered.length > 0) {
     if (!filtered[0].blockID) {
