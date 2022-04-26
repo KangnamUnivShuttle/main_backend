@@ -516,6 +516,9 @@ export class RuntimeController extends Controller {
       currentUserRecentBlockId === BLOCK_ID_FALLBACK &&
       messageText === FALLBACK_ESCAPE_MSG
     ) {
+      logger.debug(
+        `[runtimeController] [blockKeySelector] Request escape fallback block.`
+      );
       return FALLBACK_ESCAPE_BLOCK_ID;
     } else {
       const bestChoice = await getBestRuntimeChoice(
@@ -524,16 +527,23 @@ export class RuntimeController extends Controller {
       );
       // 다음 대화로 이어갈 퀵 메뉴 응답 중 하나를 고른 경우
       if (bestChoice) {
+        logger.debug(
+          `[runtimeController] [blockKeySelector] Best choice block exist.`
+        );
         return bestChoice;
       }
       // 퀵 메뉴를 고른건 아닌데 해당 블럭이 무한 반복요청을 받아들일 수 있는 경우
       else if (
         (await getRuntimePayload(currentUserRecentBlockId)).block_loopable === 1
       ) {
+        logger.debug(
+          `[runtimeController] [blockKeySelector] Loop mode enabled block.`
+        );
         return currentUserRecentBlockId;
       }
       // 그 이외에는 fallback 상태
       else {
+        logger.debug(`[runtimeController] [blockKeySelector] Start fallback.`);
         return BLOCK_ID_FALLBACK;
       }
     }
