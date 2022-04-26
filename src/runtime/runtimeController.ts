@@ -511,6 +511,9 @@ export class RuntimeController extends Controller {
     messageText: string,
     lastRuntimeKey: string | undefined
   ) {
+    logger.debug(
+      `[runtimeController] [blockKeySelector] current: ${currentUserRecentBlockId} / msg: ${messageText} / last: ${lastRuntimeKey}`
+    );
     // fallback 블록에서 강제 탈출 요청 시
     if (
       currentUserRecentBlockId === BLOCK_ID_FALLBACK &&
