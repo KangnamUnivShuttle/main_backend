@@ -58,6 +58,7 @@ export class RuntimeBlockController extends Controller {
         "linkY",
         "orderNum",
         "deleteable",
+        "loopable",
         "registerDatetime",
         "updateDatetime",
       ]);
@@ -138,6 +139,7 @@ export class RuntimeBlockController extends Controller {
             y: body.y,
             linkX: body.linkX,
             linkY: body.linkY,
+            loopable: body.loopable,
           },
         ])
         .execute();
@@ -191,6 +193,7 @@ export class RuntimeBlockController extends Controller {
           y: body.y,
           linkX: body.linkX,
           linkY: body.linkY,
+          loopable: body.loopable,
           updateDatetime: "current_timestamp()",
         })
         .where("blockId = :blockID", { blockID: body.blockID })

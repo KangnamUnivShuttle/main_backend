@@ -92,6 +92,10 @@
 					"linkY": {
 						"type": "number",
 						"format": "double"
+					},
+					"loopable": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -102,7 +106,8 @@
 					"x",
 					"y",
 					"linkX",
-					"linkY"
+					"linkY",
+					"loopable"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -850,6 +855,10 @@
 					"order_num": {
 						"type": "number",
 						"format": "double"
+					},
+					"is_ml_category": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -857,7 +866,8 @@
 					"action",
 					"label",
 					"enabled",
-					"order_num"
+					"order_num",
+					"is_ml_category"
 				],
 				"type": "object",
 				"additionalProperties": false

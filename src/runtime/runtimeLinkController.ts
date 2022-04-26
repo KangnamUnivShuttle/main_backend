@@ -53,6 +53,7 @@ export class RuntimeLinkController extends Controller {
         "webLinkUrl",
         "enabled",
         "orderNum",
+        "isMlCategory",
         "registerDatetime",
         "updateDatetime",
       ]);
@@ -126,6 +127,7 @@ export class RuntimeLinkController extends Controller {
             webLinkUrl: body.webLinkUrl,
             enabled: body.enabled,
             orderNum: body.order_num,
+            isMlCategory: body.is_ml_category,
           },
         ])
         .execute();
@@ -179,6 +181,7 @@ export class RuntimeLinkController extends Controller {
           webLinkUrl: body.webLinkUrl,
           enabled: body.enabled,
           orderNum: body.order_num,
+          isMlCategory: body.is_ml_category,
           updateDatetime: "current_timestamp()",
         })
         .where("blockLinkId = :blockLinkID", { blockLinkID: body.blockLinkID })

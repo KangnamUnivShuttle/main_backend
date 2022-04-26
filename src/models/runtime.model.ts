@@ -74,6 +74,7 @@ export interface RuntimeBlockModel {
   y: number;
   linkX: number;
   linkY: number;
+  loopable: number;
 }
 
 export interface RuntimeBlockLinkModel {
@@ -86,6 +87,7 @@ export interface RuntimeBlockLinkModel {
   webLinkUrl?: string | null;
   enabled: number;
   order_num: number;
+  is_ml_category: number;
 }
 
 export interface FallbackStatusModel {
