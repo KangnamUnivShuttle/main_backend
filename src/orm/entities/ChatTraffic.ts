@@ -14,6 +14,12 @@ export class ChatTraffic {
   @Column("varchar", { name: "msg", nullable: true, length: 500 })
   msg: string | null;
 
+  @Column("varchar", { name: "beforeBlockID", nullable: true, length: 20 })
+  beforeBlockId: string | null;
+
+  @Column("varchar", { name: "beforeMsg", nullable: true, length: 500 })
+  beforeMsg: string | null;
+
   @Column("timestamp", {
     name: "registerDatetime",
     default: () => "CURRENT_TIMESTAMP",

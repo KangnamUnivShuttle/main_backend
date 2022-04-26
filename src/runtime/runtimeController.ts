@@ -506,7 +506,9 @@ export class RuntimeController extends Controller {
   async chatTrafficLogger(
     userKey: string,
     blockID: string,
-    msg: string | null
+    msg: string | null,
+    beforeBlockID?: string,
+    beforeMsg?: string | null
   ) {
     const connection = getConnection();
     const queryRunner = await connection.createQueryRunner();
@@ -529,6 +531,8 @@ export class RuntimeController extends Controller {
             userKey,
             blockId: blockID,
             msg: msg,
+            beforeBlockId: beforeBlockID,
+            beforeMsg: beforeMsg,
           },
         ])
         .execute();
@@ -622,7 +626,13 @@ export class RuntimeController extends Controller {
       lastRuntimeKey
     );
 
-    this.chatTrafficLogger(userKey, selectedkey, messageText);
+    this.chatTrafficLogger(
+      userKey,
+      selectedkey,
+      messageText,
+      currentUserRecentBlockId,
+      inputMsg
+    );
 
     if (
       selectedkey !== BLOCK_ID_FALLBACK &&
