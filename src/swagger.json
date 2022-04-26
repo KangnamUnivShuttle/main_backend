@@ -54,9 +54,7 @@
 				},
 				"required": [
 					"name",
-					"github_url",
-					"registerDatetime",
-					"updateDatetime"
+					"github_url"
 				],
 				"type": "object",
 				"additionalProperties": false
