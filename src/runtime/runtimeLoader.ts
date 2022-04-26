@@ -334,7 +334,9 @@ export const getBestRuntimeChoice = async function (
     )}`
   );
 
-  const lastRuntimePayload = runtimeDB[lastRuntimeKey] || runtimeDB["intro"];
+  const lastRuntimePayload = lastRuntimeKey
+    ? runtimeDB[lastRuntimeKey]
+    : runtimeDB["intro"];
   // console.log('key', lastRuntimeKey, 'input', currentInputMsg, 'payload', lastRuntimePayload)
   const filtered = lastRuntimePayload.nextBlock.filter(
     (block) => block.quickReply.messageText === currentInputMsg
