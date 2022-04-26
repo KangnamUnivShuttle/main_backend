@@ -51,6 +51,9 @@ export class ChatBlockLink {
   @Column("int", { name: "order_num", default: () => "'0'" })
   orderNum: number;
 
+  @Column("tinyint", { name: "is_ml_category", default: () => "'1'" })
+  isMlCategory: number;
+
   @Column("timestamp", {
     name: "registerDatetime",
     default: () => "CURRENT_TIMESTAMP",

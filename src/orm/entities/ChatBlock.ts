@@ -33,6 +33,9 @@ export class ChatBlock {
   @Column("tinyint", { name: "deleteable", default: () => "'1'" })
   deleteable: number;
 
+  @Column("tinyint", { name: "loopable", default: () => "'0'" })
+  loopable: number;
+
   @Column("timestamp", {
     name: "registerDatetime",
     default: () => "CURRENT_TIMESTAMP",
