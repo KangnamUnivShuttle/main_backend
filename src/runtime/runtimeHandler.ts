@@ -54,18 +54,18 @@ export function returnRecommendedMessage(
     },
   };
 
+  returnMsg.template.quickReplies = recommendNextBlockList.map((item) => {
+    return {
+      ...item.quickReply,
+    } as QuickReplyModel;
+  });
+
   returnMsg.template.quickReplies.splice(0, 0, {
     messageText: FALLBACK_ESCAPE_MSG,
     label: FALLBACK_ESCAPE_LABEL,
     blockId: FALLBACK_ESCAPE_BLOCK_ID,
     action: "message",
   } as QuickReplyModel);
-
-  returnMsg.template.quickReplies = recommendNextBlockList.map((item) => {
-    return {
-      ...item.quickReply,
-    } as QuickReplyModel;
-  });
   return returnMsg;
 }
 
