@@ -58,6 +58,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
   sample_weather: {
     pluginList: [
@@ -78,6 +79,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
   sample_shuttle_route_for_nearest_bus_time: {
     pluginList: [
@@ -106,6 +108,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
   sample_nearest_bus_time: {
     pluginList: [
@@ -138,6 +141,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
   sample_shuttle_route_for_station_list: {
     pluginList: [
@@ -166,6 +170,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
   sample_shuttle_route_station_list: {
     pluginList: [
@@ -198,6 +203,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
   sample_shuttle_info_selector: {
     pluginList: [
@@ -234,6 +240,7 @@ const kakaoChatRuntimeHashmap: RuntimeHashmapModel = {
         } as QuickReplyModel,
       } as NextBlockModel,
     ],
+    block_loopable: 0,
   } as RuntimePayloadModel,
 };
 
@@ -259,6 +266,7 @@ const runtimeDBModelConverter = function (
         processResult: [],
         nextBlock: [],
         block_order_num: runtime.block_order_num,
+        block_loopable: runtime.block_loopable,
       } as RuntimePayloadModel;
     } else if (runtime.blockLinkID) {
       result[runtime.blockID].nextBlock.push({
@@ -271,6 +279,7 @@ const runtimeDBModelConverter = function (
           label: runtime.label,
           webLinkUrl: runtime.webLinkUrl,
         } as QuickReplyModel,
+        is_ml_category: runtime.is_ml_category,
       } as NextBlockModel);
     } else if (runtime.blockRuntimeID) {
       result[runtime.blockID].pluginList.push({
@@ -382,12 +391,14 @@ export const getRecommendedReplyList = async function (
   const runtimeDB = await loadRuntimeDB(isDev);
 
   Object.keys(runtimeDB).forEach((key) => {
-    runtimeDB[key].nextBlock.forEach((next) => {
-      totalNextBlockList.push({
-        ...next,
-        blockID: key,
-      } as NextBlockModel);
-    });
+    runtimeDB[key].nextBlock
+      .filter((nBlock) => nBlock.is_ml_category === 1)
+      .forEach((next) => {
+        totalNextBlockList.push({
+          ...next,
+          blockID: key,
+        } as NextBlockModel);
+      });
   });
 
   logger.info(

@@ -506,6 +506,39 @@ export class RuntimeController extends Controller {
     return new Promise<any>(() => {});
   }
 
+  async blockKeySelector(
+    currentUserRecentBlockId: string,
+    messageText: string,
+    lastRuntimeKey: string | undefined
+  ) {
+    // fallback 블록에서 강제 탈출 요청 시
+    if (
+      currentUserRecentBlockId === BLOCK_ID_FALLBACK &&
+      messageText === FALLBACK_ESCAPE_MSG
+    ) {
+      return FALLBACK_ESCAPE_BLOCK_ID;
+    } else {
+      const bestChoice = await getBestRuntimeChoice(
+        messageText,
+        lastRuntimeKey
+      );
+      // 다음 대화로 이어갈 퀵 메뉴 응답 중 하나를 고른 경우
+      if (bestChoice) {
+        return bestChoice;
+      }
+      // 퀵 메뉴를 고른건 아닌데 해당 블럭이 무한 반복요청을 받아들일 수 있는 경우
+      else if (
+        (await getRuntimePayload(currentUserRecentBlockId)).block_loopable === 1
+      ) {
+        return currentUserRecentBlockId;
+      }
+      // 그 이외에는 fallback 상태
+      else {
+        return BLOCK_ID_FALLBACK;
+      }
+    }
+  }
+
   @Response<KakaoChatResModel>(200, "Response ok")
   @Post("kakaochat")
   public async kakaoChatRuntime(
@@ -528,15 +561,11 @@ export class RuntimeController extends Controller {
       `[runtimeController] [kakaoChatRuntime] last runtime key: ${lastRuntimeKey}`
     );
 
-    // fallback 상태에서 강제 탈출 입력시 intro 블럭으로 이동
-    // 그게 아니라면 이전 대화에서 이동할 퀵 응답 베이스 이동
-    // 이외 경우 fallback 시작
-    const selectedkey =
-      currentUserRecentBlockId === BLOCK_ID_FALLBACK &&
-      messageText === FALLBACK_ESCAPE_MSG
-        ? FALLBACK_ESCAPE_BLOCK_ID
-        : (await getBestRuntimeChoice(messageText, lastRuntimeKey)) ||
-          BLOCK_ID_FALLBACK;
+    const selectedkey = await this.blockKeySelector(
+      currentUserRecentBlockId,
+      messageText,
+      lastRuntimeKey
+    );
 
     if (
       selectedkey !== BLOCK_ID_FALLBACK &&
