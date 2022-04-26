@@ -528,6 +528,7 @@ export class RuntimeController extends Controller {
         messageText,
         lastRuntimeKey
       );
+
       // 다음 대화로 이어갈 퀵 메뉴 응답 중 하나를 고른 경우
       if (bestChoice) {
         logger.debug(
@@ -537,6 +538,7 @@ export class RuntimeController extends Controller {
       }
       // 퀵 메뉴를 고른건 아닌데 해당 블럭이 무한 반복요청을 받아들일 수 있는 경우
       else if (
+        currentUserRecentBlockId !== BLOCK_ID_FALLBACK &&
         (await getRuntimePayload(currentUserRecentBlockId)).block_loopable === 1
       ) {
         logger.debug(
