@@ -141,7 +141,8 @@ export class PluginController extends Controller {
             orderNum: body.order_num,
             githubUrl: body.github_url,
           },
-        ]);
+        ])
+        .execute();
       await queryRunner.commitTransaction();
       logger.debug(`[PluginController] [registerPlugin] Add new plugin ok`);
       result.success = true;
