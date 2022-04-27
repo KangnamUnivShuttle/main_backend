@@ -316,7 +316,11 @@ const loadRuntimeDB = async function (
         SELECT * FROM chat_block_runtime_map
     `)) as RuntimeDBModel[];
 
-  // logger.debug(`[runtimeLoader] [loadRuntimeDB] total runtime list: ${JSON.stringify(runtimeList)}`)
+  logger.debug(
+    `[runtimeLoader] [loadRuntimeDB] total runtime list: ${JSON.stringify(
+      runtimeList
+    )}`
+  );
 
   return Promise.resolve(runtimeDBModelConverter(runtimeList));
 };
