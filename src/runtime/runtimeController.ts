@@ -12,6 +12,7 @@ import {
   Body,
   Response,
 } from "tsoa";
+import { performance } from "perf_hooks";
 import { postRequestToInstance } from "../lib/internalRequest";
 import logger from "../logger";
 import {
