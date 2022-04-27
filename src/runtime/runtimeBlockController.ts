@@ -79,7 +79,7 @@ export class RuntimeBlockController extends Controller {
         cntQuery = cntQuery.where(`_ChatBlock.name like '%${name}%'`);
       }
       const dataQuery = query
-        .orderBy("_ChatBlock.orderNum", "ASC")
+        .orderBy("_ChatBlock.registerDatetime", "DESC")
         .limit(limit)
         .offset((page - 1) * limit)
         .getQuery();

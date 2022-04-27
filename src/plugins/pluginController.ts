@@ -80,7 +80,7 @@ export class PluginController extends Controller {
         cntQuery = cntQuery.where(`_ChatImage.name like '%${name}%'`);
       }
       const dataQuery = query
-        .orderBy("_ChatImage.order_num", "ASC")
+        .orderBy("_ChatImage.registerDatetime", "DESC")
         .limit(limit)
         .offset((page - 1) * limit)
         .getQuery();
