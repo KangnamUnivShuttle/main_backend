@@ -21,6 +21,7 @@ export interface PluginInfoModel {
 export interface PlugInImageModel {
   imageID?: number;
   name: string;
+  title: string;
   order_num?: number;
   github_url: string;
   registerDatetime?: string;

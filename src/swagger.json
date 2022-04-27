@@ -38,6 +38,9 @@
 					"name": {
 						"type": "string"
 					},
+					"title": {
+						"type": "string"
+					},
 					"order_num": {
 						"type": "number",
 						"format": "double"
@@ -54,6 +57,7 @@
 				},
 				"required": [
 					"name",
+					"title",
 					"github_url"
 				],
 				"type": "object",

@@ -58,6 +58,7 @@ export class PluginController extends Controller {
       const { countCols, dataCols } = pagingQuerySelection("_ChatImage", [
         "imageId",
         "name",
+        "title",
         "orderNum",
         "githubUrl",
         "registerDatetime",
@@ -138,6 +139,7 @@ export class PluginController extends Controller {
         .values([
           {
             name: body.name,
+            title: body.title,
             orderNum: body.order_num,
             githubUrl: body.github_url,
           },
@@ -189,6 +191,7 @@ export class PluginController extends Controller {
         .update(ChatImage)
         .set({
           name: body.name,
+          title: body.title,
           orderNum: body.order_num,
           updateDatetime: "current_timestamp()",
         })

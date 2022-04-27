@@ -41,6 +41,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "imageID": {"dataType":"double"},
             "name": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
             "order_num": {"dataType":"double"},
             "github_url": {"dataType":"string","required":true},
             "registerDatetime": {"dataType":"string"},
