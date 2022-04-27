@@ -91,7 +91,7 @@ export class RuntimeBlockController extends Controller {
         countQuery,
         dataQuery,
         [],
-        "order by `orderNum` ASC"
+        "order by cnt IS NULL, `registerDatetime` DESC"
       );
     } catch (err: any) {
       logger.error(
