@@ -5,7 +5,7 @@ export function postRequestToInstance(
   instanceName: string,
   payload: any,
   port: string = "15000",
-  timeout: number = 2000,
+  timeout: number = 1000,
   route: string = "chat"
 ) {
   logger.debug(

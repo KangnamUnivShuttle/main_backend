@@ -684,9 +684,9 @@ export class RuntimeController extends Controller {
               currentRuntime.processResult.length - 1
             ];
           logger.debug(
-            `[runtimeController] [kakaoChatRuntime] took ${
+            `[runtimeController] [kakaoChatRuntime] took ${Math.floor(
               endTime - startTime
-            } milliseconds`
+            )} milliseconds`
           );
           logger.debug(
             `[runtimeController] [kakaoChatRuntime] next payload: ${JSON.stringify(
