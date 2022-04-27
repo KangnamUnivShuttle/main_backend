@@ -254,6 +254,9 @@ const runtimeDBModelConverter = function (
     // logger.debug(`block linked: ${runtime.blockLinkID} / ${runtime.blockLinkID}, asdf ${runtime['blockLinkID']}`)
     // logger.debug(`image id: ${!runtime.imageID} / ${runtime.imageID}`)
     // logger.debug(`runtime id: ${!runtime.blockRuntimeID} / ${runtime.blockRuntimeID}`)
+    // logger.debug(
+    //   `[runtimeLoader] [runtimeDBModelConverter] runtime: ${runtime.blockID}`
+    // );
     if (
       runtime.blockID &&
       !runtime.blockLinkID &&
@@ -316,11 +319,11 @@ const loadRuntimeDB = async function (
         SELECT * FROM chat_block_runtime_map
     `)) as RuntimeDBModel[];
 
-  logger.debug(
-    `[runtimeLoader] [loadRuntimeDB] total runtime list: ${JSON.stringify(
-      runtimeList
-    )}`
-  );
+  // logger.debug(
+  //   `[runtimeLoader] [loadRuntimeDB] total runtime list: ${JSON.stringify(
+  //     runtimeList
+  //   )}`
+  // );
 
   return Promise.resolve(runtimeDBModelConverter(runtimeList));
 };
