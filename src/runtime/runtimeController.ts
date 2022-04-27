@@ -680,6 +680,11 @@ export class RuntimeController extends Controller {
             currentRuntime.processResult[
               currentRuntime.processResult.length - 1
             ];
+          logger.debug(
+            `[runtimeController] [kakaoChatRuntime] next payload: ${JSON.stringify(
+              payload
+            )}`
+          );
         }
 
         payload["template"]["quickReplies"] = [];
