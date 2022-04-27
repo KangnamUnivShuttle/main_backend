@@ -669,6 +669,7 @@ export class RuntimeController extends Controller {
 
         let payload = body as any;
         for (let idx = 0; idx < currentRuntime.pluginList.length; idx++) {
+          const startTime = performance.now();
           currentRuntime.processResult.push(
             await postRequestToInstance(
               `plugin_node_${currentRuntime.pluginList[idx].url}`,
@@ -676,10 +677,16 @@ export class RuntimeController extends Controller {
               currentRuntime.pluginList[idx].port
             )
           );
+          const endTime = performance.now();
           payload =
             currentRuntime.processResult[
               currentRuntime.processResult.length - 1
             ];
+          logger.debug(
+            `[runtimeController] [kakaoChatRuntime] took ${
+              endTime - startTime
+            } milliseconds`
+          );
           logger.debug(
             `[runtimeController] [kakaoChatRuntime] next payload: ${JSON.stringify(
               payload
