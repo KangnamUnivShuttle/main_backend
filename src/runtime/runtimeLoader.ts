@@ -248,6 +248,7 @@ const runtimeDBModelConverter = function (
   runtimeList: RuntimeDBModel[]
 ): RuntimeHashmapModel {
   const result = {} as RuntimeHashmapModel;
+  console.log("ruyn", runtimeList);
   runtimeList.forEach((runtime) => {
     // logger.debug(`runtime check, ${JSON.stringify(runtime)}, ${Object.keys(runtime)}`)
     // logger.debug(`block id ${runtime.blockID}`)
@@ -257,6 +258,7 @@ const runtimeDBModelConverter = function (
     // logger.debug(
     //   `[runtimeLoader] [runtimeDBModelConverter] runtime: ${runtime.blockID}`
     // );
+    // console.log("runtime key", runtime.blockID, result[runtime.blockID]);
     if (
       runtime.blockID &&
       !runtime.blockLinkID &&
@@ -271,7 +273,7 @@ const runtimeDBModelConverter = function (
         block_order_num: runtime.block_order_num,
         block_loopable: runtime.block_loopable,
       } as RuntimePayloadModel;
-    } else if (runtime.blockLinkID) {
+    } else if (result[runtime.blockID] && runtime.blockLinkID) {
       result[runtime.blockID].nextBlock.push({
         blockID: runtime.nextBlockID,
         link_order_num: runtime.link_order_num,
@@ -284,7 +286,7 @@ const runtimeDBModelConverter = function (
         } as QuickReplyModel,
         is_ml_category: runtime.is_ml_category,
       } as NextBlockModel);
-    } else if (runtime.blockRuntimeID) {
+    } else if (result[runtime.blockID] && runtime.blockRuntimeID) {
       result[runtime.blockID].pluginList.push({
         url: runtime.container_url,
         port: runtime.container_port,
