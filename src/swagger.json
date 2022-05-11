@@ -1677,6 +1677,42 @@
 				}
 			}
 		},
+		"/runtime/executeRuntime": {
+			"post": {
+				"operationId": "ExecuteRuntimeTest",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/KakaoChatResModel"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Runtime"
+				],
+				"security": [
+					{
+						"passport-cookie": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/KakaoChatReqModel"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/runtime/kakaochat": {
 			"post": {
 				"operationId": "KakaoChatRuntime",

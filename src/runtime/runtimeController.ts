@@ -664,6 +664,17 @@ export class RuntimeController extends Controller {
   }
 
   @Response<KakaoChatResModel>(200, "Response ok")
+  @Post("executeRuntime")
+  @Security("passport-cookie")
+  public async executeRuntimeTest(
+    @Body() body: KakaoChatReqModel
+  ): Promise<KakaoChatResModel> {
+    const selectedkey = body.intent?.id || "intro";
+    const currentRuntime = await getRuntimePayload(selectedkey);
+    return this.executeRuntime(currentRuntime, selectedkey, body);
+  }
+
+  @Response<KakaoChatResModel>(200, "Response ok")
   @Post("kakaochat")
   public async kakaoChatRuntime(
     @Body() body: KakaoChatReqModel
