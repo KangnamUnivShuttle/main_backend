@@ -412,13 +412,13 @@ export class RuntimeController extends Controller {
           )}`
         );
 
-        const code = await controlCLI({
+        const cliResult = await controlCLI({
           container_name: recentRuntime.containerUrl,
           container_state: body.container_state,
           path: process.env.PLUGIN_PATH || ".",
         } as RuntimeControlModel);
         logger.debug(
-          `[runtimeController] [containerStateControl] code: ${code}`
+          `[runtimeController] [containerStateControl] code: ${cliResult.code}`
         );
         const result_db = await this.updateContainerStateToDB({
           blockRuntimeID: body.blockRuntimeID,
@@ -435,6 +435,7 @@ export class RuntimeController extends Controller {
         );
 
         result.success = true;
+        result.message = cliResult.msg;
       } else {
         // 컨테이너 새로 만들때
         let init_result = await genDockerCompose(
@@ -480,10 +481,10 @@ export class RuntimeController extends Controller {
         );
 
         body.path = process.env.PLUGIN_PATH || ".";
-        const code = await controlCLI(body);
+        const cliResult = await controlCLI(body);
 
         logger.debug(
-          `[runtimeController] [containerStateControl] control code: ${code}`
+          `[runtimeController] [containerStateControl] control code: ${cliResult.code}`
         );
 
         const result_db = await this.updateContainerStateToDB({
@@ -493,7 +494,7 @@ export class RuntimeController extends Controller {
           env: body.env,
         } as RuntimeControlModel);
         result.success = result_db.success;
-        result.message = result_db.message;
+        result.message = `${result_db.message}\n${cliResult.msg}`;
       }
     } catch (e: any) {
       logger.error(
