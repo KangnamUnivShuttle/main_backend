@@ -600,6 +600,69 @@ export class RuntimeController extends Controller {
     }
   }
 
+  async executeRuntime(
+    currentRuntime: RuntimePayloadModel,
+    selectedkey: string,
+    body: any
+  ) {
+    try {
+      if (currentRuntime.pluginList.length <= 0) {
+        logger.error(
+          `[runtimeController] [executeRuntime] This runtime(${selectedkey})'s plugin list is empty.`
+        );
+        return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME);
+      }
+
+      let payload = body as any;
+      for (let idx = 0; idx < currentRuntime.pluginList.length; idx++) {
+        const startTime = performance.now();
+        currentRuntime.processResult.push(
+          await postRequestToInstance(
+            `plugin_node_${currentRuntime.pluginList[idx].url}`,
+            payload,
+            currentRuntime.pluginList[idx].port
+          )
+        );
+        const endTime = performance.now();
+        payload =
+          currentRuntime.processResult[currentRuntime.processResult.length - 1];
+        logger.debug(
+          `[runtimeController] [executeRuntime] took ${Math.floor(
+            endTime - startTime
+          )} milliseconds`
+        );
+        logger.debug(
+          `[runtimeController] [executeRuntime] next payload: ${JSON.stringify(
+            payload
+          )}`
+        );
+      }
+
+      payload["template"]["quickReplies"] = [];
+      currentRuntime.nextBlock.sort(
+        (a, b) => (a.link_order_num || 0) - (b.link_order_num || 0)
+      );
+      currentRuntime.nextBlock.forEach((block) => {
+        payload["template"]["quickReplies"].push(block.quickReply);
+      });
+
+      return payload;
+    } catch (err: unknown) {
+      // https://stackoverflow.com/a/64452744/7270469
+      if (err instanceof Error) {
+        logger.error(
+          `[runtimeController] [executeRuntime] Runtime error detected. ${err.message}`
+        );
+        return returnErrorMessage();
+      } else {
+        logger.error(
+          `[runtimeController] [executeRuntime] Undefined runtime error detected.`
+        );
+        return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR);
+      }
+    }
+  }
+
   @Response<KakaoChatResModel>(200, "Response ok")
   @Post("kakaochat")
   public async kakaoChatRuntime(
@@ -661,64 +724,7 @@ export class RuntimeController extends Controller {
     }
 
     if (currentRuntime) {
-      try {
-        if (currentRuntime.pluginList.length <= 0) {
-          logger.error(
-            `[runtimeController] [kakaoChatRuntime] This runtime(${selectedkey})'s plugin list is empty.`
-          );
-          return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_EMPTY_RUNTIME);
-        }
-
-        let payload = body as any;
-        for (let idx = 0; idx < currentRuntime.pluginList.length; idx++) {
-          const startTime = performance.now();
-          currentRuntime.processResult.push(
-            await postRequestToInstance(
-              `plugin_node_${currentRuntime.pluginList[idx].url}`,
-              payload,
-              currentRuntime.pluginList[idx].port
-            )
-          );
-          const endTime = performance.now();
-          payload =
-            currentRuntime.processResult[
-              currentRuntime.processResult.length - 1
-            ];
-          logger.debug(
-            `[runtimeController] [kakaoChatRuntime] took ${Math.floor(
-              endTime - startTime
-            )} milliseconds`
-          );
-          logger.debug(
-            `[runtimeController] [kakaoChatRuntime] next payload: ${JSON.stringify(
-              payload
-            )}`
-          );
-        }
-
-        payload["template"]["quickReplies"] = [];
-        currentRuntime.nextBlock.sort(
-          (a, b) => (a.link_order_num || 0) - (b.link_order_num || 0)
-        );
-        currentRuntime.nextBlock.forEach((block) => {
-          payload["template"]["quickReplies"].push(block.quickReply);
-        });
-
-        return payload;
-      } catch (err: unknown) {
-        // https://stackoverflow.com/a/64452744/7270469
-        if (err instanceof Error) {
-          logger.error(
-            `[runtimeController] [kakaoChatRuntime] Runtime error detected. ${err.message}`
-          );
-          return returnErrorMessage();
-        } else {
-          logger.error(
-            `[runtimeController] [kakaoChatRuntime] Undefined runtime error detected.`
-          );
-          return returnErrorMessage(ERROR_CHAT_RESPONSE_MSG_SYSTEM_ERROR);
-        }
-      }
+      return this.executeRuntime(currentRuntime, selectedkey, body);
     } else if (selectedkey === BLOCK_ID_FALLBACK) {
       // recommend what user will want
       logger.warn(
