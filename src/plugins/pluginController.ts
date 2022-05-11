@@ -248,6 +248,8 @@ export class PluginController extends Controller {
       await queryRunner.commitTransaction();
 
       logger.debug(`[PluginController] [deletePlugin] Delete data done`);
+
+      result.success;
     } catch (err: any) {
       await queryRunner.rollbackTransaction();
       logger.error(

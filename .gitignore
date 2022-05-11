@@ -19,6 +19,8 @@ bower_components/
 # IDEs and editors
 .idea/
 
+log/
+
 # misc
 .sass-cache/
 connect.lock/
